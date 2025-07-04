@@ -1,0 +1,8 @@
+# melos_managed_dependency_overrides: base,core,ui
+dependency_overrides:
+  base:
+    path: ..\\base
+  core:
+    path: ..\\core
+  ui:
+    path: ..\\ui

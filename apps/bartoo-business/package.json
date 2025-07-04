@@ -1,0 +1,11 @@
+{
+  "name": "barber-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "ygiraldo",
+  "license": "MIT",
+  "scripts": {
+    "web": "flutter run -d c --web-renderer canvaskit --web-port=50000",
+    "webt": "FLUTTER_WEB_USED_SKIA=true flutter run -d c --web-port=50000"
+  }
+}

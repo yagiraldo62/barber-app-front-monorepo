@@ -1,0 +1,62 @@
+{
+    "id": "b40d5974-6b11-4f6c-bef0-1960e8c19efe",
+    "app_metadata": {
+        "provider": "facebook",
+        "providers": [
+            "facebook"
+        ]
+    },
+    "user_metadata": {
+        "avatar_url": "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=3636998186614144&height=50&width=50&ext=1695779548&hash=AeQ-wuY5DuQg89r1dMA",
+        "email": "andress-16giraldo@hotmail.com",
+        "email_verified": true,
+        "full_name": "AndresAndres",
+        "iss": "https://graph.facebook.com/me?fields=email,first_name,last_name,name,picture",
+        "name": "Andres Andres",
+        "nickname": "Andres",
+        "picture": "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=3636998186614144&height=50&width=50&ext=1695779548&hash=AeQ-wuY5DuQg89r1dMA",
+        "provider_id": "3636998186614144",
+        "slug": "Andres",
+        "sub": "3636998186614144"
+    },
+    "aud": "authenticated",
+    "confirmation_sent_at": null,
+    "recovery_sent_at": null,
+    "email_change_sent_at": null,
+    "new_email": null,
+    "invited_at": null,
+    "action_link": null,
+    "email": "andress-16giraldo@hotmail.com",
+    "phone": "",
+    "created_at": "2023-08-28T01:52:28.244433Z",
+    "confirmed_at": "2023-08-28T01:52:28.2517Z",
+    "email_confirmed_at": "2023-08-28T01:52:28.2517Z",
+    "phone_confirmed_at": null,
+    "last_sign_in_at": "2023-08-28T01:52:30.933302168Z",
+    "role": "authenticated",
+    "updated_at": "2023-08-28T01:52:30.936738Z",
+    "identities": [
+        {
+            "id": "3636998186614144",
+            "user_id": "b40d5974-6b11-4f6c-bef0-1960e8c19efe",
+            "identity_data": {
+                "avatar_url": "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=3636998186614144&height=50&width=50&ext=1695779548&hash=AeQ-wuY5DuQg89r1dMA",
+                "email": "andress-16giraldo@hotmail.com",
+                "email_verified": true,
+                "full_name": "AndresAndres",
+                "iss": "https://graph.facebook.com/me?fields=email,first_name,last_name,name,picture",
+                "name": "AndresAndres",
+                "nickname": "Andres",
+                "picture": "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=3636998186614144&height=50&width=50&ext=1695779548&hash=AeQ-wuY5DuQg89r1dMA",
+                "provider_id": "3636998186614144",
+                "slug": "Andres",
+                "sub": "3636998186614144"
+            },
+            "provider": "facebook",
+            "created_at": "2023-08-28T01:52:28.248511Z",
+            "last_sign_in_at": "2023-08-28T01:52:28.248466Z",
+            "updated_at": "2023-08-28T01:52:28.248511Z"
+        }
+    ],
+    "factors": null
+}

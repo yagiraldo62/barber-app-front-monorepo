@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "338341610850",
+    "project_id": "bartoo-app",
+    "storage_bucket": "bartoo-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:338341610850:android:0e4a02519317b3db5e983b",
+        "android_client_info": {
+          "package_name": "com.bartoo.business"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "338341610850-n5h2332fo18a01h0j4kq6kt0rnt1fqil.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCi6HwT9SSjxTha2spAKUlsrFoSaeHchhY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "338341610850-jv39p5ueq32q1h5rnu9nndptu7janv9g.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "338341610850-0s98ju2u356mfa4brevuma1aouh34fup.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.bartoo.business"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
