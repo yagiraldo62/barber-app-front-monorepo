@@ -1,6 +1,6 @@
-import 'package:bartoo/app/modules/artist/controllers/artist_bottom_navigation_controller.dart';
-import 'package:bartoo/app/modules/artist/widgets/artist_bottom_navigation_bar.dart';
-import 'package:bartoo/app/modules/artist/widgets/artist_navigation_stack.dart';
+import 'package:bartoo/app/modules/profiles/controllers/artist_bottom_navigation_controller.dart';
+import 'package:bartoo/app/modules/profiles/widgets/artist_bottom_navigation_bar.dart';
+import 'package:bartoo/app/modules/profiles/widgets/artist_navigation_stack.dart';
 import 'package:core/modules/auth/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:ui/layout/app_layout.dart';

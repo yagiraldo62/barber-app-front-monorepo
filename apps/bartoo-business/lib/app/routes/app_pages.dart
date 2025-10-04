@@ -2,15 +2,14 @@ import 'package:get/get.dart';
 
 import '../modules/appointments/bindings/artist_appointments_binding.dart';
 import '../modules/appointments/bindings/schedule_appointment_binding.dart';
-import '../modules/artist/bindings/artist_home_binding.dart';
-import '../modules/artist/bindings/artist_profile_binding.dart';
-import '../modules/artist/bindings/create_artist_binding.dart';
-import '../modules/artist/views/artist_home_view.dart';
-import '../modules/artist/views/artist_profile_view.dart';
-import '../modules/artist/views/create_artist_view.dart';
-import '../modules/auth/views/_first_login_intro/first_login_intro_view.dart';
+import '../modules/profiles/bindings/artist_home_binding.dart';
+import '../modules/profiles/bindings/artist_profile_binding.dart';
+import '../modules/profiles/bindings/create_artist_binding.dart';
+import '../modules/profiles/views/artist_home_view.dart';
+import '../modules/profiles/views/artist_profile_view.dart';
+import '../modules/profiles/views/create_artist_view.dart';
+import '../modules/auth/views/first_login_intro/first_login_intro_view.dart';
 import '../modules/auth/views/auth_token_view.dart';
-import '../modules/auth/views/auth_view.dart';
 import '../modules/auth/views/splash_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
@@ -22,6 +21,7 @@ import '../modules/services/views/update_services_view.dart';
 part 'app_routes.dart';
 
 class AppPages {
+  // Private constructor to prevent instantiation of AppPages.
   AppPages._();
 
   static const INITIAL = Routes.SPLASH;
@@ -54,7 +54,7 @@ class AppPages {
       ],
     ),
     GetPage(
-      name: _Paths.CREATE_ARTIST,
+      name: _Paths.CREATE_PROFILE,
       page: () => CreateArtistView(),
       bindings: [CreateArtistBinding()],
     ),

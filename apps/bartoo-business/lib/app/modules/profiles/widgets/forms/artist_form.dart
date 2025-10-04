@@ -1,9 +1,9 @@
-import 'package:bartoo/app/modules/artist/controllers/forms/artist_form_controller.dart';
-import 'package:bartoo/app/modules/artist/widgets/forms/steps/categories_step.dart';
-import 'package:bartoo/app/modules/artist/widgets/forms/steps/description_step.dart';
-import 'package:bartoo/app/modules/artist/widgets/forms/steps/name_step.dart';
-import 'package:bartoo/app/modules/artist/widgets/forms/steps/photo_step.dart';
-import 'package:bartoo/app/modules/artist/widgets/forms/steps/title_step.dart';
+import 'package:bartoo/app/modules/profiles/controllers/forms/artist_form_controller.dart';
+import 'package:bartoo/app/modules/profiles/widgets/forms/steps/categories_step.dart';
+import 'package:bartoo/app/modules/profiles/widgets/forms/steps/description_step.dart';
+import 'package:bartoo/app/modules/profiles/widgets/forms/steps/name_step.dart';
+import 'package:bartoo/app/modules/profiles/widgets/forms/steps/photo_step.dart';
+import 'package:bartoo/app/modules/profiles/widgets/forms/steps/title_step.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ui/widgets/form/stepper_form_fields.dart';

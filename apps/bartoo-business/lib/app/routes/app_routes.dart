@@ -9,7 +9,7 @@ abstract class Routes {
   static const INTRO = _Paths.INTRO;
   static const SPLASH = _Paths.SPLASH;
   static const PROFILE = _Paths.PROFILE;
-  static const CREATE_ARTIST = _Paths.CREATE_ARTIST;
+  static const CREATE_PROFILE = _Paths.CREATE_PROFILE;
   static const ARTIST_HOME = _Paths.ARTIST_HOME;
   static const CREATE_LOCATION = _Paths.CREATE_LOCATION;
   static const UPDATE_SERVICES = _Paths.UPDATE_SERVICES;
@@ -24,7 +24,7 @@ abstract class _Paths {
   static const SPLASH = '/';
   static const PROFILE = '/profile';
   static const ARTIST_HOME = '/artist-home';
-  static const CREATE_ARTIST = '/artist/new';
+  static const CREATE_PROFILE = '/artist/new';
   static const CREATE_LOCATION = '/artist/:artist_id/locations/new';
 
   static const UPDATE_SERVICES =

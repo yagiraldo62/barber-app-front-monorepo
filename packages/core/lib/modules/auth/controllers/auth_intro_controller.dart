@@ -6,7 +6,7 @@ import 'package:core/modules/auth/repository/auth_repository.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 
-enum UserType { artist, organization, client }
+enum UserType { artist, organization, member, client }
 
 class AuthIntroController extends GetxController {
   Rx<UserModel?> user = Get.find<BaseAuthController>().user;
@@ -37,12 +37,12 @@ class AuthIntroController extends GetxController {
       Get.offAllNamed(dotenv.env['HOME_ROUTE'] ?? '/home');
     } else if (selectedUserType.value == UserType.artist) {
       Get.offAllNamed(
-        dotenv.env['CREATE_ARTIST_ROUTE'] ?? '/home',
+        dotenv.env['CREATE_PROFILE_ROUTE'] ?? '/home',
         arguments: {'userType': 'artist'},
       );
     } else if (selectedUserType.value == UserType.organization) {
       Get.offAllNamed(
-        dotenv.env['CREATE_ARTIST_ROUTE'] ?? '/home',
+        dotenv.env['CREATE_PROFILE_ROUTE'] ?? '/home',
         arguments: {'userType': 'organization'},
       );
     }

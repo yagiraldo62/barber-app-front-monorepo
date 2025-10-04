@@ -176,20 +176,6 @@ class UserTypeSelector extends StatelessWidget {
                         context,
                       ).colorScheme.onSurface.withAlpha((0.6 * 255).round()),
                     ),
-                    Typography(
-                      '• Califica y comenta servicios',
-                      variation: TypographyVariation.bodySmall,
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withAlpha((0.6 * 255).round()),
-                    ),
-                    Typography(
-                      '• Historial de servicios y favoritos',
-                      variation: TypographyVariation.bodySmall,
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withAlpha((0.6 * 255).round()),
-                    ),
                   ],
                 ),
               ),

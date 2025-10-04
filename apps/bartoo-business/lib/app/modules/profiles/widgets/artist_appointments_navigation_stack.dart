@@ -1,6 +1,6 @@
 import 'package:bartoo/app/modules/appointments/controllers/artist/artist_appointments_controller.dart';
 import 'package:bartoo/app/modules/appointments/widgets/artist_appointments_list_screen.dart';
-import 'package:bartoo/app/modules/artist/controllers/artist_appointments_menu_controller.dart';
+import 'package:bartoo/app/modules/profiles/controllers/artist_appointments_menu_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

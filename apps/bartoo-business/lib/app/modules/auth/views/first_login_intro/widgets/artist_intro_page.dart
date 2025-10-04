@@ -22,7 +22,7 @@ class ArtistIntroPage extends StatelessWidget {
         const SizedBox(height: 30),
         ElevatedButton(
           onPressed: () {
-            Get.toNamed(Routes.CREATE_ARTIST);
+            Get.toNamed(Routes.CREATE_PROFILE);
           },
           child: const Text("Continuar como Barbero"),
         ),

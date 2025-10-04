@@ -1,7 +1,7 @@
 import 'package:bartoo/app/modules/appointments/controllers/artist/artist_appointments_controller.dart';
 import 'package:bartoo/app/modules/appointments/widgets/artist_appointments_toggle_menu.dart';
 import 'package:bartoo/app/modules/appointments/widgets/schedule_appointment/schedule_appointment.dart';
-import 'package:bartoo/app/modules/artist/widgets/artist_appointments_navigation_stack.dart';
+import 'package:bartoo/app/modules/profiles/widgets/artist_appointments_navigation_stack.dart';
 import 'package:bartoo/app/modules/auth/controllers/business_auth_controller.dart';
 import 'package:bartoo/app/modules/locations/widgets/no_locations_alert.dart';
 import 'package:core/data/models/appointment/appointment_model.dart';

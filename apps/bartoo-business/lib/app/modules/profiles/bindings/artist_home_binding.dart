@@ -1,5 +1,5 @@
-import 'package:bartoo/app/modules/artist/controllers/artist_appointments_menu_controller.dart';
-import 'package:bartoo/app/modules/artist/controllers/artist_bottom_navigation_controller.dart';
+import 'package:bartoo/app/modules/profiles/controllers/artist_appointments_menu_controller.dart';
+import 'package:bartoo/app/modules/profiles/controllers/artist_bottom_navigation_controller.dart';
 import 'package:core/modules/appointments/repository/appointment_repository.dart';
 import 'package:get/get.dart';
 

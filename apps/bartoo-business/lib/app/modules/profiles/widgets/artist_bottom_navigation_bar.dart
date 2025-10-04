@@ -1,4 +1,4 @@
-import 'package:bartoo/app/modules/artist/controllers/artist_bottom_navigation_controller.dart';
+import 'package:bartoo/app/modules/profiles/controllers/artist_bottom_navigation_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:ui/widgets/avatar/auth_user_avatar.dart';
 import 'package:get/get.dart';

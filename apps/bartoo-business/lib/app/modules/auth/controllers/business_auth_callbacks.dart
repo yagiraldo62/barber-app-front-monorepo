@@ -1,4 +1,5 @@
 import 'package:bartoo/app/modules/auth/controllers/business_auth_controller.dart';
+import 'package:bartoo/app/routes/app_pages.dart';
 import 'package:core/data/models/user/user_model.dart';
 import 'package:core/data/models/artists/artist_model.dart';
 import 'package:core/modules/auth/interfaces/auth_callbacks.dart';
@@ -43,13 +44,15 @@ class BusinessAuthCallbacks implements AuthCallbacks {
     if (authController.user.value == null) {
       if (user?.isFirstLogin == true) {
         // Redirect to introduction screen for first-time users
-        Get.offAndToNamed(dotenv.env['INTRODUCTION_ROUTE'] ?? '/intro');
+        Get.offAndToNamed(dotenv.env['INTRODUCTION_ROUTE'] ?? Routes.INTRO);
       } else if (user?.artists?.isNotEmpty ?? false) {
         // Redirect to artist home if user has artists
-        Get.offAndToNamed(dotenv.env['ARTIST_HOME_ROUTE'] ?? '/artist-home');
+        Get.offAndToNamed(
+          dotenv.env['ARTIST_HOME_ROUTE'] ?? Routes.ARTIST_HOME,
+        );
       } else {
         // Redirect to regular home screen
-        Get.offAndToNamed(dotenv.env['HOME_ROUTE'] ?? '/');
+        Get.offAndToNamed(dotenv.env['HOME_ROUTE'] ?? Routes.SPLASH);
       }
     }
   }

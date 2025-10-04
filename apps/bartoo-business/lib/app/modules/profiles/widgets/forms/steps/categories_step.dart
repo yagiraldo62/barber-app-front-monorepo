@@ -1,4 +1,4 @@
-import 'package:bartoo/app/modules/artist/controllers/forms/artist_form_controller.dart';
+import 'package:bartoo/app/modules/profiles/controllers/forms/artist_form_controller.dart';
 import 'package:core/data/models/category/category_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

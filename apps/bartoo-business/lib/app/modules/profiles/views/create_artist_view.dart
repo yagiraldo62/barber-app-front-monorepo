@@ -7,7 +7,7 @@ import 'package:ui/widgets/greet/greet.dart';
 import 'package:ui/widgets/typing_text/secuential_typing_messages.dart';
 import 'package:ui/widgets/typography/typography.dart';
 
-import 'package:bartoo/app/modules/artist/widgets/forms/artist_form.dart';
+import 'package:bartoo/app/modules/profiles/widgets/forms/artist_form.dart';
 
 class CreateArtistView extends GetView {
   CreateArtistView({super.key});

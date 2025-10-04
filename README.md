@@ -243,6 +243,10 @@ The monorepo uses a **shared environment configuration** through a single `.env`
 - **Port**: 50000 (configurable)
 - **PWA**: Configured with manifest.json
 
+## 📚 Documentation
+
+For detailed documentation, visit the [Documentation Index](./docs/index.md).
+
 ## 🤝 Contributing
 
 1. Create a feature branch from `main`
