@@ -1,20 +1,24 @@
 import 'package:base/providers/base_provider.dart';
+import 'package:core/data/models/profile_model.dart';
 import 'package:utils/log.dart';
-import 'package:core/data/models/artists/artist_model.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-class ArtistProvider extends BaseProvider {
-  Future<ArtistModel?> createArtist(
-    String name,
-    List<String> categoriesId,
-    String title,
-    String description,
-  ) async {
-    final response = await post('/artists', {
+class ProfileProvider extends BaseProvider {
+  final String _baseUrl = '/artists';
+
+  Future<ProfileModel?> registerProfile({
+    String? name,
+    String? title,
+    String? description,
+    ProfileType type = ProfileType.artist,
+    List<String> categoriesId = const [],
+  }) async {
+    final response = await post('$_baseUrl/register', {
       'name': name,
       'categories_id': categoriesId,
       'title': title,
+      'type': type.toJson(),
       'description': description,
     });
 
@@ -22,21 +26,21 @@ class ArtistProvider extends BaseProvider {
       return null;
     }
 
-    print(ArtistModel.fromJson(response.body?["data"]).toJson());
+    Log(ProfileModel.fromJson(response.body?["data"]).toJson());
 
     return response.body?["data"] != null
-        ? ArtistModel.fromJson(response.body?["data"])
+        ? ProfileModel.fromJson(response.body?["data"])
         : null;
   }
 
-  Future<ArtistModel?> updateArtist(
+  Future<ProfileModel?> updateProfile(
     String id,
     String name,
     List<String> categoriesId,
     String title,
     String description,
   ) async {
-    final response = await post("/artists/$id/update", {
+    final response = await post('$_baseUrl/$id/update', {
       'name': name,
       'categories_id': categoriesId,
       'title': title,
@@ -47,18 +51,18 @@ class ArtistProvider extends BaseProvider {
       return null;
     }
 
-    Log(ArtistModel.fromJson(response.body?["data"]).toJson());
+    Log(ProfileModel.fromJson(response.body?["data"]).toJson());
 
     return response.body?["data"] != null
-        ? ArtistModel.fromJson(response.body?["data"])
+        ? ProfileModel.fromJson(response.body?["data"])
         : null;
   }
 
-  Future<ArtistModel?> updateArtistPhoto(String id, XFile image) async {
+  Future<ProfileModel?> updateProfilePhoto(String id, XFile image) async {
     final bytes = await image.readAsBytes();
 
     final response = await post(
-      "/artists/$id/photo",
+      "$_baseUrl/$id/photo",
       FormData({'photo': MultipartFile(bytes, filename: image.name)}),
       contentType: "multipart/form-data",
     );
@@ -68,17 +72,17 @@ class ArtistProvider extends BaseProvider {
     }
 
     return response.body?["data"] != null
-        ? ArtistModel.fromJson(response.body?["data"])
+        ? ProfileModel.fromJson(response.body?["data"])
         : null;
   }
 
   // To update the categories of an artist, we need to send a list of categories id to the backend.
-  Future<bool> updateArtistCategories(
+  Future<bool> updateProfileCategories(
     String id,
     List<String> categoriesId,
   ) async {
     final response = await put(
-      '/artists/$id/categories',
+      '$_baseUrl/$id/categories',
       FormData({'categories_id': categoriesId}),
     );
 
@@ -89,7 +93,7 @@ class ArtistProvider extends BaseProvider {
     return false;
   }
 
-  Future<bool> upsertArtistService({
+  Future<bool> upsertProfileService({
     required String artistId,
     required String name,
     required int duration,

@@ -1,5 +1,5 @@
-import 'package:core/data/models/artists/artist_model.dart';
-import 'package:core/data/models/user/user_model.dart';
+import 'package:core/data/models/user_model.dart';
+import 'package:core/modules/auth/classes/selected_scope.dart';
 import 'package:core/modules/auth/repository/auth_repository.dart';
 import 'package:get/get.dart';
 
@@ -18,6 +18,7 @@ abstract class BaseAuthController extends GetxController {
 
   /// Called when user is set - apps can override for custom logic
   void onUserSet(UserModel? user) {
+    authRepository.setAuthUser(user);
     // Override in app implementations for custom behavior
   }
 
@@ -32,16 +33,18 @@ abstract class BaseAuthController extends GetxController {
     // Override in app implementations if needed
   }
 
+  Future<UserModel> refreshUser() async {
+    validating.value = true;
+    UserModel? currentUser = await authRepository.getAuthUser();
+    setUser(currentUser);
+    validating.value = false;
+
+    return currentUser!;
+  }
+
   @override
   void onClose() {
     super.onClose();
     super.dispose();
   }
-}
-
-/// Legacy AuthController for backward compatibility
-/// @deprecated Use BaseAuthController and create app-specific implementations
-@Deprecated('Use BaseAuthController and create app-specific implementations')
-class AuthController extends BaseAuthController {
-  // Maintains backward compatibility
 }

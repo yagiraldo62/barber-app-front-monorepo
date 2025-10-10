@@ -25,7 +25,7 @@ The auth module follows a callback-based architecture that allows each app to cu
 The `AuthState` class contains:
 - `token`: Authentication token
 - `user`: Current user model
-- `selectedArtist`: Currently selected artist (for business apps)
+- `selectedScope`: Currently selected artist (for business apps)
 
 ## Implementation Guide
 
@@ -62,7 +62,7 @@ class MyAppAuthCallbacks implements AuthCallbacks {
   }
 
   @override
-  Future<void> onAuthValidation(UserModel? user, ArtistModel? selectedArtist) async {
+  Future<void> onAuthValidation(UserModel? user, ArtistModel? selectedScope) async {
     // App-specific auth validation
   }
 }
@@ -183,7 +183,7 @@ Called when first-time user completes onboarding. Handle:
 - Setting up initial data
 - Completing registration
 
-### `onAuthValidation(UserModel? user, ArtistModel? selectedArtist)`
+### `onAuthValidation(UserModel? user, ArtistModel? selectedScope)`
 Called by guards to validate auth state. Handle:
 - Permission checks
 - User status validation

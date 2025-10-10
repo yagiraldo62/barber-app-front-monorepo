@@ -15,16 +15,16 @@ class ArtistAppointmentsListScreen extends StatelessWidget {
     this.active = true,
     required this.artistAppointmentsController,
   }) {
-    if (authController.selectedArtist.value != null) {
-      artistAppointmentsController.initializeAppointmets(
-        authController.selectedArtist.value!.id,
-        active: active,
-      );
+    if (authController.selectedScope.value != null) {
+      // artistAppointmentsController.initializeAppointmets(
+      //   authController.selectedScope.value!.id,
+      //   active: active,
+      // );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Text(authController.selectedArtist.value?.name ?? 'Artist');
+    return Text('Artist');
   }
 }

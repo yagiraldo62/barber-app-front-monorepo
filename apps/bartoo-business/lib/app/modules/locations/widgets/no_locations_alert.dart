@@ -1,5 +1,6 @@
 import 'package:bartoo/app/modules/auth/controllers/business_auth_controller.dart';
 import 'package:bartoo/app/routes/app_pages.dart';
+import 'package:core/modules/auth/classes/selected_scope.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -40,7 +41,11 @@ class NoLocationsAlert extends StatelessWidget {
                   () => Get.toNamed(
                     Routes.CREATE_LOCATION.replaceAll(
                       ':artist_id',
-                      authController.selectedArtist.value?.id.toString() ?? '',
+                      (authController.selectedScope.value as ProfileScope?)
+                              ?.profile
+                              .id
+                              .toString() ??
+                          '',
                     ),
                   ),
               child: const Text("Crear mi primera ubicación"),

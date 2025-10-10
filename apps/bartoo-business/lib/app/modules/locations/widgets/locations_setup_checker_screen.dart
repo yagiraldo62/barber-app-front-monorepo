@@ -1,9 +1,9 @@
 import 'package:bartoo/app/modules/auth/controllers/business_auth_controller.dart';
 import 'package:bartoo/app/routes/app_pages.dart';
-import 'package:core/data/models/artists/artist_model.dart';
+import 'package:core/data/models/artist_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:core/data/models/artists/artist_location_model.dart';
+import 'package:core/data/models/artist_location_model.dart';
 
 class LocationsSetupCheckerScreen extends StatelessWidget {
   final Widget child;
@@ -14,25 +14,25 @@ class LocationsSetupCheckerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final artist = authController.selectedArtist.value;
-      if (artist == null ||
-          artist.locations == null ||
-          artist.locations!.isEmpty) {
-        return child; // Si no hay artista o ubicaciones, simplemente muestra el widget hijo
-      }
+      final artist = authController.selectedScope.value;
+      // if (artist == null ||
+      //     artist.locations == null ||
+      //     artist.locations!.isEmpty) {
+      //   return child; // Si no hay artista o ubicaciones, simplemente muestra el widget hijo
+      // }
 
-      // Filtrar las ubicaciones que necesitan configuración
-      final locationsNeedingSetup =
-          artist.locations!
-              .where(
-                (location) => !location.servicesUp || !location.availabilityUp,
-              )
-              .toList();
+      // // Filtrar las ubicaciones que necesitan configuración
+      // final locationsNeedingSetup =
+      //     artist.locations!
+      //         .where(
+      //           (location) => !location.servicesUp || !location.availabilityUp,
+      //         )
+      //         .toList();
 
       // Si todas las ubicaciones están configuradas correctamente, muestra el widget hijo
-      if (locationsNeedingSetup.isEmpty) {
-        return child;
-      }
+      // if (locationsNeedingSetup.isEmpty) {
+      //   return child;
+      // }
 
       // Si hay ubicaciones que necesitan configuración, muestra las alertas correspondientes
       return SingleChildScrollView(
@@ -47,10 +47,10 @@ class LocationsSetupCheckerScreen extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 16),
-              ...locationsNeedingSetup.map(
-                (location) => _buildLocationAlert(context, artist, location),
-              ),
+              // const SizedBox(height: 16),
+              // ...locationsNeedingSetup.map(
+              //   (location) => _buildLocationAlert(context, artist, location),
+              // ),
             ],
           ),
         ),

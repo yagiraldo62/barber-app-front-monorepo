@@ -14,13 +14,13 @@ class ArtistHomeScreen extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Obx(() {
-          final hasLocations = authController.hasSelectedArtistLocations();
+          // final hasLocations = authController.hasSelectedArtistLocations();
 
-          if (!hasLocations) {
-            return NoLocationsAlert(
-              onCreateLocation: () => Get.toNamed('/artist/locations/create'),
-            );
-          }
+          // if (!hasLocations) {
+          //   return NoLocationsAlert(
+          //     onCreateLocation: () => Get.toNamed('/artist/locations/create'),
+          //   );
+          // }
 
           // Usar el LocationsSetupCheckerScreen como wrapper
           return LocationsSetupCheckerScreen(child: _buildHomeContent(context));
@@ -36,8 +36,10 @@ class ArtistHomeScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Obx(() {
-            final artistName =
-                authController.selectedArtist.value?.name ?? 'Artista';
+            // final artistName =
+            //     authController.selectedScope.value?.name ?? 'Artista';
+            final artistName = 'Artista';
+
             return Text(
               '¡Bienvenido, $artistName!',
               style: Theme.of(

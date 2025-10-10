@@ -1,12 +1,12 @@
-import 'package:bartoo/app/modules/profiles/controllers/forms/artist_form_controller.dart';
-import 'package:core/data/models/category/category_model.dart';
+import 'package:bartoo/app/modules/profiles/controllers/forms/profile_form_controller.dart';
+import 'package:core/data/models/category_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ui/widgets/button/selectable_entity_button.dart';
 import 'package:ui/widgets/form/animated_form_step.dart';
 
 class CategoriesStep extends StatelessWidget {
-  final ArtistFormController controller;
+  final ProfileFormController controller;
 
   const CategoriesStep({super.key, required this.controller});
 

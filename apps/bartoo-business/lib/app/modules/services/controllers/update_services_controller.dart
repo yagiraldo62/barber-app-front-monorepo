@@ -4,7 +4,7 @@ import 'package:utils/log.dart';
 import 'package:get/get.dart';
 import 'package:bartoo/app/modules/services/classes/location_services_item_model.dart';
 
-import 'package:core/data/models/category/category_model.dart';
+import 'package:core/data/models/category_model.dart';
 
 class UpdateServicesController extends GetxController {
   final ArtistLocationServiceProvider _serviceProvider =

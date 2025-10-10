@@ -1,5 +1,5 @@
 import 'package:bartoo/app/modules/auth/controllers/business_auth_controller.dart';
-import 'package:core/data/models/artists/artist_location_model.dart';
+import 'package:core/data/models/artist_location_model.dart';
 import 'package:core/modules/locations/providers/artist_location_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -165,24 +165,24 @@ class ArtistLocationFormController extends GetxController
       if (loading.value) return;
       loading.value = true;
 
-      final artist = authController.selectedArtist.value;
+      final artist = authController.selectedScope.value;
       if (artist == null) throw Exception('No artist selected');
 
-      final result = await provider.createLocation(
-        artist.id,
-        nameController.text,
-        addressController.text,
-        location.value,
-        address2: address2Controller.text,
-        city: cityController.text,
-        state: stateController.text,
-        country: countryController.text,
-      );
+      // final result = await provider.createLocation(
+      //   artist.id,
+      //   nameController.text,
+      //   addressController.text,
+      //   location.value,
+      //   address2: address2Controller.text,
+      //   city: cityController.text,
+      //   state: stateController.text,
+      //   country: countryController.text,
+      // );
 
-      if (result == null) throw Exception('Error creating location');
+      // if (result == null) throw Exception('Error creating location');
 
-      artist.locations ??= [];
-      artist.locations!.add(result);
+      // artist.locations ??= [];
+      // artist.locations!.add(result);
 
       Get.back();
       Snackbars.success(message: 'Ubicación creada exitosamente');

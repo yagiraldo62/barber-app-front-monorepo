@@ -1,5 +1,5 @@
-import 'package:core/data/models/artists/artist_location_service_model.dart';
-import 'package:core/data/models/category/category_model.dart';
+import 'package:core/data/models/artist_location_service_model.dart';
+import 'package:core/data/models/category_model.dart';
 
 /// Relate services to categories
 /// - relate services to the categories

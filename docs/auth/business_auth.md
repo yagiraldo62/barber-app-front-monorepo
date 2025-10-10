@@ -19,7 +19,7 @@ The `BusinessAuthCallbacks` class implements the `AuthCallbacks` interface and p
 - `onLogout()`: Clears artist-specific data and handles logout cleanup.
 - `onSetUserLocation(UserModel user)`: Sets the artist's location.
 - `onFirstLoginCompleted(UserModel user)`: Handles first-time login completion for artists.
-- `onAuthValidation(UserModel? user, ArtistModel? selectedArtist)`: Validates the authentication state for artists.
+- `onAuthValidation(UserModel? user, ArtistModel? selectedScope)`: Validates the authentication state for artists.
 
 ### Auth Controllers
 

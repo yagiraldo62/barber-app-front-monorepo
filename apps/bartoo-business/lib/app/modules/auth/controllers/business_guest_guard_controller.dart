@@ -18,7 +18,7 @@ class BusinessGuestGuardController extends BaseGuardController {
   Future<void> validate(AuthState authState) async {
     // Guest guard specific logic - redirect if user IS authenticated
     if (authState.user != null) {
-      _authCallbacks.onAuthValidation(authState.user, authState.selectedArtist);
+      _authCallbacks.onAuthValidation(authState.user, authState.selectedScope);
     }
   }
 }

@@ -1,8 +1,8 @@
 import 'package:bartoo/app/modules/appointments/controllers/schedule_appointment_controller.dart';
 import 'package:bartoo/app/modules/appointments/widgets/schedule_appointment/schedule_appointment_input.dart';
 import 'package:bartoo/app/modules/auth/controllers/business_auth_controller.dart';
-import 'package:core/data/models/appointment/appointment_model.dart';
-import 'package:core/data/models/category/category_service_model.dart';
+import 'package:core/data/models/appointment_model.dart';
+import 'package:core/data/models/category_service_model.dart';
 import 'package:flutter/material.dart';
 import 'package:ui/widgets/button/selectable_entity_button.dart';
 import 'package:get/get.dart';
@@ -25,10 +25,10 @@ class ScheduleAppointment extends StatelessWidget {
     required this.onAppointmentScheduled,
     required this.appointment,
   }) {
-    // if the logged in user is an artist, replace the appointment´s artist with the value of the logged in artist
-    if (authController.selectedArtist.value != null) {
-      appointment.artist = authController.selectedArtist.value;
-    }
+    // // if the logged in user is an artist, replace the appointment´s artist with the value of the logged in artist
+    // if (authController.selectedScope.value != null) {
+    //   appointment.artist = authController.selectedScope.value;
+    // }
 
     // if the appointment is new, init
     appointment.startTime ??= Moment.now();

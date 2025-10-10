@@ -1,15 +1,16 @@
-import 'package:bartoo/app/modules/profiles/controllers/forms/artist_form_controller.dart';
+import 'package:bartoo/app/modules/profiles/controllers/forms/profile_form_controller.dart';
+import 'package:core/data/models/profile_model.dart';
 import 'package:flutter/material.dart';
 import 'package:ui/widgets/input/avatar_picker.dart';
 import 'package:ui/widgets/form/animated_form_step.dart';
 
 class PhotoStep extends StatelessWidget {
-  final ArtistFormController controller;
+  final ProfileFormController controller;
 
   const PhotoStep({super.key, required this.controller});
 
   String get _photoMessage {
-    return controller.isArtist.value
+    return controller.profileType.value == ProfileType.artist
         ? 'Elijir una buena foto puede hacer que destaques en la seccion de busqueda.'
         : 'Añade el logo de tu negocio, esto puedes hacerlo después si prefieres';
   }
@@ -17,7 +18,7 @@ class PhotoStep extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Use controller.isArtist directly to create a new key when the value changes
-    Key typingKey = ValueKey(controller.isArtist.value);
+    Key typingKey = ValueKey(controller.profileType.value);
     return AnimatedFormStep(
       title: _photoMessage,
       typingKey: typingKey,
@@ -26,7 +27,7 @@ class PhotoStep extends StatelessWidget {
       content: Center(
         child: AvatarPicker(
           onPickImage: (image) => controller.setImage(image),
-          imageUrl: controller.currentArtist?.photoUrl,
+          imageUrl: controller.currentProfile?.photoUrl,
         ),
       ),
     );

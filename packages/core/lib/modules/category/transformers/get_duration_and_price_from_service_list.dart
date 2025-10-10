@@ -1,4 +1,4 @@
-import 'package:core/data/models/category/category_service_model.dart';
+import 'package:core/data/models/category_service_model.dart';
 import 'package:core/data/models/shared/duration_and_price_model.dart';
 
 DurationAndPriceModel getDurationAndPriceFromServiceList(

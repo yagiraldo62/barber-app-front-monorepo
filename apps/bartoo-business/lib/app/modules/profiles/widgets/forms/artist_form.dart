@@ -1,24 +1,23 @@
-import 'package:bartoo/app/modules/profiles/controllers/forms/artist_form_controller.dart';
+import 'package:bartoo/app/modules/profiles/controllers/forms/profile_form_controller.dart';
 import 'package:bartoo/app/modules/profiles/widgets/forms/steps/categories_step.dart';
 import 'package:bartoo/app/modules/profiles/widgets/forms/steps/description_step.dart';
 import 'package:bartoo/app/modules/profiles/widgets/forms/steps/name_step.dart';
 import 'package:bartoo/app/modules/profiles/widgets/forms/steps/photo_step.dart';
 import 'package:bartoo/app/modules/profiles/widgets/forms/steps/title_step.dart';
+import 'package:core/data/models/profile_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ui/widgets/form/stepper_form_fields.dart';
 
-import 'package:core/data/models/artists/artist_model.dart';
-
-class ArtistForm extends StatelessWidget {
-  final ArtistModel? currentArtist;
+class ProfileForm extends StatelessWidget {
+  final ProfileModel? currentProfile;
   final bool isCreation;
   final ScrollController? scrollController;
   final bool showForm;
 
-  const ArtistForm({
+  const ProfileForm({
     super.key,
-    this.currentArtist,
+    this.currentProfile,
     this.isCreation = false,
     this.scrollController,
     this.showForm = false,
@@ -26,43 +25,44 @@ class ArtistForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(ArtistFormController(currentArtist, isCreation));
+    Get.put(ProfileFormController(currentProfile, isCreation));
 
-    final controller = Get.find<ArtistFormController>();
+    final controller = Get.find<ProfileFormController>();
     final steps = [
       StepInfo(
         stepWidget: NameStep(controller: controller),
         condition:
             () =>
-                controller.currentStep.value.index >= ArtistFormStep.name.index,
+                controller.currentStep.value.index >=
+                ProfileFormStep.name.index,
       ),
       StepInfo(
         stepWidget: TitleStep(controller: controller),
         condition:
             () =>
                 controller.currentStep.value.index >=
-                ArtistFormStep.title.index,
+                ProfileFormStep.title.index,
       ),
       StepInfo(
         stepWidget: DescriptionStep(controller: controller),
         condition:
             () =>
                 controller.currentStep.value.index >=
-                ArtistFormStep.description.index,
+                ProfileFormStep.description.index,
       ),
       StepInfo(
         stepWidget: CategoriesStep(controller: controller),
         condition:
             () =>
                 controller.currentStep.value.index >=
-                ArtistFormStep.categories.index,
+                ProfileFormStep.categories.index,
       ),
       StepInfo(
         stepWidget: PhotoStep(controller: controller),
         condition:
             () =>
                 controller.currentStep.value.index >=
-                ArtistFormStep.photo.index,
+                ProfileFormStep.photo.index,
       ),
     ];
 
@@ -72,20 +72,20 @@ class ArtistForm extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           if (controller.isCreation)
-            StepperFormFields<Rx<ArtistFormStep>>(
+            StepperFormFields<Rx<ProfileFormStep>>(
               controller: controller,
               steps: steps,
               scrollController: scrollController,
               showFormCondition: () => showForm,
               showButtonCondition: () => controller.animationsComplete.value,
-              isFinalStep: (step) => step == ArtistFormStep.photo,
+              isFinalStep: (step) => step == ProfileFormStep.photo,
               buttonLabelBuilder: (step) {
-                return step.value == ArtistFormStep.photo
+                return step.value == ProfileFormStep.photo
                     ? 'Finalizar'
                     : 'Continuar';
               },
               buttonIconBuilder: (step) {
-                return step.value == ArtistFormStep.photo
+                return step.value == ProfileFormStep.photo
                     ? Icons.check
                     : Icons.arrow_forward;
               },

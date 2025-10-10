@@ -1,5 +1,5 @@
 // import 'package:bartoo/app/modules/appointments/transformers/get_widgets_list_from_appointments_map.dart';
-// import 'package:core/data/models/appointment/appointment_model.dart';
+// import 'package:core/data/models/appointment_model.dart';
 // import 'package:flutter/material.dart';
 // import 'package:moment_dart/moment_dart.dart';
 

@@ -22,8 +22,8 @@ class AuthUserAvatar extends StatelessWidget {
     // String? src = authController.user.value?.photoURL;
 
     // if (isArtist) {
-    //   if (authController.selectedArtist.value != null) {
-    //     src = authController.selectedArtist.value?.photoUrl;
+    //   if (authController.selectedScope.value != null) {
+    //     src = authController.selectedScope.value?.photoUrl;
     //   }
     // }
 

@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:core/data/models/artists/artist_location_model.dart';
-import 'package:core/data/models/category/category_model.dart';
-import 'package:core/data/models/availability/artist_week_day_availability.dart';
-import 'package:core/data/models/user/user_model.dart';
+import 'package:core/data/models/artist_location_model.dart';
+import 'package:core/data/models/category_model.dart';
+import 'package:core/data/models/artist_week_day_availability.dart';
+import 'package:core/data/models/user_model.dart';
 
 class ArtistModel {
   ArtistModel({

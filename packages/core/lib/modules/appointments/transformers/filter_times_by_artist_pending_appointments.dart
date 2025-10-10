@@ -1,6 +1,6 @@
 import 'package:utils/date_time/normalize_date.dart';
-import 'package:core/data/models/appointment/appointment_datetime_model.dart';
-import 'package:core/data/models/availability/time_of_day.dart';
+import 'package:core/data/models/appointment_datetime_model.dart';
+import 'package:core/data/models/time_of_day.dart';
 import 'package:get/get.dart';
 import 'package:moment_dart/moment_dart.dart';
 

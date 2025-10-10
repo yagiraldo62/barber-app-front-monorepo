@@ -1,9 +1,10 @@
 import 'package:bartoo/app/modules/auth/controllers/business_auth_controller.dart';
-import 'package:core/modules/artist/repository/artist_repository.dart';
-import 'package:core/data/models/artists/artist_model.dart';
-import 'package:core/data/models/category/category_model.dart';
+import 'package:core/data/models/profile_model.dart';
+import 'package:core/data/models/category_model.dart';
+import 'package:core/modules/auth/classes/selected_scope.dart';
 import 'package:core/modules/auth/repository/auth_repository.dart';
 import 'package:core/modules/auth/repository/user_repository.dart';
+import 'package:core/modules/profile/repository/profile_repository.dart';
 import 'package:core/modules/category/repository/category_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,16 +14,16 @@ import 'package:utils/log.dart';
 import 'package:utils/snackbars.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-enum ArtistFormStep { name, title, description, categories, photo }
+enum ProfileFormStep { name, title, description, categories, photo }
 
-class ArtistFormController extends GetxController
-    implements StepperFormController<Rx<ArtistFormStep>> {
-  final ArtistModel? currentArtist;
+class ProfileFormController extends GetxController
+    implements StepperFormController<Rx<ProfileFormStep>> {
+  final ProfileModel? currentProfile;
   final bool isCreation;
 
-  ArtistFormController(this.currentArtist, this.isCreation);
+  ProfileFormController(this.currentProfile, this.isCreation);
 
-  final ArtistRepository artistRepository = Get.find<ArtistRepository>();
+  final ProfileRepository profileRepository = Get.find<ProfileRepository>();
   final AuthRepository authRepository = Get.find<AuthRepository>();
   final UserRepository userRepository = Get.find<UserRepository>();
   final CategoryRepository categoryRepository = Get.find<CategoryRepository>();
@@ -43,11 +44,11 @@ class ArtistFormController extends GetxController
   final loadingCategories = false.obs;
   final loading = false.obs;
   final typeSelected = false.obs;
-  final isArtist = true.obs;
+  final profileType = ProfileType.organization.obs;
   final animationsComplete = false.obs;
 
   @override
-  final currentStep = Rx<ArtistFormStep>(ArtistFormStep.name);
+  final currentStep = Rx<ProfileFormStep>(ProfileFormStep.name);
   @override
   void onInit() {
     super.onInit();
@@ -58,23 +59,23 @@ class ArtistFormController extends GetxController
 
     // Set type based on route argument
     if (userType == 'artist') {
-      isArtist.value = true;
+      profileType.value = ProfileType.artist;
     } else if (userType == 'organization') {
-      isArtist.value = false;
+      profileType.value = ProfileType.organization;
     } else {
-      // Default to artist if no argument provided
-      isArtist.value = true;
+      // Default to organization if no argument provided
+      profileType.value = ProfileType.organization;
     }
     typeSelected.value = true;
 
     // Initialize animation state
     animationsComplete.value = false;
 
-    if (currentArtist != null) {
-      nameController.text = currentArtist!.name;
-      titleController.text = currentArtist!.title;
-      descriptionController.text = currentArtist!.description;
-      currentStep.value = ArtistFormStep.name;
+    if (currentProfile != null) {
+      nameController.text = currentProfile!.name;
+      titleController.text = currentProfile!.title ?? '';
+      descriptionController.text = currentProfile!.description ?? '';
+      currentStep.value = ProfileFormStep.name;
     }
 
     loadCategories();
@@ -111,7 +112,7 @@ class ArtistFormController extends GetxController
           .map((category) => category.id)
           .toList();
 
-  void upsertArtist() async {
+  void upsertProfile() async {
     try {
       if (loading.value) {
         return;
@@ -125,11 +126,11 @@ class ArtistFormController extends GetxController
 
       List<String> selectedCategoriesId = getSelectedCategoriesId();
 
-      ArtistModel? artist;
+      ProfileModel? artist;
 
-      if (currentArtist != null) {
-        artist = await artistRepository.update(
-          currentArtist!.id,
+      if (currentProfile != null) {
+        artist = await profileRepository.update(
+          currentProfile!.id,
           nameController.text,
           selectedCategoriesId,
           titleController.text,
@@ -137,12 +138,13 @@ class ArtistFormController extends GetxController
           image.value,
         );
       } else {
-        artist = await artistRepository.create(
-          nameController.text,
-          selectedCategoriesId,
-          titleController.text,
-          descriptionController.text,
-          image.value,
+        artist = await profileRepository.register(
+          name: nameController.text,
+          categoriesId: selectedCategoriesId,
+          type: profileType.value,
+          title: titleController.text,
+          description: descriptionController.text,
+          image: image.value,
         );
       }
 
@@ -165,26 +167,24 @@ class ArtistFormController extends GetxController
     return null;
   }
 
-  Future<void> onSaved(ArtistModel artist) async {
+  Future<void> onSaved(ProfileModel profile) async {
     if (authController.user.value!.isFirstLogin) {
       await authRepository.updateFirstLogin(false);
       authController.user.value!.isFirstLogin = false;
     }
 
-    artist.owner = null;
-    authController.user.value!.upsertArtist(artist);
+    await authController.refreshUser();
+    await authController.setAuthDefaultScope(
+      preferredScope: ProfileScope(profile),
+    );
 
-    await authRepository.setAuthUser(authController.user.value);
-    await authRepository.setSelectedArtist(artist);
-
-    authController.selectedArtist.value = artist;
     Get.offAndToNamed(dotenv.env['HOME_ROUTE'] ?? '/home');
   }
 
-  void setType(bool isArtistType) {
-    isArtist.value = isArtistType;
+  void setType(ProfileType profileTypeType) {
+    profileType.value = profileTypeType;
     typeSelected.value = true;
-    currentStep.value = ArtistFormStep.name;
+    currentStep.value = ProfileFormStep.name;
   }
 
   void onAnimationsComplete() {
@@ -194,44 +194,44 @@ class ArtistFormController extends GetxController
   @override
   void nextStep() {
     switch (currentStep.value) {
-      case ArtistFormStep.name:
+      case ProfileFormStep.name:
         if (nameController.text.isEmpty) {
           Snackbars.error(message: 'El nombre comercial es requerido');
           return;
         }
         // Reset animation state when successfully moving to next step
         animationsComplete.value = false;
-        currentStep.value = ArtistFormStep.title;
+        currentStep.value = ProfileFormStep.title;
         break;
-      case ArtistFormStep.title:
+      case ProfileFormStep.title:
         if (titleController.text.isEmpty) {
           Snackbars.error(message: 'El título es requerido');
           return;
         }
         // Reset animation state when successfully moving to next step
         animationsComplete.value = false;
-        currentStep.value = ArtistFormStep.description;
+        currentStep.value = ProfileFormStep.description;
         break;
-      case ArtistFormStep.description:
+      case ProfileFormStep.description:
         if (descriptionController.text.isEmpty) {
           Snackbars.error(message: 'La descripción es requerida');
           return;
         }
         // Reset animation state when successfully moving to next step
         animationsComplete.value = false;
-        currentStep.value = ArtistFormStep.categories;
+        currentStep.value = ProfileFormStep.categories;
         break;
-      case ArtistFormStep.categories:
+      case ProfileFormStep.categories:
         if (getSelectedCategoriesId().isEmpty) {
           Snackbars.error(message: 'Debes seleccionar al menos una categoría');
           return;
         }
         // Reset animation state when successfully moving to next step
         animationsComplete.value = false;
-        currentStep.value = ArtistFormStep.photo;
+        currentStep.value = ProfileFormStep.photo;
         break;
-      case ArtistFormStep.photo:
-        upsertArtist();
+      case ProfileFormStep.photo:
+        upsertProfile();
         break;
     }
   }

@@ -17,7 +17,7 @@ abstract class BaseGuardController extends GetxController {
   }
 
   Future<void> validate(AuthState data) async {
-    await authCallbacks.onAuthValidation(data.user, data.selectedArtist);
+    await authCallbacks.onAuthValidation(data.user, data.selectedScope);
   }
 
   @override

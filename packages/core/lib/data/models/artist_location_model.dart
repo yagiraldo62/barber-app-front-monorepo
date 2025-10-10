@@ -1,5 +1,5 @@
-import 'package:core/data/models/artists/artist_location_service_model.dart';
-import 'package:core/data/models/availability/artist_week_day_availability.dart';
+import 'package:core/data/models/artist_location_service_model.dart';
+import 'package:core/data/models/artist_week_day_availability.dart';
 
 class ArtistLocationModel {
   ArtistLocationModel({

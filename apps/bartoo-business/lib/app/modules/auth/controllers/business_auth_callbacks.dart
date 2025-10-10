@@ -1,13 +1,14 @@
 import 'package:bartoo/app/modules/auth/controllers/business_auth_controller.dart';
 import 'package:bartoo/app/routes/app_pages.dart';
-import 'package:core/data/models/user/user_model.dart';
-import 'package:core/data/models/artists/artist_model.dart';
+import 'package:core/data/models/user_model.dart';
+import 'package:core/modules/auth/classes/selected_scope.dart';
 import 'package:core/modules/auth/interfaces/auth_callbacks.dart';
 import 'package:core/modules/auth/repository/auth_repository.dart';
 import 'package:utils/geolocation/map_utils.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:utils/log.dart';
 
 /// Business app specific implementation of auth callbacks
 class BusinessAuthCallbacks implements AuthCallbacks {
@@ -17,19 +18,13 @@ class BusinessAuthCallbacks implements AuthCallbacks {
 
   @override
   Future<void> onLogin(UserModel user) async {
-    print('Business app: onLogin - ${user.toJson()}');
-    List<ArtistModel> artists = user.artists ?? [];
+    Log('Business app: onLogin - ${user.toJson()}');
 
-    // Set user location
-    user = await onSetUserLocation(user);
+    user = await setUserLocation(user);
+    authController.setUser(user);
 
-    // Set selected artist if user has artists and none is selected
-    if (artists.isNotEmpty) {
-      await authRepository.setSelectedArtist(artists.first);
-    }
-
-    // Save authenticated user
-    await authRepository.setAuthUser(user);
+    // Set default scope after login
+    await authController.setAuthDefaultScope(user: user);
 
     // Redirect user after login
     onLoginRedirection(user);
@@ -37,7 +32,7 @@ class BusinessAuthCallbacks implements AuthCallbacks {
 
   @override
   void onLoginRedirection(UserModel? user) {
-    print('Business app: onLoginRedirection - ${user?.toJson()}');
+    Log('Business app: onLoginRedirection - ${user?.toJson()}');
 
     // apply redirection logic based on user state
     // If user is not authenticated, redirect to login
@@ -45,8 +40,8 @@ class BusinessAuthCallbacks implements AuthCallbacks {
       if (user?.isFirstLogin == true) {
         // Redirect to introduction screen for first-time users
         Get.offAndToNamed(dotenv.env['INTRODUCTION_ROUTE'] ?? Routes.INTRO);
-      } else if (user?.artists?.isNotEmpty ?? false) {
-        // Redirect to artist home if user has artists
+      } else if (user?.profiles?.isNotEmpty ?? false) {
+        // Redirect to profile home if user has profiles
         Get.offAndToNamed(
           dotenv.env['ARTIST_HOME_ROUTE'] ?? Routes.ARTIST_HOME,
         );
@@ -59,14 +54,14 @@ class BusinessAuthCallbacks implements AuthCallbacks {
 
   @override
   Future<void> onLogout() async {
-    print('Business app: onLogout - Cleaning up business-specific data');
+    Log('Business app: onLogout - Cleaning up business-specific data');
     // Add any business-specific cleanup logic here
     // For example: clear cached data, reset app state, etc.
   }
 
   @override
-  Future<UserModel> onSetUserLocation(UserModel user) async {
-    print('Business app: onSetUserLocation');
+  Future<UserModel> setUserLocation(UserModel user) async {
+    Log('Business app: setUserLocation');
     Position? position = await getUserCurrentLocation();
     if (position != null) {
       user.location = position.toJson();
@@ -77,12 +72,12 @@ class BusinessAuthCallbacks implements AuthCallbacks {
   @override
   Future<void> onAuthValidation(
     UserModel? user,
-    ArtistModel? selectedArtist,
+    SelectedScope? selectedScope,
   ) async {
     onLoginRedirection(user);
 
-    // set user and selected artist in auth controller AFTER redirection
+    // set user and selected scope in auth controller AFTER redirection
     authController.setUser(user);
-    authController.setSelectedArtist(selectedArtist);
+    authController.setSelectedScope(selectedScope);
   }
 }

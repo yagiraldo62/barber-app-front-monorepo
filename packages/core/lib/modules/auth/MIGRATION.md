@@ -136,8 +136,8 @@ Create `lib/app/modules/auth/controllers/your_app_auth_callbacks.dart`:
 
 ```dart
 import 'package:core/modules/auth/interfaces/auth_callbacks.dart';
-import 'package:core/data/models/user/user_model.dart';
-import 'package:core/data/models/artists/artist_model.dart';
+import 'package:core/data/models/user_model.dart';
+import 'package:core/data/models/artist_model.dart';
 
 class YourAppAuthCallbacks implements AuthCallbacks {
   @override
@@ -167,7 +167,7 @@ class YourAppAuthCallbacks implements AuthCallbacks {
   }
 
   @override
-  Future<void> onAuthValidation(UserModel? user, ArtistModel? selectedArtist) async {
+  Future<void> onAuthValidation(UserModel? user, ArtistModel? selectedScope) async {
     // Your app's auth validation logic
   }
 }

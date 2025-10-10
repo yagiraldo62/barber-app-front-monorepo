@@ -1,5 +1,5 @@
 import 'package:base/providers/base_provider.dart';
-import 'package:core/data/models/artists/artist_location_model.dart';
+import 'package:core/data/models/artist_location_model.dart';
 
 class ArtistLocationProvider extends BaseProvider {
   createLocation(

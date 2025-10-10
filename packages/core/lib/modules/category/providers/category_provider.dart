@@ -1,5 +1,5 @@
 import 'package:base/providers/base_provider.dart';
-import 'package:core/data/models/category/category_model.dart';
+import 'package:core/data/models/category_model.dart';
 
 class CategoryProvider extends BaseProvider {
   Future<List<CategoryModel>?> getCategories({

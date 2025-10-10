@@ -51,7 +51,7 @@ class CreateArtistView extends GetView {
                 ],
               ),
               Obx(
-                () => ArtistForm(
+                () => ProfileForm(
                   isCreation: true,
                   scrollController: scrollController,
                   showForm: showForm.value,

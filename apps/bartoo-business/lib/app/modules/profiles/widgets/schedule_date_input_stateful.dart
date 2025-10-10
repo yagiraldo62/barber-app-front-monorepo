@@ -1,6 +1,6 @@
 import 'package:utils/date_time/format_date_utils.dart';
-import 'package:core/data/models/artists/artist_model.dart';
-import 'package:core/data/models/user/user_model.dart';
+import 'package:core/data/models/artist_model.dart';
+import 'package:core/data/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:moment_dart/moment_dart.dart';
 

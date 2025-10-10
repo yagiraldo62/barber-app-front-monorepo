@@ -5,6 +5,8 @@ build/
 .flutter-plugins
 .flutter-plugins-dependencies
 
+*.env
+
 # IDE
 .idea/
 .vscode/settings.json

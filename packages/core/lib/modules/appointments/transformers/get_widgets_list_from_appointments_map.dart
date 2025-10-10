@@ -1,6 +1,6 @@
 // import 'package:ui/widgets/button/selectable_entity_button.dart';
 // import 'package:ui/widgets/cards/service_card.dart';
-// import 'package:core/data/models/appointment/appointment_model.dart';
+// import 'package:core/data/models/appointment_model.dart';
 // import 'package:flutter/material.dart';
 // import 'package:moment_dart/moment_dart.dart';
 

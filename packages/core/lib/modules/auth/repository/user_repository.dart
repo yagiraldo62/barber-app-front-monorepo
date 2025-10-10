@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:core/data/models/user/user_model.dart';
+import 'package:core/data/models/user_model.dart';
 
 class UserRepository {
   Future<UserModel?> findOrSave(

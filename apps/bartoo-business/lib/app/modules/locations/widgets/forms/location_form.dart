@@ -1,4 +1,4 @@
-import 'package:core/data/models/artists/artist_location_model.dart';
+import 'package:core/data/models/artist_location_model.dart';
 import 'package:flutter/material.dart' hide Typography;
 import 'package:get/get.dart';
 import 'package:bartoo/app/modules/locations/controllers/forms/artist_location_form_controller.dart';

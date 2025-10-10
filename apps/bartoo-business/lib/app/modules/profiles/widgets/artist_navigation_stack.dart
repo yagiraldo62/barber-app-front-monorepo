@@ -1,6 +1,6 @@
 import 'package:bartoo/app/modules/profiles/controllers/artist_bottom_navigation_controller.dart';
 import 'package:bartoo/app/modules/appointments/widgets/artist_appointments_screen.dart';
-import 'package:bartoo/app/modules/profiles/views/artist_profile_edition_view.dart';
+import 'package:bartoo/app/modules/profiles/views/profile_edition_view.dart';
 import 'package:bartoo/app/modules/profiles/widgets/artist_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,7 +18,7 @@ class ArtistNavigationStack extends StatelessWidget {
           children: [
             ArtistHomeScreen(),
             ArtistAppointmentsScreen(),
-            ArtistProfileEditionView(),
+            // ArtistProfileEditionView(),
           ],
         ),
       ),

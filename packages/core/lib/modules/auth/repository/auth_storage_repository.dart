@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:core/modules/auth/classes/auth_state.dart';
+import 'package:core/modules/auth/classes/selected_scope.dart';
 import 'package:utils/storage_manager.dart';
-import 'package:core/data/models/artists/artist_model.dart';
-import 'package:core/data/models/user/user_model.dart';
+import 'package:core/data/models/user_model.dart';
 
 class AuthStorageRepository with StorageManager {
   AuthStorageRepository();
@@ -27,48 +27,49 @@ class AuthStorageRepository with StorageManager {
     return token;
   }
 
-  ///Stores or removes selected artist data from storage
-  Future<void> setSelectedArtist(ArtistModel? artist) {
+  ///Stores or removes selected scope data from storage
+  Future<void> setSelectedScope(SelectedScope? scope) {
     return setValue(
-      SELECTED_ARTIST,
-      artist != null ? json.encode(artist.toJson()) : null,
+      SELECTED_SCOPE,
+      scope != null ? json.encode(scope.toJson()) : null,
     );
   }
 
-  Future<ArtistModel?> getSelectedArtist() async {
-    String? storedArtist = await getValue(SELECTED_ARTIST);
+  Future<SelectedScope?> getSelectedScope() async {
+    String? storedScope = await getValue(SELECTED_SCOPE);
 
-    return storedArtist != null
-        ? ArtistModel.fromJson(json.decode(storedArtist))
-        : null;
+    if (storedScope == null) return null;
+
+    final jsonData = json.decode(storedScope);
+    return SelectedScope.fromJson(jsonData);
   }
 
   /// Retrieves the authentication state.
   ///
   /// This method retrieves the current authentication state by fetching the user,
-  /// token, and selected artist from the storage. It returns an [AuthState] object
+  /// token, and selected scope from the storage. It returns an [AuthState] object
   /// containing the retrieved values.
   ///
   /// Returns:
-  /// - [AuthState]: The authentication state containing the user, token, and selected artist.
+  /// - [AuthState]: The authentication state containing the user, token, and selected scope.
   Future<AuthState> getAuthState() async {
     UserModel? user = await getAuthUser();
     String? token = await getAuthToken();
-    ArtistModel? artist = await getSelectedArtist();
+    SelectedScope? scope = await getSelectedScope();
 
-    return AuthState(token: token, user: user, selectedArtist: artist);
+    return AuthState(token: token, user: user, selectedScope: scope);
   }
 
   /// Sets the authentication state.
   ///
   /// This method sets the authentication state by storing the user, token, and selected
-  /// artist in the storage.
+  /// scope in the storage.
   ///
   /// Parameters:
   /// - [state]: The authentication state to be set.
   void setAuthState(AuthState state) {
     setAuthUser(state.user);
     setAuthToken(state.token);
-    setSelectedArtist(state.selectedArtist);
+    setSelectedScope(state.selectedScope);
   }
 }

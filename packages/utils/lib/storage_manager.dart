@@ -5,7 +5,7 @@ mixin StorageManager {
   String AUTH_LOADING = "AUTH_LOADING";
   String AUTH_USER = "AUTH_USER";
   String AUTH_TOKEN = "AUTH_TOKEN";
-  String SELECTED_ARTIST = "SELECTED_ARTIST";
+  String SELECTED_SCOPE = "SELECTED_SCOPE";
   String USER_COORDS = "USER_COORDS";
 
   /// Stores value in storage

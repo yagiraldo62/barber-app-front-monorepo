@@ -1,6 +1,6 @@
 import 'package:base/providers/base_provider.dart';
 import 'package:utils/log.dart';
-import 'package:core/data/models/user/user_model.dart';
+import 'package:core/data/models/user_model.dart';
 
 class AuthProvider extends BaseProvider {
   Future<UserModel?> getAuthInfo() async {
@@ -15,9 +15,13 @@ class AuthProvider extends BaseProvider {
     return null;
   }
 
-  Future<bool> updateFirstLogin(bool isFirstLogin) async {
+  Future<bool> updateFirstLogin({
+    bool isFirstLogin = false,
+    bool isOrganizationMember = false,
+  }) async {
     final response = await post('/auth/first-login', {
       'is_first_login': isFirstLogin,
+      'is_organization_member': isOrganizationMember,
     });
 
     if (response.body?["ok"] == true) {

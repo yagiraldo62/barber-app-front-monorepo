@@ -1,8 +1,8 @@
-import 'package:core/data/models/appointment/appointment_client_info_model.dart';
-import 'package:core/data/models/appointment/appointment_datetime_model.dart';
-import 'package:core/data/models/artists/artist_model.dart';
-import 'package:core/data/models/category/category_service_model.dart';
-import 'package:core/data/models/user/user_model.dart';
+import 'package:core/data/models/appointment_client_info_model.dart';
+import 'package:core/data/models/appointment_datetime_model.dart';
+import 'package:core/data/models/artist_model.dart';
+import 'package:core/data/models/category_service_model.dart';
+import 'package:core/data/models/user_model.dart';
 
 class AppointmentState {
   static const String pending = 'pending';

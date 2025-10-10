@@ -1,7 +1,7 @@
 import 'package:core/modules/category/providers/category_provider.dart';
 import 'package:utils/log.dart';
 import 'package:utils/snackbars.dart';
-import 'package:core/data/models/category/category_model.dart';
+import 'package:core/data/models/category_model.dart';
 import 'package:get/get.dart';
 
 class CategoryRepository {

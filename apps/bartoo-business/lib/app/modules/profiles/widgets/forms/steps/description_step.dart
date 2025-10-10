@@ -1,25 +1,28 @@
-import 'package:bartoo/app/modules/profiles/controllers/forms/artist_form_controller.dart';
+import 'package:bartoo/app/modules/profiles/controllers/forms/profile_form_controller.dart';
+import 'package:core/data/models/profile_model.dart';
 import 'package:flutter/material.dart';
 import 'package:ui/widgets/input/text_field.dart';
 import 'package:ui/widgets/form/animated_form_step.dart';
 
 class DescriptionStep extends StatelessWidget {
-  final ArtistFormController controller;
+  final ProfileFormController controller;
 
   const DescriptionStep({super.key, required this.controller});
 
   String get _titleText =>
-      controller.isArtist.value
+      controller.profileType.value == ProfileType.artist
           ? 'Cuéntanos más sobre tus habilidades'
           : 'Cuéntanos más sobre tu negocio';
 
   String get _descriptionText =>
-      controller.isArtist.value
+      controller.profileType.value == ProfileType.artist
           ? 'Cual es tu especialidad.'
           : 'Cual es la especialidad de tu negocio.';
 
   String get _labelText =>
-      controller.isArtist.value ? "Sobre ti" : 'Sobre tu negocio';
+      controller.profileType.value == ProfileType.artist
+          ? "Sobre ti"
+          : 'Sobre tu negocio';
 
   @override
   Widget build(BuildContext context) {

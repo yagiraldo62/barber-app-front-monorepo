@@ -1,4 +1,4 @@
-import 'package:core/data/models/appointment/appointment_model.dart';
+import 'package:core/data/models/appointment_model.dart';
 import 'package:moment_dart/moment_dart.dart';
 
 Map<Moment, List<AppointmentModel>> sortAppointmentsMap(

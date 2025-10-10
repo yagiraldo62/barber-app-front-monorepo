@@ -1,4 +1,4 @@
-import 'package:core/data/models/user/user_model.dart';
+import 'package:core/data/models/user_model.dart';
 import 'package:core/modules/auth/interfaces/auth_callbacks.dart';
 import 'package:core/modules/auth/repository/auth_repository.dart';
 import 'package:utils/is_valid_jwt.dart';
@@ -29,7 +29,7 @@ abstract class BaseAuthActionsController extends GetxController {
   }
 
   /// Validates the user's authentication status
-  Future<UserModel?> validateAuth() async {
+  Future<UserModel?> getAuthUser() async {
     UserModel? user;
     String? token = await authRepository.getAuthToken();
 
@@ -42,7 +42,7 @@ abstract class BaseAuthActionsController extends GetxController {
   }
 
   void validateAuthForFirstRedirection() async {
-    UserModel? user = await validateAuth();
+    UserModel? user = await getAuthUser();
     authCallbacks.onLoginRedirection(user);
   }
 

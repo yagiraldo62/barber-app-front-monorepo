@@ -1,48 +1,81 @@
 import 'package:core/modules/auth/controllers/auth_controller.dart';
-import 'package:core/data/models/user/user_model.dart';
-import 'package:core/data/models/artists/artist_model.dart';
+import 'package:core/data/models/user_model.dart';
+import 'package:core/modules/auth/classes/selected_scope.dart';
 import 'package:get/get.dart';
 
 /// Business app specific auth controller implementation
 class BusinessAuthController extends BaseAuthController {
   // Business-specific properties
-  Rx<ArtistModel?> selectedArtist = Rx<ArtistModel?>(null);
+  Rx<SelectedScope?> selectedScope = Rx<SelectedScope?>(null);
 
-  @override
-  void onUserSet(UserModel? user) {
-    super.onUserSet(user);
-    // Business-specific logic when user is set
-    setSelectedArtistFromUser(user);
-  }
-
-  void setSelectedArtistFromUser(UserModel? user) {
-    if (user?.artists != null &&
-        user!.artists!.isNotEmpty &&
-        selectedArtist.value == null) {
-      setSelectedArtist(user.artists!.first);
+  Future<SelectedScope?> setAuthDefaultScope({
+    UserModel? user,
+    SelectedScope? preferredScope,
+  }) async {
+    if (user == null) {
+      if (this.user.value != null) {
+        user = this.user.value!;
+      } else {
+        setSelectedScope(null);
+        return null;
+      }
     }
+
+    var storedPreferredScope = await authRepository.getSelectedScope();
+    SelectedScope? scope;
+
+    if (storedPreferredScope != null && preferredScope == null) {
+      preferredScope = storedPreferredScope;
+    }
+
+    // If preferred scope is provided and valid, use it
+    if (preferredScope != null) {
+      if (preferredScope is ProfileScope && user.profiles != null) {
+        var preferredProfile = user.profiles!.firstWhereOrNull(
+          (p) => p.id == (preferredScope as ProfileScope).profile.id,
+        );
+        if (preferredProfile != null) scope = ProfileScope(preferredProfile);
+      } else if (preferredScope is LocationMemberScope &&
+          user.locationsWorked != null) {
+        var preferredLocation = user.locationsWorked!.firstWhereOrNull(
+          (l) =>
+              l.id == (preferredScope as LocationMemberScope).locationMember.id,
+        );
+        if (preferredLocation != null) {
+          scope = LocationMemberScope(preferredLocation);
+        }
+      }
+    }
+
+    // Fallback logic: choose first available scope
+    // If user has profiles, use the first one
+    // If not, check locations worked
+    if (user.profiles != null && user.profiles!.isNotEmpty) {
+      scope = ProfileScope(user.profiles!.first);
+    } else if (user.locationsWorked != null &&
+        user.locationsWorked!.isNotEmpty) {
+      scope = LocationMemberScope(user.locationsWorked!.first);
+    }
+
+    setSelectedScope(scope);
+
+    return scope;
   }
 
-  void setSelectedArtist(ArtistModel? newArtist) {
-    selectedArtist.value = newArtist;
-    onSelectedArtistSet(newArtist);
+  void setSelectedScope(SelectedScope? newScope) {
+    selectedScope.value = newScope;
+    onSelectedScopeSet(newScope);
   }
 
-  /// Called when selected artist is set - business-specific logic
-  void onSelectedArtistSet(ArtistModel? artist) {
-    // Business-specific logic when artist is selected
-    // For example: load artist-specific data, update permissions, etc.
-  }
-
-  bool hasSelectedArtistLocations() {
-    return selectedArtist.value?.locations != null &&
-        selectedArtist.value!.locations!.isNotEmpty;
+  /// Called when selected scope is set - business-specific logic
+  void onSelectedScopeSet(SelectedScope? scope) {
+    authRepository.setSelectedScope(scope);
   }
 
   @override
   void onSignout() {
     super.onSignout();
     // Business-specific cleanup when user signs out
-    selectedArtist.value = null;
+    selectedScope.value = null;
   }
 }

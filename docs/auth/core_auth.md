@@ -19,7 +19,7 @@ The `AuthCallbacks` interface defines the contract that each app must implement.
 - `onLogout()`: Handles app-specific logout cleanup.
 - `onSetUserLocation(UserModel user)`: Sets the user's location.
 - `onFirstLoginCompleted(UserModel user)`: Handles first-time login completion.
-- `onAuthValidation(UserModel? user, ArtistModel? selectedArtist)`: Validates the authentication state.
+- `onAuthValidation(UserModel? user, ArtistModel? selectedScope)`: Validates the authentication state.
 
 ### 2. BaseAuthActionsController
 
@@ -40,7 +40,7 @@ This abstract class provides shared functionality for authentication guards. App
 The `AuthState` class manages the authentication state, including:
 - `token`: The authentication token.
 - `user`: The current user model.
-- `selectedArtist`: The currently selected artist (for business apps).
+- `selectedScope`: The currently selected artist (for business apps).
 
 ## Authentication Flow
 

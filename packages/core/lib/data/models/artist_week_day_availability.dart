@@ -1,4 +1,4 @@
-import 'package:core/data/models/availability/time_of_day.dart';
+import 'package:core/data/models/time_of_day.dart';
 
 class ArtistWeekDayAvailabilityModel {
   int day;

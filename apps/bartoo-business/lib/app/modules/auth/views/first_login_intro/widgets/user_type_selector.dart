@@ -3,6 +3,20 @@ import 'package:flutter/material.dart' hide Typography;
 import 'package:get/get.dart';
 import 'package:ui/widgets/typography/typography.dart';
 
+class UserTypeConfig {
+  final UserType type;
+  final String title;
+  final String description;
+  final List<String>? features;
+
+  const UserTypeConfig({
+    required this.type,
+    required this.title,
+    required this.description,
+    this.features,
+  });
+}
+
 class UserTypeSelector extends StatelessWidget {
   final Function(UserType) onTypeSelected;
   final Rx<UserType?> selectedType;
@@ -13,176 +27,97 @@ class UserTypeSelector extends StatelessWidget {
     required this.selectedType,
   });
 
+  static const List<UserTypeConfig> userTypes = [
+    UserTypeConfig(
+      type: UserType.artist,
+      title: 'Soy Artista',
+      description: 'Profesional independiente o afiliado a un negocio',
+    ),
+    UserTypeConfig(
+      type: UserType.organization,
+      title: 'Administro una Organización',
+      description: 'Negocio de estética, belleza o bienestar',
+      features: [
+        'Liquidador',
+        'Visualización en el mapa',
+        'Los clientes se quedan contigo aun si se van los artistas',
+        'Puedes tener el rol de artista administrador',
+      ],
+    ),
+    UserTypeConfig(
+      type: UserType.member,
+      title: 'Soy Colaborador',
+      description: 'Administra una organización como colaborador',
+    ),
+    UserTypeConfig(
+      type: UserType.client,
+      title: 'Soy Cliente',
+      description: 'Busco servicios de estética, belleza y bienestar',
+      features: ['Reserva citas online', 'Encuentra profesionales cerca de ti'],
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Artist Option
-        Obx(
-          () => InkWell(
-            onTap: () => onTypeSelected(UserType.artist),
-            child: Card(
-              elevation: selectedType.value == UserType.artist ? 8 : 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-                side: BorderSide(
-                  color:
-                      selectedType.value == UserType.artist
-                          ? Theme.of(context).colorScheme.primary
-                          : Colors.transparent,
-                  width: selectedType.value == UserType.artist ? 2 : 1,
+      children:
+          userTypes.map((config) {
+            return Column(
+              children: [
+                Obx(
+                  () => InkWell(
+                    onTap: () => onTypeSelected(config.type),
+                    child: Card(
+                      elevation: selectedType.value == config.type ? 8 : 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        side: BorderSide(
+                          color:
+                              selectedType.value == config.type
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Colors.transparent,
+                          width: selectedType.value == config.type ? 2 : 1,
+                        ),
+                      ),
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Typography(
+                              config.title,
+                              variation: TypographyVariation.displayMedium,
+                            ),
+                            const SizedBox(height: 8),
+                            Typography(
+                              config.description,
+                              variation: TypographyVariation.bodySmall,
+                              color: Theme.of(context).colorScheme.onSurface
+                                  .withAlpha((0.6 * 255).round()),
+                            ),
+                            if (config.features != null) ...[
+                              const SizedBox(height: 8),
+                              ...config.features!.map(
+                                (feature) => Typography(
+                                  '• $feature',
+                                  variation: TypographyVariation.bodySmall,
+                                  color: Theme.of(context).colorScheme.onSurface
+                                      .withAlpha((0.6 * 255).round()),
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Typography(
-                      'Soy Artista',
-                      variation: TypographyVariation.displayMedium,
-                    ),
-                    const SizedBox(height: 8),
-                    Typography(
-                      'Profesional independiente o afiliado a un negocio',
-                      variation: TypographyVariation.bodySmall,
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withAlpha((0.6 * 255).round()),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 16), // Organization Manager Option
-        Obx(
-          () => InkWell(
-            onTap: () => onTypeSelected(UserType.organization),
-            child: Card(
-              elevation: selectedType.value == UserType.organization ? 8 : 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-                side: BorderSide(
-                  color:
-                      selectedType.value == UserType.organization
-                          ? Theme.of(context).colorScheme.primary
-                          : Colors.transparent,
-                  width: selectedType.value == UserType.organization ? 2 : 1,
-                ),
-              ),
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Typography(
-                      'Administro una Organización',
-                      variation: TypographyVariation.displayMedium,
-                    ),
-                    const SizedBox(height: 8),
-                    Typography(
-                      'Negocio de estética, belleza o bienestar',
-                      variation: TypographyVariation.bodySmall,
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withAlpha((0.6 * 255).round()),
-                    ),
-                    const SizedBox(height: 8),
-                    Typography(
-                      '• Liquidador',
-                      variation: TypographyVariation.bodySmall,
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withAlpha((0.6 * 255).round()),
-                    ),
-                    Typography(
-                      '• Visualización en el mapa',
-                      variation: TypographyVariation.bodySmall,
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withAlpha((0.6 * 255).round()),
-                    ),
-                    Typography(
-                      '• Los clientes se quedan contigo aun si se van los artistas',
-                      variation: TypographyVariation.bodySmall,
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withAlpha((0.6 * 255).round()),
-                    ),
-                    Typography(
-                      '• Puedes tener el rol de artista administrador',
-                      variation: TypographyVariation.bodySmall,
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withAlpha((0.6 * 255).round()),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 16), // Client Option
-        Obx(
-          () => InkWell(
-            onTap: () => onTypeSelected(UserType.client),
-            child: Card(
-              elevation: selectedType.value == UserType.client ? 8 : 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-                side: BorderSide(
-                  color:
-                      selectedType.value == UserType.client
-                          ? Theme.of(context).colorScheme.primary
-                          : Colors.transparent,
-                  width: selectedType.value == UserType.client ? 2 : 1,
-                ),
-              ),
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Typography(
-                      'Soy Cliente',
-                      variation: TypographyVariation.displayMedium,
-                    ),
-                    const SizedBox(height: 8),
-                    Typography(
-                      'Busco servicios de estética, belleza y bienestar',
-                      variation: TypographyVariation.bodySmall,
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withAlpha((0.6 * 255).round()),
-                    ),
-                    const SizedBox(height: 8),
-                    Typography(
-                      '• Reserva citas online',
-                      variation: TypographyVariation.bodySmall,
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withAlpha((0.6 * 255).round()),
-                    ),
-                    Typography(
-                      '• Encuentra profesionales cerca de ti',
-                      variation: TypographyVariation.bodySmall,
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withAlpha((0.6 * 255).round()),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
+                if (config != userTypes.last) const SizedBox(height: 16),
+              ],
+            );
+          }).toList(),
     );
   }
 }
