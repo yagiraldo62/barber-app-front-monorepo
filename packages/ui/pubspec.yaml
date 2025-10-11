@@ -28,6 +28,7 @@ dependencies:
     path: ../../packages/utils
   core:
     path: ../../packages/core
+  easy_stepper: ^0.8.5+1
 
 dev_dependencies:
   flutter_test:
