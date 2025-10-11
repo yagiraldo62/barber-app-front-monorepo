@@ -1,4 +1,4 @@
-import 'package:core/modules/auth/controllers/auth_intro_controller.dart';
+import 'package:core/modules/auth/controllers/base_auth_intro_controller.dart';
 import 'package:flutter/material.dart' hide Typography;
 import 'package:get/get.dart';
 import 'package:ui/widgets/typography/typography.dart';

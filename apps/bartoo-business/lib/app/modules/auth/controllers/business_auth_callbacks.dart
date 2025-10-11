@@ -34,6 +34,14 @@ class BusinessAuthCallbacks implements AuthCallbacks {
   void onLoginRedirection(UserModel? user) {
     Log('Business app: onLoginRedirection - ${user?.toJson()}');
 
+    // Always enforce phone verification first if user exists
+    if (user != null && user.isPhoneVerified != true) {
+      Get.offAndToNamed(
+        dotenv.env['VERIFY_PHONE_ROUTE'] ?? Routes.VERIFY_PHONE,
+      );
+      return;
+    }
+
     // apply redirection logic based on user state
     // If user is not authenticated, redirect to login
     if (authController.user.value == null) {
@@ -72,7 +80,7 @@ class BusinessAuthCallbacks implements AuthCallbacks {
   @override
   Future<void> onAuthValidation(
     UserModel? user,
-    SelectedScope? selectedScope,
+    BussinessScope? selectedScope,
   ) async {
     onLoginRedirection(user);
 

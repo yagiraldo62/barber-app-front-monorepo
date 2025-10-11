@@ -17,6 +17,8 @@ import '../modules/locations/bindings/create_location_binding.dart';
 import '../modules/locations/views/create_location_view.dart';
 import '../modules/services/bindings/update_services_binding.dart';
 import '../modules/services/views/update_services_view.dart';
+import '../modules/auth/bindings/phone_verification_binding.dart';
+import 'package:ui/widgets/auth/phone_verification_view.dart';
 
 part 'app_routes.dart';
 
@@ -32,6 +34,11 @@ class AppPages {
     GetPage(name: _Paths.AUTH_TOKEN, page: () => const AuthTokenView()),
     // GetPage(name: _Paths.AUTH, page: () => const AuthView()),
     GetPage(name: _Paths.INTRO, page: () => FirstLoginIntroView()),
+    GetPage(
+      name: _Paths.VERIFY_PHONE,
+      page: () => PhoneVerificationView(),
+      binding: PhoneVerificationBinding(),
+    ),
     // APP PAGES
     GetPage(
       name: _Paths.HOME,

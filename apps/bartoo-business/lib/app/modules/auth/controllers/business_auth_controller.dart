@@ -6,11 +6,11 @@ import 'package:get/get.dart';
 /// Business app specific auth controller implementation
 class BusinessAuthController extends BaseAuthController {
   // Business-specific properties
-  Rx<SelectedScope?> selectedScope = Rx<SelectedScope?>(null);
+  Rx<BussinessScope?> selectedScope = Rx<BussinessScope?>(null);
 
-  Future<SelectedScope?> setAuthDefaultScope({
+  Future<BussinessScope?> setAuthDefaultScope({
     UserModel? user,
-    SelectedScope? preferredScope,
+    BussinessScope? preferredScope,
   }) async {
     if (user == null) {
       if (this.user.value != null) {
@@ -22,7 +22,7 @@ class BusinessAuthController extends BaseAuthController {
     }
 
     var storedPreferredScope = await authRepository.getSelectedScope();
-    SelectedScope? scope;
+    BussinessScope? scope;
 
     if (storedPreferredScope != null && preferredScope == null) {
       preferredScope = storedPreferredScope;
@@ -62,13 +62,13 @@ class BusinessAuthController extends BaseAuthController {
     return scope;
   }
 
-  void setSelectedScope(SelectedScope? newScope) {
+  void setSelectedScope(BussinessScope? newScope) {
     selectedScope.value = newScope;
     onSelectedScopeSet(newScope);
   }
 
   /// Called when selected scope is set - business-specific logic
-  void onSelectedScopeSet(SelectedScope? scope) {
+  void onSelectedScopeSet(BussinessScope? scope) {
     authRepository.setSelectedScope(scope);
   }
 

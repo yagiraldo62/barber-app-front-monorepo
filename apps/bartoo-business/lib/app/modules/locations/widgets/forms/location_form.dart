@@ -11,14 +11,12 @@ import 'package:ui/widgets/form/stepper_form_fields.dart';
 class LocationForm extends StatelessWidget {
   final ArtistLocationModel? currentLocation;
   final bool isCreation;
-  final bool showForm;
   final ScrollController? scrollController;
 
   const LocationForm({
     super.key,
     this.currentLocation,
     this.isCreation = true,
-    this.showForm = true,
     this.scrollController,
   });
 
@@ -78,7 +76,6 @@ class LocationForm extends StatelessWidget {
             steps: steps,
             isFinalStep: (step) => step.value == LocationFormStep.location,
             scrollController: scrollController,
-            showFormCondition: () => showForm,
             showButtonCondition: () => controller.animationsComplete.value,
             buttonLabelBuilder: (step) {
               return step.value == LocationFormStep.location

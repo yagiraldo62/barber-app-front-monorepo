@@ -42,11 +42,13 @@ class CreateLocationView extends StatelessWidget {
                 ],
               ),
               Obx(
-                () => LocationForm(
-                  isCreation: true,
-                  scrollController: scrollController,
-                  showForm: showForm.value,
-                ),
+                () =>
+                    showForm.value
+                        ? LocationForm(
+                          isCreation: true,
+                          scrollController: scrollController,
+                        )
+                        : const SizedBox.shrink(),
               ),
             ],
           ),

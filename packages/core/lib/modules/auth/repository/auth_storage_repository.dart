@@ -28,20 +28,20 @@ class AuthStorageRepository with StorageManager {
   }
 
   ///Stores or removes selected scope data from storage
-  Future<void> setSelectedScope(SelectedScope? scope) {
+  Future<void> setSelectedScope(BussinessScope? scope) {
     return setValue(
       SELECTED_SCOPE,
       scope != null ? json.encode(scope.toJson()) : null,
     );
   }
 
-  Future<SelectedScope?> getSelectedScope() async {
+  Future<BussinessScope?> getSelectedScope() async {
     String? storedScope = await getValue(SELECTED_SCOPE);
 
     if (storedScope == null) return null;
 
     final jsonData = json.decode(storedScope);
-    return SelectedScope.fromJson(jsonData);
+    return BussinessScope.fromJson(jsonData);
   }
 
   /// Retrieves the authentication state.
@@ -55,7 +55,7 @@ class AuthStorageRepository with StorageManager {
   Future<AuthState> getAuthState() async {
     UserModel? user = await getAuthUser();
     String? token = await getAuthToken();
-    SelectedScope? scope = await getSelectedScope();
+    BussinessScope? scope = await getSelectedScope();
 
     return AuthState(token: token, user: user, selectedScope: scope);
   }

@@ -23,5 +23,5 @@ abstract class AuthCallbacks {
   /// Called to validate authentication state for guards
   /// [user] - The current user (can be null)
   /// [selectedScope] - The current selected scope (can be null)
-  Future<void> onAuthValidation(UserModel? user, SelectedScope? selectedScope);
+  Future<void> onAuthValidation(UserModel? user, BussinessScope? selectedScope);
 }

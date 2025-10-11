@@ -21,12 +21,12 @@ class ArtistHomeView extends StatelessWidget {
               padding: const EdgeInsets.only(top: 2),
               child: Column(
                 children: [
-                  Obx(
-                    () =>
-                        authController.user.value != null
-                            ? ArtistNavigationStack()
-                            : const SizedBox(),
-                  ),
+                  // Obx(
+                  //   () =>
+                  //       authController.user.value != null
+                  //           ? ArtistNavigationStack()
+                  //           : const SizedBox(),
+                  // ),
                   const SizedBox(height: 20),
                 ],
               ),

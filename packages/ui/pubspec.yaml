@@ -21,6 +21,8 @@ dependencies:
   flutter_dotenv: ^5.1.0
   flutter_map: ^8.1.1
   latlong2: ^0.9.1
+  intl_phone_number_input: ^0.7.4
+  otp_input_editor: ^0.0.9
 
   utils:
     path: ../../packages/utils

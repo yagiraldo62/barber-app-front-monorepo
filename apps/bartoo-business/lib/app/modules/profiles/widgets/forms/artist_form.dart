@@ -13,14 +13,12 @@ class ProfileForm extends StatelessWidget {
   final ProfileModel? currentProfile;
   final bool isCreation;
   final ScrollController? scrollController;
-  final bool showForm;
 
   const ProfileForm({
     super.key,
     this.currentProfile,
     this.isCreation = false,
     this.scrollController,
-    this.showForm = false,
   });
 
   @override
@@ -76,7 +74,7 @@ class ProfileForm extends StatelessWidget {
               controller: controller,
               steps: steps,
               scrollController: scrollController,
-              showFormCondition: () => showForm,
+              // showFormCondition: () => showForm,
               showButtonCondition: () => controller.animationsComplete.value,
               isFinalStep: (step) => step == ProfileFormStep.photo,
               buttonLabelBuilder: (step) {

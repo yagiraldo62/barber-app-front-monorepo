@@ -3,12 +3,12 @@ import 'package:core/data/models/location_member_model.dart';
 
 /// Represents the selected scope for a user session.
 /// Can be either a ProfileModel or a LocationMemberModel.
-sealed class SelectedScope {
-  const SelectedScope();
+sealed class BussinessScope {
+  const BussinessScope();
 
   Map<String, dynamic> toJson();
 
-  factory SelectedScope.fromJson(Map<String, dynamic> json) {
+  factory BussinessScope.fromJson(Map<String, dynamic> json) {
     final type = json['type'] as String?;
     final data = json['data'] as Map<String, dynamic>;
 
@@ -30,7 +30,7 @@ sealed class SelectedScope {
 }
 
 /// Scope representing a ProfileModel (artist or organization profile)
-class ProfileScope extends SelectedScope {
+class ProfileScope extends BussinessScope {
   final ProfileModel profile;
 
   const ProfileScope(this.profile);
@@ -43,7 +43,7 @@ class ProfileScope extends SelectedScope {
 }
 
 /// Scope representing a LocationMemberModel (member of an organization location)
-class LocationMemberScope extends SelectedScope {
+class LocationMemberScope extends BussinessScope {
   final LocationMemberModel locationMember;
 
   const LocationMemberScope(this.locationMember);

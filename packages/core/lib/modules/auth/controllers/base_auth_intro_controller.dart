@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 
 enum UserType { artist, organization, member, client }
 
-class AuthIntroController extends GetxController {
+class BaseAuthIntroController extends GetxController {
   Rx<UserModel?> user = Get.find<BaseAuthController>().user;
   Rx<bool> validating = false.obs;
 
@@ -32,16 +32,13 @@ class AuthIntroController extends GetxController {
 
   Future<void> onSelectUserType() async {
     user.value?.isFirstLogin = false;
-    user.value?.isOrganizationMember =
-        selectedUserType.value == UserType.member;
 
     await authRepository.setAuthUser(user.value);
 
-    if (selectedUserType.value == UserType.client ||
-        selectedUserType.value == UserType.member) {
-      // Direct to home for clients and members
-      // Update first login status and organization member flag
-      await updateFirstLogin(selectedUserType.value == UserType.member);
+    if (selectedUserType.value == UserType.client) {
+      // Direct to home for clients
+      // Update first login status
+      await updateFirstLogin();
       Get.offAllNamed(dotenv.env['HOME_ROUTE'] ?? '/home');
     } else if (selectedUserType.value == UserType.artist) {
       Get.offAllNamed(

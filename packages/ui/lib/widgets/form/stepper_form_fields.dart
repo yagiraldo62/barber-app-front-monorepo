@@ -49,7 +49,7 @@ class StepperFormFields<T> extends StatelessWidget {
   final Duration animationDuration;
 
   /// Optional condition to determine if the form should be shown
-  final bool Function()? showFormCondition;
+  // final bool Function()? showFormCondition;
 
   /// Optional condition to determine if the button should be visible
   final bool Function()? showButtonCondition;
@@ -80,7 +80,7 @@ class StepperFormFields<T> extends StatelessWidget {
     this.buttonLabelBuilder,
     this.buttonIconBuilder,
     this.animationDuration = const Duration(milliseconds: 200),
-    this.showFormCondition,
+    // this.showFormCondition,
     this.showButtonCondition,
     this.defaultContinueLabel = 'Continuar',
     this.defaultFinalLabel = 'Finalizar',
@@ -123,10 +123,10 @@ class StepperFormFields<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Check if the form should be shown
-    if (showFormCondition != null && !showFormCondition!()) {
-      return const SizedBox.shrink();
-    }
+    // // Check if the form should be shown
+    // if (showFormCondition != null && !showFormCondition!()) {
+    //   return const SizedBox.shrink();
+    // }
 
     return Obx(() {
       _scrollToBottom();
@@ -161,10 +161,7 @@ class StepperFormFields<T> extends StatelessWidget {
         children: [
           ...visibleSteps,
           AnimatedOpacity(
-            opacity:
-                (showButtonCondition != null && !showButtonCondition!())
-                    ? 0.0
-                    : 1.0,
+            opacity: 1.0,
             duration: animationDuration,
             curve: Curves.easeInOut,
             child: Align(

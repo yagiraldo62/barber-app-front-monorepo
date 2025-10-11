@@ -1,4 +1,5 @@
 import 'package:bartoo/app/modules/auth/controllers/business_auth_controller.dart';
+import 'package:bartoo/app/routes/app_pages.dart';
 import 'package:core/data/models/profile_model.dart';
 import 'package:core/data/models/category_model.dart';
 import 'package:core/modules/auth/classes/selected_scope.dart';
@@ -169,8 +170,9 @@ class ProfileFormController extends GetxController
 
   Future<void> onSaved(ProfileModel profile) async {
     if (authController.user.value!.isFirstLogin) {
-      await authRepository.updateFirstLogin(false);
+      await authRepository.updateFirstLogin(false, true);
       authController.user.value!.isFirstLogin = false;
+      authController.user.value!.isOrganizationMember = true;
     }
 
     await authController.refreshUser();
@@ -178,7 +180,7 @@ class ProfileFormController extends GetxController
       preferredScope: ProfileScope(profile),
     );
 
-    Get.offAndToNamed(dotenv.env['HOME_ROUTE'] ?? '/home');
+    Get.offAndToNamed(Routes.ARTIST_HOME);
   }
 
   void setType(ProfileType profileTypeType) {

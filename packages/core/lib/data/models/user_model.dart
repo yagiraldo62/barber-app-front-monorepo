@@ -103,6 +103,7 @@ class UserModel {
       'is_first_login': isFirstLogin,
       'is_organization_member': isOrganizationMember,
     },
+    'phone_number_verified_at': phoneNumberVerifiedAt?.toIso8601String(),
     'created_at': createdAt?.toIso8601String(),
     'updated_at': updatedAt?.toIso8601String(),
     'deleted_at': deletedAt?.toIso8601String(),
@@ -128,6 +129,9 @@ class UserModel {
     },
     'created_at': createdAt?.toIso8601String(),
   };
+
+  /// Returns true if the user's phone number has been verified
+  bool get isPhoneVerified => phoneNumberVerifiedAt != null;
 
   void upsertProfile(ProfileModel profile) {
     profiles ??= [];

@@ -228,6 +228,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.8"
+  dlibphonenumber:
+    dependency: transitive
+    description:
+      name: dlibphonenumber
+      sha256: c48b5ba336e4e6414d6465b30a7efe64e1130c8a45ddd3cbacfc713b8bbc8aba
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.49"
   dots_indicator:
     dependency: transitive
     description:
@@ -244,6 +252,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+  equatable:
+    dependency: transitive
+    description:
+      name: equatable
+      sha256: "567c64b3cb4cf82397aac55f4f0cbd3ca20d77c6c03bedbc4ceaddc08904aef7"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.7"
   fake_async:
     dependency: transitive
     description:
@@ -683,6 +699,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.20.2"
+  intl_phone_number_input:
+    dependency: transitive
+    description:
+      name: intl_phone_number_input
+      sha256: "9d4d7f174cfc3a85b238e0b465ec0e7232fc0815a779e5a58fbf118dee26dfa0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.5"
   introduction_screen:
     dependency: "direct main"
     description:
@@ -891,6 +915,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.1"
+  otp_input_editor:
+    dependency: transitive
+    description:
+      name: otp_input_editor
+      sha256: "6b0ddbf9507a62a13459a7cab8a7ac065e7bfba570df4ca9f986d3b297f20429"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.9"
   package_config:
     dependency: transitive
     description:
@@ -1011,6 +1043,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  protobuf:
+    dependency: transitive
+    description:
+      name: protobuf
+      sha256: "826d6a306be26f29e5cd9faeb0c97aad5897270341dab6dbd7b8acd675937006"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.0"
   pub_semver:
     dependency: transitive
     description:

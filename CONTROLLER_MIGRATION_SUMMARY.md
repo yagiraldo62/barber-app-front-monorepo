@@ -1,11 +1,11 @@
-# Controller Migration Summary - SelectedScope Implementation
+# Controller Migration Summary - BussinessScope Implementation
 
 ## ✅ Completed Changes
 
 ### Core Package Controllers
 
 #### 1. **AuthCallbacks Interface** (`packages/core/lib/modules/auth/interfaces/auth_callbacks.dart`)
-- ✅ Updated `onAuthValidation` signature from `ArtistModel?` to `SelectedScope?`
+- ✅ Updated `onAuthValidation` signature from `ArtistModel?` to `BussinessScope?`
 - ✅ Updated imports to use `SelectedScope`
 
 #### 2. **BaseGuardController** (`packages/core/lib/modules/auth/controllers/base_guard_controller.dart`)
@@ -18,7 +18,7 @@
 ### Business App Controllers
 
 #### 4. **BusinessAuthController** (`apps/bartoo-business/lib/app/modules/auth/controllers/business_auth_controller.dart`)
-- ✅ Replaced `Rx<ArtistModel?>` with `Rx<SelectedScope?>`
+- ✅ Replaced `Rx<ArtistModel?>` with `Rx<BussinessScope?>`
 - ✅ Renamed `setSelectedArtistFromUser` → `setSelectedScopeFromUser`
 - ✅ Renamed `setSelectedArtist` → `setSelectedScope`
 - ✅ Renamed `onSelectedArtistSet` → `onSelectedScopeSet`
@@ -31,13 +31,13 @@
 
 #### 6. **BusinessAuthCallbacks** (`apps/bartoo-business/lib/app/modules/auth/controllers/business_auth_callbacks.dart`)
 - ✅ Updated `onLogin` to create appropriate scope based on user data
-- ✅ Updated `onAuthValidation` signature to use `SelectedScope?`
+- ✅ Updated `onAuthValidation` signature to use `BussinessScope?`
 - ✅ Updated to call `setSelectedScope` instead of `setSelectedProfile`
 - ✅ Updated imports to use correct paths
 
 ## 🎯 Key Implementation Details
 
-### SelectedScope Logic in BusinessAuthController
+### BussinessScope Logic in BusinessAuthController
 
 The `setSelectedScopeFromUser` method now follows this priority:
 

@@ -1,4 +1,4 @@
-# SelectedScope Migration Summary
+# BussinessScope Migration Summary
 
 ## Changes Applied
 
@@ -20,8 +20,8 @@ This sealed class allows a single scope that can be either:
 
 **Changes**:
 - Replaced `ArtistModel` import with `SelectedScope` import
-- Updated `setSelectedScope()` to accept `SelectedScope?` instead of `ArtistModel?`
-- Renamed `getSelectedArtist()` to `getSelectedScope()` returning `SelectedScope?`
+- Updated `setSelectedScope()` to accept `BussinessScope?` instead of `ArtistModel?`
+- Renamed `getSelectedArtist()` to `getSelectedScope()` returning `BussinessScope?`
 - Updated `getAuthState()` to use `SelectedScope`
 - Updated `setAuthState()` to use `SelectedScope`
 
@@ -57,7 +57,7 @@ final scope = LocationMemberScope(member);
 ### Pattern Matching (Recommended)
 
 ```dart
-void handleScope(SelectedScope scope) {
+void handleScope(BussinessScope scope) {
   switch (scope) {
     case ProfileScope(:final profile):
       print('Profile: ${profile.name}');
@@ -108,7 +108,7 @@ if (artist != null) {
 
 With:
 ```dart
-SelectedScope? scope = await authRepo.getSelectedScope();
+BussinessScope? scope = await authRepo.getSelectedScope();
 if (scope case ProfileScope(:final profile)) {
   print(profile.name);
 }

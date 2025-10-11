@@ -1,4 +1,4 @@
-// This file demonstrates how to use the SelectedScope sealed class
+// This file demonstrates how to use the BussinessScope sealed class
 // DO NOT IMPORT THIS FILE IN PRODUCTION CODE - IT'S JUST AN EXAMPLE
 
 import 'package:core/modules/auth/classes/selected_scope.dart';
@@ -26,7 +26,7 @@ void exampleCreateScope() {
 
 /// Example: How to use pattern matching with SelectedScope
 
-void examplePatternMatching(SelectedScope? scope) {
+void examplePatternMatching(BussinessScope? scope) {
   if (scope == null) {
     print('No scope selected');
     return;
@@ -58,7 +58,7 @@ void examplePatternMatching(SelectedScope? scope) {
 
 /// Example: Alternative using if-case
 
-void exampleIfCase(SelectedScope? scope) {
+void exampleIfCase(BussinessScope? scope) {
   if (scope case ProfileScope(:final profile)) {
     // Handle ProfileScope
     print('Profile: ${profile.name}');
@@ -70,7 +70,7 @@ void exampleIfCase(SelectedScope? scope) {
 
 /// Example: Getting specific data based on scope type
 
-String getScopeName(SelectedScope scope) {
+String getScopeName(BussinessScope scope) {
   return switch (scope) {
     ProfileScope(:final profile) => profile.name,
     LocationMemberScope(:final locationMember) =>
@@ -80,7 +80,7 @@ String getScopeName(SelectedScope scope) {
 
 /// Example: Checking scope type
 
-bool isOrganizationScope(SelectedScope scope) {
+bool isOrganizationScope(BussinessScope scope) {
   return switch (scope) {
     ProfileScope(:final profile) => profile.type == ProfileType.organization,
     LocationMemberScope() => true, // Always part of an organization
@@ -90,7 +90,7 @@ bool isOrganizationScope(SelectedScope scope) {
 /// Example: In a real-world scenario - Displaying scope info in UI
 
 class ScopeDisplay {
-  final SelectedScope scope;
+  final BussinessScope scope;
 
   ScopeDisplay(this.scope);
 

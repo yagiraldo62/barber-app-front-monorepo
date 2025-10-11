@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProfileProvider extends BaseProvider {
-  final String _baseUrl = '/artists';
+  final String _baseUrl = '/profiles';
 
   Future<ProfileModel?> registerProfile({
     String? name,

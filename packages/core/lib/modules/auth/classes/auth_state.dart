@@ -4,7 +4,7 @@ import 'package:core/data/models/user_model.dart';
 class AuthState {
   final String? token;
   final UserModel? user;
-  final SelectedScope? selectedScope;
+  final BussinessScope? selectedScope;
 
   const AuthState({this.token, this.user, this.selectedScope});
 

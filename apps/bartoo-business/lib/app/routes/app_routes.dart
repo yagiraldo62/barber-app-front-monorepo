@@ -13,6 +13,7 @@ abstract class Routes {
   static const ARTIST_HOME = _Paths.ARTIST_HOME;
   static const CREATE_LOCATION = _Paths.CREATE_LOCATION;
   static const UPDATE_SERVICES = _Paths.UPDATE_SERVICES;
+  static const VERIFY_PHONE = _Paths.VERIFY_PHONE;
 }
 
 abstract class _Paths {
@@ -29,4 +30,5 @@ abstract class _Paths {
 
   static const UPDATE_SERVICES =
       '/artist/:artist_id/locations/:artist_location_id/update-services';
+  static const VERIFY_PHONE = '/verify-phone';
 }
