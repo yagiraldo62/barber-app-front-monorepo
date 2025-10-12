@@ -1,12 +1,12 @@
 import 'package:utils/date_time/format_date_utils.dart';
-import 'package:core/data/models/artist_model.dart';
+import 'package:core/data/models/profile_model.dart';
 import 'package:core/data/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:moment_dart/moment_dart.dart';
 
 class ScheduleAppointmentInput extends StatefulWidget {
   final UserModel? client;
-  final ArtistModel? artist;
+  final ProfileModel? artist;
   final bool isClient;
   const ScheduleAppointmentInput({
     super.key,

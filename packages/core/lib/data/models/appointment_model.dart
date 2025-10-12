@@ -1,6 +1,6 @@
 import 'package:core/data/models/appointment_client_info_model.dart';
 import 'package:core/data/models/appointment_datetime_model.dart';
-import 'package:core/data/models/artist_model.dart';
+import 'package:core/data/models/profile_model.dart';
 import 'package:core/data/models/category_service_model.dart';
 import 'package:core/data/models/user_model.dart';
 
@@ -17,7 +17,7 @@ class AppointmentModel {
 
   late String id;
   late UserModel? client;
-  late ArtistModel? artist;
+  late ProfileModel? artist;
   late AppointmentClientInfoModel? clientInfo;
   late String? state;
   late int? duration;
@@ -47,7 +47,7 @@ class AppointmentModel {
               : null,
       artist:
           jsonData['artist'] != null
-              ? ArtistModel.fromJson(jsonData['artist'])
+              ? ProfileModel.fromJson(jsonData['artist'])
               : null,
       clientInfo:
           jsonData['client_info'] != null

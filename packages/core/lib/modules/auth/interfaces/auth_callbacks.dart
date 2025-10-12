@@ -10,7 +10,7 @@ abstract class AuthCallbacks {
 
   /// Called to determine where to redirect user after login
   /// [user] - The authenticated user (can be null)
-  void onLoginRedirection(UserModel? user);
+  Future<void> onLoginRedirection(UserModel? user);
 
   /// Called after successful logout to handle app-specific cleanup
   Future<void> onLogout();

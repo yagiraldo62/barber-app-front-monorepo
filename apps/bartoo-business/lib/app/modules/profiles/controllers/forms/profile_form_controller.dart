@@ -21,8 +21,13 @@ class ProfileFormController extends GetxController
     implements StepperFormController<Rx<ProfileFormStep>> {
   final ProfileModel? currentProfile;
   final bool isCreation;
+  final void Function(ProfileModel)? onSavedCallback;
 
-  ProfileFormController(this.currentProfile, this.isCreation);
+  ProfileFormController(
+    this.currentProfile,
+    this.isCreation, {
+    this.onSavedCallback,
+  });
 
   final ProfileRepository profileRepository = Get.find<ProfileRepository>();
   final AuthRepository authRepository = Get.find<AuthRepository>();
@@ -139,7 +144,7 @@ class ProfileFormController extends GetxController
           image.value,
         );
       } else {
-        artist = await profileRepository.register(
+        artist = await profileRepository.create(
           name: nameController.text,
           categoriesId: selectedCategoriesId,
           type: profileType.value,
@@ -153,7 +158,11 @@ class ProfileFormController extends GetxController
         throw Exception('Error creating artist');
       }
 
-      await onSaved(artist);
+      if (onSavedCallback != null) {
+        onSavedCallback!(artist);
+      } else {
+        await onSavedDefault(artist);
+      }
 
       loading.value = false;
 
@@ -168,7 +177,7 @@ class ProfileFormController extends GetxController
     return null;
   }
 
-  Future<void> onSaved(ProfileModel profile) async {
+  Future<void> onSavedDefault(ProfileModel profile) async {
     if (authController.user.value!.isFirstLogin) {
       await authRepository.updateFirstLogin(false, true);
       authController.user.value!.isFirstLogin = false;

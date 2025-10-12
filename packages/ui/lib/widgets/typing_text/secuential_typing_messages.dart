@@ -14,7 +14,7 @@ class SequentialTypingMessagesItem {
   const SequentialTypingMessagesItem({
     required this.text,
     this.variation = TypographyVariation.bodyMedium,
-    this.duration = const Duration(milliseconds: 1000),
+    this.duration = const Duration(milliseconds: 600),
     this.spacingAfter = 16.0,
   });
 }

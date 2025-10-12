@@ -42,7 +42,7 @@ class ProfileRepository {
     return null;
   }
 
-  Future<ProfileModel> register({
+  Future<ProfileModel> create({
     String? name,
     List<String>? categoriesId,
     ProfileType type = ProfileType.artist,
@@ -51,7 +51,7 @@ class ProfileRepository {
     XFile? image,
   }) async {
     try {
-      ProfileModel? createdProfile = await profileProvider.registerProfile(
+      ProfileModel? createdProfile = await profileProvider.createProfile(
         name: name,
         categoriesId: categoriesId ?? [],
         type: type,

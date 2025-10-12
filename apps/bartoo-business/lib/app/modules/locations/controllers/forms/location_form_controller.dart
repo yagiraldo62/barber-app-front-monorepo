@@ -1,10 +1,12 @@
 import 'package:bartoo/app/modules/auth/controllers/business_auth_controller.dart';
 import 'package:core/data/models/shared/location_model.dart';
+import 'package:core/modules/auth/classes/selected_scope.dart';
 import 'package:core/modules/locations/providers/artist_location_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ui/widgets/form/stepper_form_fields.dart';
 import 'package:utils/snackbars.dart';
+import 'package:utils/log.dart';
 import 'package:utils/geolocation/map_utils.dart';
 
 /// Enum to track the steps in the location form
@@ -53,16 +55,56 @@ class LocationFormController extends GetxController
   }) {
     _initializeControllers();
   }
-  void _initializeControllers() {
+
+  void _initializeControllers() async {
     // Initialize animation state
     animationsComplete.value = false;
+
     if (currentLocation != null) {
+      // Editing existing location
       nameController.text = currentLocation!.name;
       addressController.text = currentLocation!.address ?? '';
       address2Controller.text = currentLocation!.address2 ?? '';
       cityController.text = currentLocation!.city;
       stateController.text = currentLocation!.state;
       countryController.text = currentLocation!.country;
+    } else if (isCreation) {
+      // Creating new location - get current location and populate fields
+      await _initializeFromCurrentLocation();
+    }
+  }
+
+  /// Initialize location fields from user's current location
+  Future<void> _initializeFromCurrentLocation() async {
+    try {
+      final locationData = await getCurrentLocationWithAddress();
+
+      Log('Location Dart: $locationData');
+
+      if (locationData != null) {
+        // Populate city, state, and country from current location
+        if (locationData['city'] != null) {
+          cityController.text = locationData['city'] as String;
+        }
+        if (locationData['state'] != null) {
+          stateController.text = locationData['state'] as String;
+        }
+        if (locationData['country'] != null) {
+          countryController.text = locationData['country'] as String;
+        }
+
+        // Optionally set the coordinates
+        if (locationData['latitude'] != null &&
+            locationData['longitude'] != null) {
+          location.value = {
+            'latitude': locationData['latitude'] as double,
+            'longitude': locationData['longitude'] as double,
+          };
+        }
+      }
+    } catch (e) {
+      // Silently fail - user can still manually enter location
+      print('Failed to get current location: $e');
     }
   }
 
@@ -182,7 +224,7 @@ class LocationFormController extends GetxController
       );
 
       if (addressComponents != null) {
-        // Populate address fields
+        // Populate address fields if empty
         if (addressComponents.street != null &&
             addressController.text.isEmpty) {
           addressController.text = addressComponents.street!;
@@ -217,27 +259,40 @@ class LocationFormController extends GetxController
       if (loading.value) return;
       loading.value = true;
 
-      final artist = authController.selectedScope.value;
-      if (artist == null) throw Exception('No artist selected');
+      final scope = authController.selectedScope.value;
+      if (scope == null) throw Exception('No scope selected');
 
-      // final result = await provider.createLocation(
-      //   artist.id,
-      //   nameController.text,
-      //   addressController.text,
-      //   location.value,
-      //   address2: address2Controller.text,
-      //   city: cityController.text,
-      //   state: stateController.text,
-      //   country: countryController.text,
-      // );
+      late String profileId;
 
-      // if (result == null) throw Exception('Error creating location');
+      if (scope is ProfileScope) {
+        profileId = scope.profile.id;
+      } else if (scope is LocationMemberScope) {
+        if (scope.locationMember.organization == null) {
+          throw Exception('No organization found in scope');
+        }
+        profileId = scope.locationMember.organization!.id;
+      } else {
+        throw Exception('Invalid scope type for creating location');
+      }
 
-      // if (onSavedCallback != null) {
-      //   onSavedCallback!(result);
-      // } else {
-      //   await onSavedDefault(result, artist);
-      // }
+      final result = await provider.createLocation(
+        profileId,
+        nameController.text,
+        addressController.text,
+        location.value,
+        address2: address2Controller.text,
+        city: cityController.text,
+        state: stateController.text,
+        country: countryController.text,
+      );
+
+      if (result == null) throw Exception('Error creating location');
+
+      if (onSavedCallback != null) {
+        onSavedCallback!(result);
+      } else {
+        await onSavedDefault(result);
+      }
 
       loading.value = false;
       Snackbars.success(message: 'Ubicación creada exitosamente');
@@ -247,9 +302,7 @@ class LocationFormController extends GetxController
     }
   }
 
-  Future<void> onSavedDefault(LocationModel result, artist) async {
-    artist.locations ??= [];
-    artist.locations!.add(result);
+  Future<void> onSavedDefault(LocationModel result) async {
     Get.back();
   }
 }

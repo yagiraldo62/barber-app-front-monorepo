@@ -1,4 +1,4 @@
-import 'package:core/data/models/artist_model.dart';
+import 'package:core/data/models/profile_model.dart';
 import 'package:core/data/models/category_service_model.dart';
 import 'package:core/data/models/shared/abstract/selectable_entity.dart';
 
@@ -22,7 +22,7 @@ class ArtistLocationServiceModel extends SelectableEntity {
   int duration;
   double price;
 
-  ArtistModel? artist;
+  ProfileModel? artist;
   List<CategoryServiceModel> items;
 
   factory ArtistLocationServiceModel.fromJson(Map<String, dynamic> json) {
@@ -36,7 +36,7 @@ class ArtistLocationServiceModel extends SelectableEntity {
               ? CategoryServiceModel.listFromJson(json['items'])
               : [],
       artist:
-          json['artist'] != null ? ArtistModel.fromJson(json['artist']) : null,
+          json['artist'] != null ? ProfileModel.fromJson(json['artist']) : null,
     );
   }
 

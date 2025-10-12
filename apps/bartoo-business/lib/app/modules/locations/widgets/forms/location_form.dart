@@ -1,7 +1,7 @@
-import 'package:core/data/models/artist_location_model.dart';
+import 'package:core/data/models/shared/location_model.dart';
 import 'package:flutter/material.dart' hide Typography;
 import 'package:get/get.dart';
-import 'package:bartoo/app/modules/locations/controllers/forms/artist_location_form_controller.dart';
+import 'package:bartoo/app/modules/locations/controllers/forms/location_form_controller.dart';
 import 'package:bartoo/app/modules/locations/widgets/forms/steps/address_step.dart';
 import 'package:bartoo/app/modules/locations/widgets/forms/steps/map_step.dart';
 import 'package:bartoo/app/modules/locations/widgets/forms/steps/name_step.dart';
@@ -9,30 +9,34 @@ import 'package:bartoo/app/modules/locations/widgets/forms/steps/region_step.dar
 import 'package:ui/widgets/form/stepper_form_fields.dart';
 
 class LocationForm extends StatelessWidget {
-  final ArtistLocationModel? currentLocation;
+  final LocationModel? currentLocation;
   final bool isCreation;
   final ScrollController? scrollController;
+  final void Function(LocationModel)?
+  onSaved; // Optional override when creation completes
 
   const LocationForm({
     super.key,
     this.currentLocation,
     this.isCreation = true,
     this.scrollController,
+    this.onSaved,
   });
 
   @override
   Widget build(BuildContext context) {
     // Initialize or find the controller
-    if (!Get.isRegistered<ArtistLocationFormController>()) {
+    if (!Get.isRegistered<LocationFormController>()) {
       Get.put(
-        ArtistLocationFormController(
+        LocationFormController(
           currentLocation: currentLocation,
           isCreation: isCreation,
+          onSavedCallback: onSaved,
         ),
       );
     }
 
-    final controller = Get.find<ArtistLocationFormController>();
+    final controller = Get.find<LocationFormController>();
 
     // Define steps for the form
     final steps = [

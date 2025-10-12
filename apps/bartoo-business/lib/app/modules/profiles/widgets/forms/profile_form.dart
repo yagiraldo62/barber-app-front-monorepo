@@ -13,17 +13,19 @@ class ProfileForm extends StatelessWidget {
   final ProfileModel? currentProfile;
   final bool isCreation;
   final ScrollController? scrollController;
+  final void Function(ProfileModel)? onSaved; // Optional override when creation completes
 
   const ProfileForm({
     super.key,
     this.currentProfile,
     this.isCreation = false,
     this.scrollController,
+    this.onSaved,
   });
 
   @override
   Widget build(BuildContext context) {
-    Get.put(ProfileFormController(currentProfile, isCreation));
+    Get.put(ProfileFormController(currentProfile, isCreation, onSavedCallback: onSaved));
 
     final controller = Get.find<ProfileFormController>();
     final steps = [

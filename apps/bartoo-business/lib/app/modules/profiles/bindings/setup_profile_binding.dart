@@ -1,3 +1,5 @@
+import 'package:bartoo/app/modules/locations/bindings/location_form_binding.dart';
+import 'package:bartoo/app/modules/profiles/controllers/setup_scope_controller.dart';
 import 'package:core/modules/category/providers/category_provider.dart';
 import 'package:core/modules/category/repository/category_repository.dart';
 import 'package:core/modules/auth/repository/user_repository.dart';
@@ -7,9 +9,12 @@ import 'package:core/modules/profile/repository/profile_repository.dart';
 
 import 'package:get/get.dart';
 
-class CreateArtistBinding extends Bindings {
+class SetupScopeBinding extends LocationFormBinding {
   @override
   void dependencies() {
+    super.dependencies();
+
+    Get.lazyPut<SetupScopeController>(() => SetupScopeController());
     Get.lazyPut<ProfileProvider>(() => ProfileProvider());
     Get.lazyPut<CategoryProvider>(() => CategoryProvider());
     Get.lazyPut<CategoryRepository>(() => CategoryRepository());

@@ -43,7 +43,7 @@ abstract class BaseAuthActionsController extends GetxController {
 
   void validateAuthForFirstRedirection() async {
     UserModel? user = await getAuthUser();
-    authCallbacks.onLoginRedirection(user);
+    await authCallbacks.onLoginRedirection(user);
   }
 
   void signout() async {

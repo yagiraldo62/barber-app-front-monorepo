@@ -1,4 +1,4 @@
-import 'package:bartoo/app/modules/profiles/widgets/forms/artist_form.dart';
+import 'package:bartoo/app/modules/profiles/widgets/forms/profile_form.dart';
 import 'package:bartoo/app/modules/auth/controllers/business_auth_controller.dart';
 import 'package:bartoo/app/modules/auth/controllers/business_auth_guard_controller.dart';
 import 'package:core/data/models/profile_model.dart';

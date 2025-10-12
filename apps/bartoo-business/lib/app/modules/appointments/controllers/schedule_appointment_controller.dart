@@ -60,7 +60,8 @@ class ScheduleAppointmentController extends GetxController {
 
     initializeDate(
       initAppointment.startTime,
-      initAppointment.artist?.availability,
+      null,
+      // initAppointment.artist?.availability,
     );
 
     // initializeCategoriesAndServices(

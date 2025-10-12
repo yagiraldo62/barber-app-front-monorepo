@@ -1,5 +1,6 @@
 import 'package:bartoo/app/modules/auth/controllers/business_auth_controller.dart';
 import 'package:bartoo/app/routes/app_pages.dart';
+import 'package:core/data/models/profile_model.dart';
 import 'package:core/data/models/user_model.dart';
 import 'package:core/modules/auth/classes/selected_scope.dart';
 import 'package:core/modules/auth/interfaces/auth_callbacks.dart';
@@ -23,19 +24,23 @@ class BusinessAuthCallbacks implements AuthCallbacks {
     user = await setUserLocation(user);
     authController.setUser(user);
 
-    // Set default scope after login
     await authController.setAuthDefaultScope(user: user);
 
     // Redirect user after login
-    onLoginRedirection(user);
+    await onLoginRedirection(user);
   }
 
   @override
-  void onLoginRedirection(UserModel? user) {
-    Log('Business app: onLoginRedirection - ${user?.toJson()}');
+  Future<void> onLoginRedirection(UserModel? user) async {
+    if (user == null && authController.user.value == null) {
+      Get.offAndToNamed(dotenv.env['HOME_ROUTE'] ?? Routes.SPLASH);
+      return;
+    }
+
+    BussinessScope? selectedScope = authController.selectedScope.value;
 
     // Always enforce phone verification first if user exists
-    if (user != null && user.isPhoneVerified != true) {
+    if (user?.isPhoneVerified != true) {
       Get.offAndToNamed(
         dotenv.env['VERIFY_PHONE_ROUTE'] ?? Routes.VERIFY_PHONE,
       );
@@ -44,19 +49,41 @@ class BusinessAuthCallbacks implements AuthCallbacks {
 
     // apply redirection logic based on user state
     // If user is not authenticated, redirect to login
-    if (authController.user.value == null) {
-      if (user?.isFirstLogin == true) {
-        // Redirect to introduction screen for first-time users
-        Get.offAndToNamed(dotenv.env['INTRODUCTION_ROUTE'] ?? Routes.INTRO);
-      } else if (user?.profiles?.isNotEmpty ?? false) {
-        // Redirect to profile home if user has profiles
-        Get.offAndToNamed(
-          dotenv.env['ARTIST_HOME_ROUTE'] ?? Routes.ARTIST_HOME,
-        );
-      } else {
-        // Redirect to regular home screen
-        Get.offAndToNamed(dotenv.env['HOME_ROUTE'] ?? Routes.SPLASH);
+    if (user?.isFirstLogin == true) {
+      // Redirect to introduction screen for first-time users
+      Get.offAndToNamed(dotenv.env['INTRODUCTION_ROUTE'] ?? Routes.INTRO);
+      return;
+    }
+
+    if (selectedScope != null) {
+      switch (selectedScope) {
+        case ProfileScope(:final profile):
+          // Redirect to profile home if user has profiles
+          if (profile.type == ProfileType.organization) {
+            if (profile.locations != null && profile.locations!.isNotEmpty) {
+              // Redirect to location home if profile has locations
+              Get.offAndToNamed(
+                dotenv.env['LOCATION_HOME_ROUTE'] ??
+                    Routes.SETUP_PROFILE
+                        .replaceFirst(':profile_id', profile.id!)
+                        .replaceFirst(
+                          ':location_id',
+                          profile.locations!.first.id!,
+                        ),
+              );
+            } else {
+              // TODO : ERROR
+            }
+          }
+          break;
+        case LocationMemberScope(:final locationMember):
+          break;
+        default:
+          // Fallback to regular home screen
+          Get.offAndToNamed(dotenv.env['HOME_ROUTE'] ?? Routes.SPLASH);
       }
+      // Redirect to profile home if user has profiles
+      Get.offAndToNamed(dotenv.env['ARTIST_HOME_ROUTE'] ?? Routes.ARTIST_HOME);
     }
   }
 
@@ -82,10 +109,10 @@ class BusinessAuthCallbacks implements AuthCallbacks {
     UserModel? user,
     BussinessScope? selectedScope,
   ) async {
-    onLoginRedirection(user);
-
     // set user and selected scope in auth controller AFTER redirection
     authController.setUser(user);
     authController.setSelectedScope(selectedScope);
+
+    await onLoginRedirection(user);
   }
 }

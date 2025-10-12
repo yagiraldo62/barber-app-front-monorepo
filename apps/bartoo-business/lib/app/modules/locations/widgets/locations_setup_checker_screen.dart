@@ -1,6 +1,6 @@
 import 'package:bartoo/app/modules/auth/controllers/business_auth_controller.dart';
 import 'package:bartoo/app/routes/app_pages.dart';
-import 'package:core/data/models/artist_model.dart';
+import 'package:core/data/models/profile_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:core/data/models/artist_location_model.dart';
@@ -60,7 +60,7 @@ class LocationsSetupCheckerScreen extends StatelessWidget {
 
   Widget _buildLocationAlert(
     BuildContext context,
-    ArtistModel artist,
+    ProfileModel artist,
     ArtistLocationModel location,
   ) {
     return Card(

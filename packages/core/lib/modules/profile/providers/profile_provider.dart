@@ -7,14 +7,14 @@ import 'package:image_picker/image_picker.dart';
 class ProfileProvider extends BaseProvider {
   final String _baseUrl = '/profiles';
 
-  Future<ProfileModel?> registerProfile({
+  Future<ProfileModel?> createProfile({
     String? name,
     String? title,
     String? description,
     ProfileType type = ProfileType.artist,
     List<String> categoriesId = const [],
   }) async {
-    final response = await post('$_baseUrl/register', {
+    final response = await post('$_baseUrl', {
       'name': name,
       'categories_id': categoriesId,
       'title': title,

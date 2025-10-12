@@ -1,11 +1,11 @@
-import 'package:bartoo/app/modules/locations/controllers/forms/artist_location_form_controller.dart';
+import 'package:bartoo/app/modules/locations/controllers/forms/location_form_controller.dart';
 import 'package:flutter/material.dart' hide Typography;
 import 'package:ui/widgets/typography/typography.dart';
 import 'package:ui/widgets/input/text_field.dart';
 import 'package:ui/widgets/form/animated_form_step.dart';
 
 class LocationAddressStep extends StatelessWidget {
-  final ArtistLocationFormController controller;
+  final LocationFormController controller;
 
   const LocationAddressStep({super.key, required this.controller});
 

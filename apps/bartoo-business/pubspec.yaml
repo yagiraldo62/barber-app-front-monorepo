@@ -63,6 +63,7 @@ flutter:
   assets:
     - ../../.env
     - assets/images/
+    - assets/images/svgs/
     - assets/map_styles/dark_map_style.txt
     - assets/map_styles/light_map_style.txt
 

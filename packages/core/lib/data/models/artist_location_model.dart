@@ -71,8 +71,8 @@ class ArtistLocationModel {
       'location':
           location != null
               ? {
-                'type': 'Point',
-                'coordinates': [location!['longitude'], location!['latitude']],
+                'longitude': location!['longitude'],
+                'latitude': location!['latitude'],
               }
               : null,
       'is_published': isPublished,

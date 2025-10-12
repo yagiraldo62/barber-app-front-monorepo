@@ -20,7 +20,7 @@ class BusinessAuthGuardController extends BaseGuardController {
     Log('BusinessAuthGuardController: validate - ${authState.toJson()}');
     // Auth guard specific logic - redirect if user IS authenticated
     if (authState.user == null) {
-      _authCallbacks.onLoginRedirection(authState.user);
+      await _authCallbacks.onLoginRedirection(authState.user);
     }
   }
 }

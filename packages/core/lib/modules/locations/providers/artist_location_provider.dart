@@ -1,9 +1,10 @@
 import 'package:base/providers/base_provider.dart';
-import 'package:core/data/models/artist_location_model.dart';
+import 'package:core/data/models/shared/location_model.dart';
+import 'package:utils/log.dart';
 
 class ArtistLocationProvider extends BaseProvider {
   createLocation(
-    String artistId,
+    String profileId,
     String name,
     String address,
     Map<String, double>? location, {
@@ -12,7 +13,7 @@ class ArtistLocationProvider extends BaseProvider {
     String? state,
     String? country,
   }) async {
-    final response = await post('/artists/$artistId/locations', {
+    Log({
       'name': name,
       'address': address,
       'address2': address2,
@@ -27,13 +28,28 @@ class ArtistLocationProvider extends BaseProvider {
               }
               : null,
     });
+    final response = await post('/profiles/$profileId/locations', {
+      'name': name,
+      'address': address,
+      'address2': address2,
+      'city': city,
+      'state': state,
+      'country': country,
+      'location':
+          location != null
+              ? {
+                'longitude': location['longitude'],
+                'latitude': location['latitude'],
+              }
+              : null,
+    });
 
     if ((response.body?["ok"] ?? false) != true) {
       return null;
     }
 
     return response.body?["data"] != null
-        ? ArtistLocationModel.fromJson(response.body?["data"])
+        ? LocationModel.fromJson(response.body?["data"])
         : null;
   }
 }
