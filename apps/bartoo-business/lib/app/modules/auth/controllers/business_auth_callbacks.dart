@@ -1,5 +1,6 @@
 import 'package:bartoo/app/modules/auth/controllers/business_auth_controller.dart';
 import 'package:bartoo/app/routes/app_pages.dart';
+import 'package:core/data/models/location_member_model.dart';
 import 'package:core/data/models/profile_model.dart';
 import 'package:core/data/models/user_model.dart';
 import 'package:core/modules/auth/classes/selected_scope.dart';
@@ -36,9 +37,6 @@ class BusinessAuthCallbacks implements AuthCallbacks {
       Get.offAndToNamed(dotenv.env['HOME_ROUTE'] ?? Routes.SPLASH);
       return;
     }
-
-    BussinessScope? selectedScope = authController.selectedScope.value;
-
     // Always enforce phone verification first if user exists
     if (user?.isPhoneVerified != true) {
       Get.offAndToNamed(
@@ -55,35 +53,83 @@ class BusinessAuthCallbacks implements AuthCallbacks {
       return;
     }
 
+    BussinessScope? selectedScope = authController.selectedScope.value;
+
     if (selectedScope != null) {
       switch (selectedScope) {
         case ProfileScope(:final profile):
           // Redirect to profile home if user has profiles
           if (profile.type == ProfileType.organization) {
-            if (profile.locations != null && profile.locations!.isNotEmpty) {
-              // Redirect to location home if profile has locations
+            if (profile.locations?.isEmpty == true) {
+              // Redirect to setup location if organization profile has no locations
               Get.offAndToNamed(
-                dotenv.env['LOCATION_HOME_ROUTE'] ??
-                    Routes.SETUP_PROFILE
-                        .replaceFirst(':profile_id', profile.id!)
-                        .replaceFirst(
-                          ':location_id',
-                          profile.locations!.first.id!,
-                        ),
+                Routes.SETUP_PROFILE.replaceFirst(':profile_id', profile.id),
+              );
+            } else if (profile.locations?.isNotEmpty == true &&
+                (profile.locations?.first.settingsServicesUp == false ||
+                    profile.locations?.first.settingsAvailabilityUp == false)) {
+              // Redirect to profile home if organization profile has locations
+              Get.offAndToNamed(
+                Routes.SETUP_PROFILE_LOCATION
+                    .replaceFirst(':profile_id', profile.id)
+                    .replaceFirst(':location_id', profile.locations!.first.id!),
               );
             } else {
-              // TODO : ERROR
+              // Redirect to profile home if organization profile has locations
+              Get.offAndToNamed(Routes.ARTIST_HOME);
+            }
+          } else if (profile.type == ProfileType.artist) {
+            if (profile.independentArtist == true) {
+              if (profile.servicesUp == false ||
+                  profile.availabilityUp == false) {
+                // Redirect to profile home if organization profile has locations
+                Get.offAndToNamed(
+                  Routes.SETUP_PROFILE.replaceFirst(':profile_id', profile.id),
+                );
+              } else {
+                // Redirect to profile home if organization profile has locations
+                Get.offAndToNamed(Routes.ARTIST_HOME);
+              }
             }
           }
+
           break;
         case LocationMemberScope(:final locationMember):
+          if (locationMember.role == LocationMemberRole.superAdmin ||
+              locationMember.role == LocationMemberRole.manager) {
+            if (locationMember.organization != null &&
+                locationMember.location == null) {
+              Get.offNamed(
+                Routes.SETUP_PROFILE.replaceAll(
+                  ':profile_id',
+                  locationMember.organization!.id,
+                ),
+              );
+            } else if (locationMember.location != null &&
+                (locationMember.location!.settingsServicesUp == false ||
+                    locationMember.location!.settingsAvailabilityUp == false)) {
+              // Redirect to setup location if organization profile has no locations
+              Get.offAndToNamed(
+                Routes.SETUP_PROFILE_LOCATION
+                    .replaceFirst(
+                      ':profile_id',
+                      locationMember.organization!.id,
+                    )
+                    .replaceFirst(':location_id', locationMember.location!.id!),
+              );
+            } else {
+              // Redirect to location admin home if user is admin of a location
+              Get.offAndToNamed(Routes.ARTIST_HOME);
+            }
+          } else {
+            // Redirect to regular home screen if user is not admin of a location
+            Get.offAndToNamed(Routes.ARTIST_HOME);
+          }
           break;
         default:
           // Fallback to regular home screen
-          Get.offAndToNamed(dotenv.env['HOME_ROUTE'] ?? Routes.SPLASH);
+          Get.offAndToNamed(Routes.ARTIST_HOME);
       }
-      // Redirect to profile home if user has profiles
-      Get.offAndToNamed(dotenv.env['ARTIST_HOME_ROUTE'] ?? Routes.ARTIST_HOME);
     }
   }
 

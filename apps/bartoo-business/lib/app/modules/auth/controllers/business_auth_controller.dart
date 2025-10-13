@@ -84,14 +84,13 @@ class BusinessAuthController extends BaseAuthController {
     // Fallback logic: If no valid preferred scope found, use first available
     // Priority: Profiles > Locations
     if (scope == null) {
-      // First try to use user's owned profiles
-      if (user.profiles != null && user.profiles!.isNotEmpty) {
-        scope = ProfileScope(user.profiles!.first);
-      }
-      // If no profiles, use first location where user is a member
-      else if (user.locationsWorked != null &&
-          user.locationsWorked!.isNotEmpty) {
+      // Firstly use first location where user is a member
+      if (user.locationsWorked != null && user.locationsWorked!.isNotEmpty) {
         scope = LocationMemberScope(user.locationsWorked!.first);
+      }
+      // In no locations, ry to use user's owned profiles
+      else if (user.profiles != null && user.profiles!.isNotEmpty) {
+        scope = ProfileScope(user.profiles!.first);
       }
     }
 

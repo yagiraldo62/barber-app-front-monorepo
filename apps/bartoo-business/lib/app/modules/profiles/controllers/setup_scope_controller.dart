@@ -54,7 +54,19 @@ class SetupScopeController extends GetxController {
     _buildSteps();
   }
 
-  int get currentIndex => steps.indexOf(currentStep.value);
+  int get currentIndex {
+    final index = steps.indexOf(currentStep.value);
+    // If current step is not in steps list, default to first step (0)
+    if (index < 0) {
+      // Reset to first step if current step is invalid
+      if (steps.isNotEmpty) {
+        currentStep.value = steps.first;
+        return 0;
+      }
+      return 0;
+    }
+    return index;
+  }
 
   void goTo(int index) {
     if (index < 0 || index >= steps.length) return;

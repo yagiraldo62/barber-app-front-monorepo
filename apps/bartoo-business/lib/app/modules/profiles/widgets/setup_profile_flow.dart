@@ -102,6 +102,13 @@ class SetupScopeFlow extends StatelessWidget {
           .map<FlowStepConfig>((s) => stepsConfigByType[s]!(s, ctrl))
           .toList(growable: false);
 
+      // Safety check: if no configs or invalid index, show empty container
+      if (configs.isEmpty || currentIdx < 0 || currentIdx >= configs.length) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      }
+
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
