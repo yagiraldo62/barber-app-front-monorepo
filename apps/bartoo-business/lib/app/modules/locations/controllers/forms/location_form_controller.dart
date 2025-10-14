@@ -24,10 +24,15 @@ class LocationFormController extends GetxController
 
   bool isCreation;
   final void Function(LocationModel)? onSavedCallback;
+  final ScrollController? scrollController;
 
   // Current step tracker
   @override
   final Rx<LocationFormStep> currentStep = LocationFormStep.name.obs;
+
+  // Track the last step that was made available to avoid re-animating
+  final Rx<LocationFormStep?> lastStepAvailable = LocationFormStep.name.obs;
+
   // Loading state for the form
   final RxBool loading = false.obs;
   final RxBool animationsComplete = false.obs;
@@ -52,8 +57,10 @@ class LocationFormController extends GetxController
     this.currentLocation,
     this.isCreation = true,
     this.onSavedCallback,
+    this.scrollController,
   }) {
     _initializeControllers();
+    setCurrentState(LocationFormStep.name);
   }
 
   void _initializeControllers() async {
@@ -128,11 +135,51 @@ class LocationFormController extends GetxController
     super.onClose();
   }
 
+  /// Smoothly scrolls to the bottom of the attached scroll view.
+  void scrollToBottom() {
+    // Only auto-scroll during creation flows
+    if (scrollController == null || !isCreation) return;
+
+    void attemptScroll(int attempt) {
+      if (!(scrollController?.hasClients ?? false)) {
+        if (attempt >= 5) return;
+        Future.delayed(const Duration(milliseconds: 80), () {
+          attemptScroll(attempt + 1);
+        });
+        return;
+      }
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final controller = scrollController;
+        if (controller == null || !(controller.hasClients)) return;
+
+        final position = controller.position;
+        final target = position.maxScrollExtent;
+
+        controller.animateTo(
+          target,
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.easeOutCubic,
+        );
+      });
+    }
+
+    attemptScroll(0);
+  }
+
   @override
   bool get isLoading => loading.value;
 
   void onAnimationsComplete() {
     animationsComplete.value = true;
+  }
+
+  void setCurrentState(LocationFormStep newState) {
+    currentStep.value = newState;
+    // Delayed
+    Future.delayed(const Duration(milliseconds: 1000), () {
+      lastStepAvailable.value = newState;
+    });
   }
 
   @override
@@ -142,21 +189,21 @@ class LocationFormController extends GetxController
         if (_validateNameStep()) {
           // Reset animation state when successfully moving to next step
           animationsComplete.value = false;
-          currentStep.value = LocationFormStep.address;
+          setCurrentState(LocationFormStep.address);
         }
         break;
       case LocationFormStep.address:
         if (_validateAddressStep()) {
           // Reset animation state when successfully moving to next step
           animationsComplete.value = false;
-          currentStep.value = LocationFormStep.region;
+          setCurrentState(LocationFormStep.region);
         }
         break;
       case LocationFormStep.region:
         if (_validateRegionStep()) {
           // Reset animation state when successfully moving to next step
           animationsComplete.value = false;
-          currentStep.value = LocationFormStep.location;
+          setCurrentState(LocationFormStep.location);
         }
         break;
       case LocationFormStep.location:

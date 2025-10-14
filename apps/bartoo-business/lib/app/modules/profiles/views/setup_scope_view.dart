@@ -20,18 +20,11 @@ class SetupScopeView extends GetView {
     Get.find<BusinessAuthGuardController>();
 
     return AppLayout(
-      back: true,
       body: SingleChildScrollView(
         controller: scrollController,
         child: Container(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 24),
-              SetupScopeFlow(scrollController: scrollController),
-            ],
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+          child: SetupScopeFlow(scrollController: scrollController),
         ),
       ),
     );

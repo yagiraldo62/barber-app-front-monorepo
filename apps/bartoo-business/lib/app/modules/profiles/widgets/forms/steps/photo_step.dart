@@ -21,6 +21,8 @@ class PhotoStep extends StatelessWidget {
     Key typingKey = ValueKey(controller.profileType.value);
     return AnimatedFormStep(
       title: _photoMessage,
+      scrollToBottom: controller.scrollToBottom,
+      noAnimation: !controller.isCreation,
       typingKey: typingKey,
       onAnimationsComplete: controller.onAnimationsComplete,
       contentPadding: EdgeInsets.zero, // No padding for centered content

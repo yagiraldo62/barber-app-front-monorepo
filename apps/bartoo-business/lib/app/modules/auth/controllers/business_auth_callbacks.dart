@@ -66,8 +66,8 @@ class BusinessAuthCallbacks implements AuthCallbacks {
                 Routes.SETUP_PROFILE.replaceFirst(':profile_id', profile.id),
               );
             } else if (profile.locations?.isNotEmpty == true &&
-                (profile.locations?.first.settingsServicesUp == false ||
-                    profile.locations?.first.settingsAvailabilityUp == false)) {
+                (profile.locations?.first.servicesUp == false ||
+                    profile.locations?.first.availabilityUp == false)) {
               // Redirect to profile home if organization profile has locations
               Get.offAndToNamed(
                 Routes.SETUP_PROFILE_LOCATION
@@ -106,8 +106,8 @@ class BusinessAuthCallbacks implements AuthCallbacks {
                 ),
               );
             } else if (locationMember.location != null &&
-                (locationMember.location!.settingsServicesUp == false ||
-                    locationMember.location!.settingsAvailabilityUp == false)) {
+                (locationMember.location!.servicesUp == false ||
+                    locationMember.location!.availabilityUp == false)) {
               // Redirect to setup location if organization profile has no locations
               Get.offAndToNamed(
                 Routes.SETUP_PROFILE_LOCATION

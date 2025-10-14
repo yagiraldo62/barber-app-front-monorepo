@@ -4,6 +4,7 @@ import 'package:ui/widgets/form/animated_form_step.dart';
 
 class LocationMapStep extends StatelessWidget {
   final LocationFormController controller;
+  final currentStep = LocationFormStep.location;
 
   const LocationMapStep({super.key, required this.controller});
 
@@ -13,6 +14,11 @@ class LocationMapStep extends StatelessWidget {
       title: '¿Ubicación exacta?',
       descriptionText:
           'Confirma en el mapa el punto exacto donde se encuentra tu negocio',
+      scrollToBottom: controller.scrollToBottom,
+      noAnimation:
+          !controller.isCreation ||
+          (controller.lastStepAvailable.value != null &&
+              controller.lastStepAvailable.value!.index >= currentStep.index),
       onAnimationsComplete: controller.onAnimationsComplete,
       content: Column(
         children: [

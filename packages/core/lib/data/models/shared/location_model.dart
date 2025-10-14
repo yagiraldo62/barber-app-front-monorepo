@@ -2,22 +2,20 @@
 /// Maps to the `locations` table in the database.
 class LocationModel {
   LocationModel({
-    this.id = '',
+    this.id,
     this.name = '',
     this.country = 'Colombia',
     this.state = 'Antioquia',
     this.city = 'Medellin',
     this.isPublished = false,
-    this.servicesUp = false,
-    this.availabilityUp = false,
     this.rate = 5.0,
     this.locationUp = false,
-    this.settingsServicesUp = false,
-    this.settingsAvailabilityUp = false,
+    this.servicesUp = false,
+    this.availabilityUp = false,
   });
 
   // Primary fields
-  String id;
+  String? id;
   String name;
   String? address;
   String? address2;
@@ -32,8 +30,6 @@ class LocationModel {
   // Location settings (JSONB field)
   double rate; // Location rating (default: 5)
   bool locationUp; // Location setup completion
-  bool settingsServicesUp; // Services config status (from settings)
-  bool settingsAvailabilityUp; // Availability config status (from settings)
 
   // Timestamps
   DateTime? createdAt;
@@ -68,9 +64,8 @@ class LocationModel {
       // Location settings (from JSONB field)
       ..rate = (locationSettings['rate'] as num?)?.toDouble() ?? 5.0
       ..locationUp = locationSettings['location_up'] as bool? ?? false
-      ..settingsServicesUp = locationSettings['services_up'] as bool? ?? false
-      ..settingsAvailabilityUp =
-          locationSettings['availability_up'] as bool? ?? false
+      ..servicesUp = locationSettings['services_up'] as bool? ?? false
+      ..availabilityUp = locationSettings['availability_up'] as bool? ?? false
       // Timestamps
       ..createdAt =
           jsonData['created_at'] != null
@@ -103,8 +98,8 @@ class LocationModel {
       'location_settings': {
         'rate': rate,
         'location_up': locationUp,
-        'services_up': settingsServicesUp,
-        'availability_up': settingsAvailabilityUp,
+        'services_up': servicesUp,
+        'availability_up': availabilityUp,
       },
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),

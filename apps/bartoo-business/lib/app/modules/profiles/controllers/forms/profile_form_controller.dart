@@ -13,7 +13,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ui/widgets/form/stepper_form_fields.dart';
 import 'package:utils/log.dart';
 import 'package:utils/snackbars.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 enum ProfileFormStep { name, title, description, categories, photo }
 
@@ -22,12 +21,16 @@ class ProfileFormController extends GetxController
   final ProfileModel? currentProfile;
   final bool isCreation;
   final void Function(ProfileModel)? onSavedCallback;
+  final ScrollController? scrollController;
 
   ProfileFormController(
     this.currentProfile,
     this.isCreation, {
     this.onSavedCallback,
-  });
+    this.scrollController,
+  }) {
+    Log('Current Profile= ${currentProfile?.toJson()}');
+  }
 
   final ProfileRepository profileRepository = Get.find<ProfileRepository>();
   final AuthRepository authRepository = Get.find<AuthRepository>();
@@ -104,6 +107,9 @@ class ProfileFormController extends GetxController
               })
               .toList();
       loadingCategories.value = false;
+
+      // After categories are loaded and the UI expands, try scrolling down
+      scrollToBottom();
     } catch (e) {
       loadingCategories.value = false;
     }
@@ -245,6 +251,38 @@ class ProfileFormController extends GetxController
         upsertProfile();
         break;
     }
+  }
+
+  void scrollToBottom() {
+    Log('Attempting to scroll to bottom $isCreation');
+    // Only auto-scroll during creation flows
+    if (scrollController == null || !isCreation) return;
+
+    void attemptScroll(int attempt) {
+      if (!(scrollController?.hasClients ?? false)) {
+        if (attempt >= 5) return;
+        Future.delayed(const Duration(milliseconds: 80), () {
+          attemptScroll(attempt + 1);
+        });
+        return;
+      }
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final controller = scrollController;
+        if (controller == null || !(controller.hasClients)) return;
+
+        final position = controller.position;
+        final target = position.maxScrollExtent;
+
+        controller.animateTo(
+          target,
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.easeOutCubic,
+        );
+      });
+    }
+
+    attemptScroll(0);
   }
 
   @override

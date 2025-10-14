@@ -1,4 +1,3 @@
-import 'package:core/data/models/category_service_model.dart';
 import 'package:core/data/models/shared/abstract/selectable_entity.dart';
 
 class CategoryModel extends SelectableEntity {
@@ -12,7 +11,6 @@ class CategoryModel extends SelectableEntity {
   DateTime? updatedAt;
   DateTime? deletedAt;
   late List<CategoryModel> subcategories;
-  late List<CategoryServiceModel> services;
 
   factory CategoryModel.fromJson(Map<String, dynamic> json) =>
       CategoryModel()
@@ -36,10 +34,6 @@ class CategoryModel extends SelectableEntity {
         ..subcategories =
             json['subcategories'] != null
                 ? CategoryModel.listFromJson(json['subcategories'])
-                : []
-        ..services =
-            json['services'] != null
-                ? CategoryServiceModel.listFromJson(json['services'])
                 : [];
 
   Map<String, dynamic> toJson() => {
@@ -53,7 +47,6 @@ class CategoryModel extends SelectableEntity {
     'deleted_at': deletedAt?.toIso8601String(),
     'subcategories':
         subcategories.map((category) => category.toJson()).toList(),
-    'services': services.map((service) => service.toJson()).toList(),
   };
 
   static List<CategoryModel> listFromJson(List<dynamic>? jsonData) =>

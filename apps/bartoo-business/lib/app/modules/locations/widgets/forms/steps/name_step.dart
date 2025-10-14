@@ -5,6 +5,7 @@ import 'package:ui/widgets/form/animated_form_step.dart';
 
 class LocationNameStep extends StatelessWidget {
   final LocationFormController controller;
+  final currentStep = LocationFormStep.name;
 
   const LocationNameStep({super.key, required this.controller});
 
@@ -16,6 +17,11 @@ class LocationNameStep extends StatelessWidget {
       title: '¿Cómo identificarás esta ubicación?',
       descriptionText:
           'El nombre ayudará a tus clientes a diferenciar entre tus distintas ubicaciones',
+      noAnimation:
+          !controller.isCreation ||
+          (controller.lastStepAvailable.value != null &&
+              controller.lastStepAvailable.value!.index >= currentStep.index),
+      scrollToBottom: controller.scrollToBottom,
       onAnimationsComplete: controller.onAnimationsComplete,
       content: CommonTextField(
         hintText: 'Ej: Sede Principal, Local Centro',

@@ -15,6 +15,7 @@ const double _defaultIconContainerSize = 36.0;
 /// Simple horizontal stepper with connectors and labels.
 class AppStepper extends StatelessWidget {
   final List<AppStepperStep> steps;
+  final int lastStepAvailable;
   final int currentStep;
   final void Function(int index)? onStepTapped;
   final Color? activeColor;
@@ -27,6 +28,7 @@ class AppStepper extends StatelessWidget {
     super.key,
     required this.steps,
     required this.currentStep,
+    required this.lastStepAvailable,
     this.onStepTapped,
     this.activeColor,
     this.completedColor,
@@ -40,13 +42,13 @@ class AppStepper extends StatelessWidget {
     final theme = Theme.of(context);
     final Color active = activeColor ?? theme.colorScheme.primary;
     final Color completed =
-        completedColor ?? theme.colorScheme.primary.withOpacity(0.85);
+        completedColor ?? theme.colorScheme.primary.withOpacity(0.80);
     final Color inactive = inactiveColor ?? theme.disabledColor;
 
     List<Widget> children = [];
 
     for (int i = 0; i < steps.length; i++) {
-      final bool isCompleted = i < currentStep;
+      final bool isCompleted = i <= lastStepAvailable;
       final bool isActive = i == currentStep;
       final Color dotColor =
           isActive ? active : (isCompleted ? completed : inactive);
@@ -62,13 +64,14 @@ class AppStepper extends StatelessWidget {
               width: _defaultIconContainerSize,
               height: _defaultIconContainerSize,
               decoration: BoxDecoration(
-                color: isCompleted ? dotColor : Colors.transparent,
+                color: isCompleted && !isActive ? Colors.transparent : dotColor,
                 border: Border.all(color: dotColor, width: isActive ? 3 : 2),
                 shape: BoxShape.circle,
               ),
               child: Center(
                 child: _buildStepIcon(
                   steps[i],
+                  isActive,
                   isCompleted,
                   dotColor,
                   theme.colorScheme.onPrimary,
@@ -120,6 +123,7 @@ class AppStepper extends StatelessWidget {
 
   Widget _buildStepIcon(
     AppStepperStep step,
+    bool isActive,
     bool isCompleted,
     Color dotColor,
     Color onPrimaryColor,
@@ -131,7 +135,7 @@ class AppStepper extends StatelessWidget {
         width: _defaultIconSize,
         height: _defaultIconSize,
         colorFilter: ColorFilter.mode(
-          isCompleted ? onPrimaryColor : dotColor,
+          isCompleted && !isActive ? dotColor : onPrimaryColor,
           BlendMode.srcIn,
         ),
       );
@@ -139,13 +143,13 @@ class AppStepper extends StatelessWidget {
       return Icon(
         step.icon,
         size: _defaultIconSize,
-        color: isCompleted ? onPrimaryColor : dotColor,
+        color: isCompleted && !isActive ? dotColor : onPrimaryColor,
       );
     } else {
       return Icon(
-        isCompleted ? Icons.check : Icons.circle,
+        isCompleted && !isActive ? Icons.check : Icons.circle,
         size: _defaultIconSize,
-        color: isCompleted ? onPrimaryColor : dotColor,
+        color: isCompleted ? dotColor : onPrimaryColor,
       );
     }
   }

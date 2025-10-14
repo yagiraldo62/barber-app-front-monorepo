@@ -4,6 +4,7 @@ import 'package:core/data/models/profile_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ui/widgets/stepper/app_stepper.dart';
+import 'package:utils/log.dart';
 
 class FlowStepConfig {
   final CreateProfileStep step;
@@ -71,6 +72,8 @@ class SetupScopeFlow extends StatelessWidget {
 
       // Organization: build config list then render stepper + body
       final currentIdx = ctrl.currentIndex;
+      final lastIdx = ctrl.lastAvailableIndex;
+
       final configs = ctrl.steps
           .map<FlowStepConfig>((s) => stepsConfigByType[s]!(s, ctrl))
           .toList(growable: false);
@@ -85,9 +88,10 @@ class SetupScopeFlow extends StatelessWidget {
                 )
                 .toList(growable: false),
             currentStep: currentIdx,
+            lastStepAvailable: lastIdx,
             onStepTapped: (i) {
               // Allow back navigation by tapping previous steps
-              if (i <= currentIdx) ctrl.goTo(i);
+              ctrl.goTo(i);
             },
           ),
           Center(

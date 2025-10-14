@@ -32,6 +32,7 @@ class LocationForm extends StatelessWidget {
           currentLocation: currentLocation,
           isCreation: isCreation,
           onSavedCallback: onSaved,
+          scrollController: scrollController,
         ),
       );
     }
@@ -80,6 +81,8 @@ class LocationForm extends StatelessWidget {
             steps: steps,
             isFinalStep: (step) => step.value == LocationFormStep.location,
             scrollController: scrollController,
+            showAllSteps: !isCreation,
+            enableAutoScroll: isCreation,
             showButtonCondition: () => controller.animationsComplete.value,
             buttonLabelBuilder: (step) {
               return step.value == LocationFormStep.location

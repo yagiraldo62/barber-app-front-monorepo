@@ -28,6 +28,8 @@ class DescriptionStep extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedFormStep(
       title: _titleText,
+      scrollToBottom: controller.scrollToBottom,
+      noAnimation: !controller.isCreation,
       descriptionText: _descriptionText,
       focusNode: controller.descriptionFocus,
       onAnimationsComplete: controller.onAnimationsComplete,

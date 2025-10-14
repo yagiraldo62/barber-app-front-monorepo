@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ui/widgets/button/app_button.dart';
+import 'package:utils/log.dart';
 
 /// A generic step information container
 class StepInfo {
@@ -36,8 +37,16 @@ class StepperFormFields<T> extends StatelessWidget {
   /// Function to determine if a step is the final step
   final bool Function(T step) isFinalStep;
 
+  /// Whether to show all steps at once instead of progressive display
+  /// If true, all steps are visible from the start
+  /// If false (default), steps are revealed progressively based on conditions
+  final bool showAllSteps;
+
   /// Optional scroll controller to handle scrolling behavior
   final ScrollController? scrollController;
+
+  /// Whether to auto-scroll when the button appears
+  final bool enableAutoScroll;
 
   /// Optional function to customize the button label for each step
   final String Function(T step)? buttonLabelBuilder;
@@ -76,7 +85,9 @@ class StepperFormFields<T> extends StatelessWidget {
     required this.controller,
     required this.steps,
     required this.isFinalStep,
+    this.showAllSteps = false,
     this.scrollController,
+    this.enableAutoScroll = true,
     this.buttonLabelBuilder,
     this.buttonIconBuilder,
     this.animationDuration = const Duration(milliseconds: 200),
@@ -106,21 +117,6 @@ class StepperFormFields<T> extends StatelessWidget {
     return isFinalStep(step) ? defaultFinalIcon : defaultContinueIcon;
   }
 
-  /// Scrolls to the bottom of the form after adding a new step
-  void _scrollToBottom() {
-    if (scrollController == null) return;
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (scrollController?.hasClients ?? false) {
-        scrollController?.animateTo(
-          scrollController!.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     // // Check if the form should be shown
@@ -129,15 +125,19 @@ class StepperFormFields<T> extends StatelessWidget {
     // }
 
     return Obx(() {
-      _scrollToBottom();
+      // Evaluate button visibility reactively (defaults to true)
+      final bool showButton =
+          showButtonCondition == null ? true : (showButtonCondition!.call());
+
       final visibleSteps = <Widget>[];
 
       // Add visible steps to the list
       for (int i = 0; i < steps.length; i++) {
         final step = steps[i];
 
-        // Check if the step should be shown based on its condition
-        if (step.condition != null && !step.condition!()) {
+        // If showAllSteps is false, check the step condition
+        // If showAllSteps is true, always show the step (ignore condition)
+        if (!showAllSteps && step.condition != null && !step.condition!()) {
           continue;
         }
 
@@ -156,23 +156,46 @@ class StepperFormFields<T> extends StatelessWidget {
         );
       }
 
+      // If the action button becomes visible, try to scroll to bottom
+      if (showButton && enableAutoScroll) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Log('Scrolllling');
+
+          final controller = scrollController;
+          if (controller == null ||
+              !(controller.hasClients) ||
+              !enableAutoScroll)
+            return;
+          final position = controller.position;
+          controller.animateTo(
+            position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOutCubic,
+          );
+        });
+      }
+
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ...visibleSteps,
-          AnimatedOpacity(
-            opacity: 1.0,
+          AnimatedSwitcher(
             duration: animationDuration,
-            curve: Curves.easeInOut,
-            child: Align(
-              alignment: buttonAlignment,
-              child: AppButton(
-                onPressed: controller.nextStep,
-                label: _getButtonLabel(controller.currentStep),
-                icon: Icon(_getButtonIcon(controller.currentStep)),
-                isLoading: controller.isLoading,
-              ),
-            ),
+            switchInCurve: Curves.easeInOut,
+            switchOutCurve: Curves.easeInOut,
+            child:
+                showButton
+                    ? Align(
+                      key: const ValueKey('stepper_button'),
+                      alignment: buttonAlignment,
+                      child: AppButton(
+                        onPressed: controller.nextStep,
+                        label: _getButtonLabel(controller.currentStep),
+                        icon: Icon(_getButtonIcon(controller.currentStep)),
+                        isLoading: controller.isLoading,
+                      ),
+                    )
+                    : const SizedBox.shrink(key: ValueKey('no_button')),
           ),
         ],
       );

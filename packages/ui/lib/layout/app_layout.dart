@@ -25,19 +25,20 @@ class AppLayout extends StatelessWidget {
     return SafeArea(
       child: Container(
         color: Theme.of(context).scaffoldBackgroundColor,
-        child: Center(
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: 900),
-            child: Scaffold(
-              drawer: back ? null : BaseAppDrawer(),
-              extendBodyBehindAppBar: back,
-              appBar: BaseAppBar(back: back, title: title),
-              body: body,
-              bottomNavigationBar: bottomNavigationBar,
-              floatingActionButton:
-                  floatingActionButton, // Agregar el botón flotante
+        child: Scaffold(
+          drawer: back ? null : BaseAppDrawer(),
+          extendBodyBehindAppBar: back,
+          appBar: BaseAppBar(back: back, title: title),
+          body: Align(
+            alignment: Alignment.topCenter,
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 600),
+              child: body,
             ),
           ),
+          bottomNavigationBar: bottomNavigationBar,
+          floatingActionButton:
+              floatingActionButton, // Agregar el botón flotante
         ),
       ),
     );

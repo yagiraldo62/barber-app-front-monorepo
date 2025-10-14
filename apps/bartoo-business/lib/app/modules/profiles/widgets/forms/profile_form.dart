@@ -13,7 +13,8 @@ class ProfileForm extends StatelessWidget {
   final ProfileModel? currentProfile;
   final bool isCreation;
   final ScrollController? scrollController;
-  final void Function(ProfileModel)? onSaved; // Optional override when creation completes
+  final void Function(ProfileModel)?
+  onSaved; // Optional override when creation completes
 
   const ProfileForm({
     super.key,
@@ -25,7 +26,14 @@ class ProfileForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(ProfileFormController(currentProfile, isCreation, onSavedCallback: onSaved));
+    Get.put(
+      ProfileFormController(
+        currentProfile,
+        isCreation,
+        scrollController: scrollController,
+        onSavedCallback: onSaved,
+      ),
+    );
 
     final controller = Get.find<ProfileFormController>();
     final steps = [
@@ -71,25 +79,26 @@ class ProfileForm extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          if (controller.isCreation)
-            StepperFormFields<Rx<ProfileFormStep>>(
-              controller: controller,
-              steps: steps,
-              scrollController: scrollController,
-              // showFormCondition: () => showForm,
-              showButtonCondition: () => controller.animationsComplete.value,
-              isFinalStep: (step) => step == ProfileFormStep.photo,
-              buttonLabelBuilder: (step) {
-                return step.value == ProfileFormStep.photo
-                    ? 'Finalizar'
-                    : 'Continuar';
-              },
-              buttonIconBuilder: (step) {
-                return step.value == ProfileFormStep.photo
-                    ? Icons.check
-                    : Icons.arrow_forward;
-              },
-            ),
+          StepperFormFields<Rx<ProfileFormStep>>(
+            controller: controller,
+            steps: steps,
+            showAllSteps: !isCreation,
+            scrollController: scrollController,
+            enableAutoScroll: isCreation,
+            // showFormCondition: () => showForm,
+            showButtonCondition: () => controller.animationsComplete.value,
+            isFinalStep: (step) => step == ProfileFormStep.photo,
+            buttonLabelBuilder: (step) {
+              return step.value == ProfileFormStep.photo
+                  ? 'Finalizar'
+                  : 'Continuar';
+            },
+            buttonIconBuilder: (step) {
+              return step.value == ProfileFormStep.photo
+                  ? Icons.check
+                  : Icons.arrow_forward;
+            },
+          ),
         ],
       ),
     );

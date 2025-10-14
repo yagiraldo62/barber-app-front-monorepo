@@ -5,6 +5,7 @@ import 'package:ui/widgets/form/animated_form_step.dart';
 
 class LocationRegionStep extends StatelessWidget {
   final LocationFormController controller;
+  final currentStep = LocationFormStep.region;
 
   const LocationRegionStep({super.key, required this.controller});
 
@@ -13,6 +14,11 @@ class LocationRegionStep extends StatelessWidget {
     return AnimatedFormStep(
       title: '¿En qué lugar te encuentras?',
       descriptionText: 'Especifica la ciudad, estado y país de tu ubicación',
+      scrollToBottom: controller.scrollToBottom,
+      noAnimation:
+          !controller.isCreation ||
+          (controller.lastStepAvailable.value != null &&
+              controller.lastStepAvailable.value!.index >= currentStep.index),
       onAnimationsComplete: controller.onAnimationsComplete,
       content: Column(
         children: [

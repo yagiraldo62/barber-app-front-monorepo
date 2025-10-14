@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Typography;
 import 'package:ui/widgets/typing_text/typing_text.dart';
 import 'package:ui/widgets/typography/typography.dart';
 
@@ -49,6 +49,13 @@ class AnimatedFormStep extends StatefulWidget {
   /// Optional callback when all animations complete
   final VoidCallback? onAnimationsComplete;
 
+  /// Whether to show all components at once without progressive animation
+  /// If true, all text and content appear immediately
+  /// If false (default), components appear progressively with typing animations
+  final bool noAnimation;
+
+  final VoidCallback? scrollToBottom;
+
   /// Optional key for the typing text widget
   final Key? typingKey;
 
@@ -58,6 +65,7 @@ class AnimatedFormStep extends StatefulWidget {
     this.introText,
     this.descriptionText,
     required this.content,
+    this.scrollToBottom,
     this.focusNode,
     this.titleVariation = TypographyVariation.displayMedium,
     this.introVariation = TypographyVariation.bodySmall,
@@ -69,6 +77,7 @@ class AnimatedFormStep extends StatefulWidget {
     this.focusDelay = const Duration(milliseconds: 500),
     this.contentPadding = const EdgeInsets.symmetric(horizontal: 0),
     this.onAnimationsComplete,
+    this.noAnimation = false,
     this.typingKey,
   });
 
@@ -91,7 +100,37 @@ class _AnimatedFormStepState extends State<AnimatedFormStep> {
   @override
   void initState() {
     super.initState();
-    _startAnimationSequence();
+    if (widget.noAnimation) {
+      _showAllImmediately();
+    } else {
+      _startAnimationSequence();
+    }
+  }
+
+  void _showAllImmediately() {
+    // Show all components immediately without animation
+    setState(() {
+      _showIntro = widget.introText != null;
+      _showTitle = true;
+      _showDescription = widget.descriptionText != null;
+      _showContent = true;
+      _introOpacityVisible = widget.introText != null;
+      _titleOpacityVisible = true;
+      _descriptionOpacityVisible = widget.descriptionText != null;
+      _contentOpacityVisible = true;
+    });
+
+    // Request focus immediately if needed
+    if (widget.focusNode != null && !widget.noAnimation) {
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (mounted) widget.focusNode?.requestFocus();
+      });
+    }
+
+    // Notify parent after this frame to avoid triggering ancestor rebuilds during build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) widget.onAnimationsComplete?.call();
+    });
   }
 
   void _startAnimationSequence() {
@@ -114,7 +153,16 @@ class _AnimatedFormStepState extends State<AnimatedFormStep> {
           setState(() => _showIntro = true);
           // Start opacity animation after a brief delay
           Future.delayed(const Duration(milliseconds: 50), () {
-            if (mounted) setState(() => _introOpacityVisible = true);
+            if (mounted) {
+              setState(() => _introOpacityVisible = true);
+              // Scroll after intro becomes visible
+              Future.delayed(
+                widget.introDuration + const Duration(milliseconds: 100),
+                () {
+                  widget.scrollToBottom?.call();
+                },
+              );
+            }
           });
         }
       });
@@ -124,7 +172,16 @@ class _AnimatedFormStepState extends State<AnimatedFormStep> {
         if (mounted) {
           setState(() => _showTitle = true);
           Future.delayed(const Duration(milliseconds: 50), () {
-            if (mounted) setState(() => _titleOpacityVisible = true);
+            if (mounted) {
+              setState(() => _titleOpacityVisible = true);
+              // Scroll after title becomes visible
+              Future.delayed(
+                widget.titleDuration + const Duration(milliseconds: 100),
+                () {
+                  widget.scrollToBottom?.call();
+                },
+              );
+            }
           });
         }
       });
@@ -135,7 +192,16 @@ class _AnimatedFormStepState extends State<AnimatedFormStep> {
     if (mounted) {
       setState(() => _showTitle = true);
       Future.delayed(const Duration(milliseconds: 50), () {
-        if (mounted) setState(() => _titleOpacityVisible = true);
+        if (mounted) {
+          setState(() => _titleOpacityVisible = true);
+          // Scroll after title becomes visible
+          Future.delayed(
+            widget.titleDuration + const Duration(milliseconds: 100),
+            () {
+              widget.scrollToBottom?.call();
+            },
+          );
+        }
       });
     }
   }
@@ -145,7 +211,16 @@ class _AnimatedFormStepState extends State<AnimatedFormStep> {
       if (mounted) {
         setState(() => _showDescription = true);
         Future.delayed(const Duration(milliseconds: 50), () {
-          if (mounted) setState(() => _descriptionOpacityVisible = true);
+          if (mounted) {
+            setState(() => _descriptionOpacityVisible = true);
+            // Scroll after description becomes visible
+            Future.delayed(
+              widget.descriptionDuration + const Duration(milliseconds: 100),
+              () {
+                widget.scrollToBottom?.call();
+              },
+            );
+          }
         });
       }
     } else {
@@ -160,11 +235,18 @@ class _AnimatedFormStepState extends State<AnimatedFormStep> {
   void _finalizeAnimation() {
     if (mounted) {
       setState(() => _showContent = true);
+
       Future.delayed(const Duration(milliseconds: 50), () {
-        if (mounted) setState(() => _contentOpacityVisible = true);
+        if (mounted) {
+          setState(() => _contentOpacityVisible = true);
+          // Scroll after content opacity is set
+          Future.delayed(const Duration(milliseconds: 100), () {
+            widget.scrollToBottom?.call();
+          });
+        }
       });
 
-      if (widget.focusNode != null) {
+      if (widget.focusNode != null && !widget.noAnimation) {
         Future.delayed(widget.focusDelay, () {
           if (mounted) widget.focusNode?.requestFocus();
         });
@@ -177,6 +259,38 @@ class _AnimatedFormStepState extends State<AnimatedFormStep> {
 
   @override
   Widget build(BuildContext context) {
+    // If showing all at once, use static Typography instead of TypingText
+    if (widget.noAnimation) {
+      return Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Intro text (optional)
+          if (widget.introText != null) ...[
+            Typography(widget.introText!, variation: widget.introVariation),
+            const SizedBox(height: 24),
+          ],
+
+          // Title text
+          Typography(widget.title, variation: widget.titleVariation),
+          const SizedBox(height: 16),
+
+          // Description text (optional)
+          if (widget.descriptionText != null) ...[
+            Typography(
+              widget.descriptionText!,
+              variation: widget.descriptionVariation,
+            ),
+            const SizedBox(height: 16),
+          ],
+
+          // Content
+          Padding(padding: widget.contentPadding, child: widget.content),
+        ],
+      );
+    }
+
+    // Progressive animation mode
     return Column(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,

@@ -4,6 +4,7 @@ import 'package:core/data/models/shared/location_model.dart';
 import 'package:core/modules/auth/classes/selected_scope.dart';
 import 'package:get/get.dart';
 import 'package:bartoo/app/routes/app_pages.dart';
+import 'package:utils/log.dart';
 
 enum CreateProfileStep { profile, location, services, availability }
 
@@ -12,7 +13,13 @@ class SetupScopeController extends GetxController {
       Get.find<BusinessAuthController>();
 
   /// Selected profile type for this creation flow
+  final isInitialized = RxBool(false);
+
+  /// Selected profile type for this creation flow
   final profileType = ProfileType.organization.obs;
+
+  /// Current high-level step for the creation flow
+  final lastAvailableStep = CreateProfileStep.profile.obs;
 
   /// Current high-level step for the creation flow
   final currentStep = CreateProfileStep.profile.obs;
@@ -30,7 +37,7 @@ class SetupScopeController extends GetxController {
   final isCreation = false.obs;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     // Read profile type from route args if provided
     final arguments = Get.arguments as Map<String, dynamic>?;
@@ -48,10 +55,14 @@ class SetupScopeController extends GetxController {
     final locationId = Get.parameters['location_id'];
     if ((profileId != null && profileId.isNotEmpty) ||
         (locationId != null && locationId.isNotEmpty)) {
-      _initializeFromSelectedScope(profileId, locationId);
+      await _initializeFromSelectedScope(profileId, locationId);
     }
 
     _buildSteps();
+
+    // delay
+    await Future.delayed(const Duration(milliseconds: 300));
+    isInitialized.value = true;
   }
 
   int get currentIndex {
@@ -68,6 +79,20 @@ class SetupScopeController extends GetxController {
     return index;
   }
 
+  int get lastAvailableIndex {
+    final index = steps.indexOf(lastAvailableStep.value);
+    // If current step is not in steps list, default to first step (0)
+    if (index < 0) {
+      // Reset to first step if current step is invalid
+      if (steps.isNotEmpty) {
+        lastAvailableStep.value = steps.first;
+        return 0;
+      }
+      return 0;
+    }
+    return index;
+  }
+
   void goTo(int index) {
     if (index < 0 || index >= steps.length) return;
     currentStep.value = steps[index];
@@ -77,6 +102,7 @@ class SetupScopeController extends GetxController {
     final nextIndex = currentIndex + 1;
     if (nextIndex < steps.length) {
       currentStep.value = steps[nextIndex];
+      lastAvailableStep.value = steps[nextIndex];
     }
   }
 
@@ -122,9 +148,15 @@ class SetupScopeController extends GetxController {
   /// - `/setup-profile/:profile_id` - Edit existing profile
   /// - `/setup-profile/:profile_id/:location_id` - Edit specific location within profile
   /// - `/setup-profile` (no params) - Create new profile
-  void _initializeFromSelectedScope(String? profileId, String? locationId) {
+  Future<void> _initializeFromSelectedScope(
+    String? profileId,
+    String? locationId,
+  ) async {
     // Retrieve the currently selected business scope from auth controller
-    final scope = _authController.selectedScope.value;
+    final authState = await _authController.authRepository.getAuthState();
+
+    final user = authState.user;
+    final scope = authState.selectedScope;
 
     // CASE 1: User is operating under a ProfileScope that matches the profileId
     // This occurs when the user owns a profile and is currently working within that context
@@ -150,16 +182,19 @@ class SetupScopeController extends GetxController {
     }
     // CASE 2: User is operating under a LocationMemberScope that matches the locationId
     // This occurs when the user is a member/employee at a location but doesn't own the profile
-    else if (scope is LocationMemberScope &&
-        scope.locationMember.location?.id == locationId) {
+    else if (scope is LocationMemberScope) {
       // Get the list of all locations where the user works
-      final locationsWorked = _authController.user.value?.locationsWorked;
+      final locationsWorked = user?.locationsWorked;
 
       if (locationsWorked != null) {
         try {
           // Find the specific location member record matching the locationId
           final found = locationsWorked.firstWhere(
-            (l) => l.location?.id == locationId,
+            (l) =>
+                locationId != null
+                    ? l.location?.id == locationId &&
+                        l.organization?.id == profileId
+                    : l.organization?.id == profileId,
           );
 
           // If a profileId is also provided and it matches the organization,
@@ -170,8 +205,13 @@ class SetupScopeController extends GetxController {
             currentProfile.value = found.organization;
           }
 
-          // Set the location from the found member record
-          currentLocation.value = found.location;
+          if (currentProfile.value != null) {
+            currentLocation.value =
+                found.location ??
+                LocationModel(name: currentProfile.value!.name);
+          } else {
+            currentLocation.value = found.location;
+          }
           // LocationMemberScope always implies an organization context
           profileType.value = ProfileType.organization;
           return;
@@ -216,6 +256,20 @@ class SetupScopeController extends GetxController {
       steps.add(CreateProfileStep.location);
       steps.add(CreateProfileStep.services);
       steps.add(CreateProfileStep.availability);
+
+      if (currentProfile.value != null) {
+        if (currentLocation.value?.id == null) {
+          currentStep.value = CreateProfileStep.location;
+        } else if (currentLocation.value?.id != null) {
+          if ((currentLocation.value!.servicesUp ?? false) == false) {
+            currentStep.value = CreateProfileStep.services;
+          } else if (currentLocation.value!.availabilityUp == false) {
+            currentStep.value = CreateProfileStep.availability;
+          }
+        }
+      }
+
+      lastAvailableStep.value = currentStep.value;
     }
   }
 }

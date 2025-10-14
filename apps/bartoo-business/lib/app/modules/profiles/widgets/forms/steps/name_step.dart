@@ -30,6 +30,8 @@ class NameStep extends StatelessWidget {
     Key typingKey = ValueKey(controller.profileType.value);
     return AnimatedFormStep(
       title: _titleText,
+      scrollToBottom: controller.scrollToBottom,
+      noAnimation: !controller.isCreation,
       introText: _introText,
       typingKey: typingKey,
       descriptionText: _descriptionText,

@@ -14,6 +14,8 @@ class CategoriesStep extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedFormStep(
       title: 'Selecciona las categorías que mejor te describen',
+      scrollToBottom: controller.scrollToBottom,
+      noAnimation: !controller.isCreation,
       onAnimationsComplete: controller.onAnimationsComplete,
       content: Obx(
         () => Wrap(

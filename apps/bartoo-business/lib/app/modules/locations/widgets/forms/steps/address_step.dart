@@ -6,6 +6,7 @@ import 'package:ui/widgets/form/animated_form_step.dart';
 
 class LocationAddressStep extends StatelessWidget {
   final LocationFormController controller;
+  final currentStep = LocationFormStep.address;
 
   const LocationAddressStep({super.key, required this.controller});
 
@@ -15,6 +16,11 @@ class LocationAddressStep extends StatelessWidget {
       title: '¿Dónde te encuentras?',
       descriptionText:
           'Ingresa la dirección exacta donde atenderás a tus clientes',
+      scrollToBottom: controller.scrollToBottom,
+      noAnimation:
+          !controller.isCreation ||
+          (controller.lastStepAvailable.value != null &&
+              controller.lastStepAvailable.value!.index >= currentStep.index),
       onAnimationsComplete: controller.onAnimationsComplete,
       content: Column(
         children: [
