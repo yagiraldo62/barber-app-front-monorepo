@@ -10,12 +10,12 @@ class ProfileRepository {
   ProfileProvider profileProvider = Get.find<ProfileProvider>();
 
   Future<ProfileModel> findOrSave(
-    ProfileModel artist,
+    ProfileModel profile,
     bool justFind,
     Uint8List? image,
   ) async {
     try {
-      ProfileModel? existentProfile = await find(artist.id);
+      ProfileModel? existentProfile = await find(profile.id!);
 
       if (justFind) {
         if (existentProfile != null) {
@@ -23,11 +23,11 @@ class ProfileRepository {
         }
       }
 
-      String? photoUrl = existentProfile?.photoUrl ?? artist.photoUrl;
+      String? photoUrl = existentProfile?.photoUrl ?? profile.photoUrl;
 
-      artist.photoUrl = photoUrl;
+      profile.photoUrl = photoUrl;
 
-      return artist;
+      return profile;
     } catch (e) {
       rethrow;
     }
@@ -59,9 +59,9 @@ class ProfileRepository {
         description: description,
       );
 
-      if (createdProfile != null && image != null) {
+      if (createdProfile?.id != null && image != null) {
         ProfileModel? updateProfilePhotoResponse = await profileProvider
-            .updateProfilePhoto(createdProfile.id, image);
+            .updateProfilePhoto(createdProfile!.id!, image);
 
         if (updateProfilePhotoResponse != null) {
           createdProfile.photoUrl = updateProfilePhotoResponse.photoUrl;
@@ -85,7 +85,7 @@ class ProfileRepository {
     XFile? image,
   ) async {
     try {
-      ProfileModel? artistResponse = await profileProvider.updateProfile(
+      ProfileModel? profileResponse = await profileProvider.updateProfile(
         id,
         name,
         categoriesId,
@@ -93,18 +93,18 @@ class ProfileRepository {
         description,
       );
 
-      if (artistResponse != null && image != null) {
+      if (profileResponse?.id != null && image != null) {
         ProfileModel? updateProfilePhotoResponse = await profileProvider
-            .updateProfilePhoto(artistResponse.id, image);
+            .updateProfilePhoto(profileResponse!.id!, image);
 
         if (updateProfilePhotoResponse != null) {
-          artistResponse.photoUrl = updateProfilePhotoResponse.photoUrl;
+          profileResponse.photoUrl = updateProfilePhotoResponse.photoUrl;
         }
       }
 
-      if (artistResponse != null) return artistResponse;
+      if (profileResponse != null) return profileResponse;
 
-      throw Exception('Error updating artist');
+      throw Exception('Error updating profile');
     } catch (e) {
       rethrow;
     }

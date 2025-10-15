@@ -63,7 +63,7 @@ class BusinessAuthCallbacks implements AuthCallbacks {
             if (profile.locations?.isEmpty == true) {
               // Redirect to setup location if organization profile has no locations
               Get.offAndToNamed(
-                Routes.SETUP_PROFILE.replaceFirst(':profile_id', profile.id),
+                Routes.SETUP_PROFILE.replaceFirst(':profile_id', profile.id!),
               );
             } else if (profile.locations?.isNotEmpty == true &&
                 (profile.locations?.first.servicesUp == false ||
@@ -71,7 +71,7 @@ class BusinessAuthCallbacks implements AuthCallbacks {
               // Redirect to profile home if organization profile has locations
               Get.offAndToNamed(
                 Routes.SETUP_PROFILE_LOCATION
-                    .replaceFirst(':profile_id', profile.id)
+                    .replaceFirst(':profile_id', profile.id!)
                     .replaceFirst(':location_id', profile.locations!.first.id!),
               );
             } else {
@@ -84,7 +84,7 @@ class BusinessAuthCallbacks implements AuthCallbacks {
                   profile.availabilityUp == false) {
                 // Redirect to profile home if organization profile has locations
                 Get.offAndToNamed(
-                  Routes.SETUP_PROFILE.replaceFirst(':profile_id', profile.id),
+                  Routes.SETUP_PROFILE.replaceFirst(':profile_id', profile.id!),
                 );
               } else {
                 // Redirect to profile home if organization profile has locations
@@ -102,7 +102,7 @@ class BusinessAuthCallbacks implements AuthCallbacks {
               Get.offNamed(
                 Routes.SETUP_PROFILE.replaceAll(
                   ':profile_id',
-                  locationMember.organization!.id,
+                  locationMember.organization!.id!,
                 ),
               );
             } else if (locationMember.location != null &&
@@ -113,7 +113,7 @@ class BusinessAuthCallbacks implements AuthCallbacks {
                 Routes.SETUP_PROFILE_LOCATION
                     .replaceFirst(
                       ':profile_id',
-                      locationMember.organization!.id,
+                      locationMember.organization!.id!!,
                     )
                     .replaceFirst(':location_id', locationMember.location!.id!),
               );

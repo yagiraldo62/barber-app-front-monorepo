@@ -2,7 +2,7 @@ import 'package:bartoo/app/modules/appointments/controllers/schedule_appointment
 import 'package:bartoo/app/modules/appointments/widgets/schedule_appointment/schedule_appointment_input.dart';
 import 'package:bartoo/app/modules/auth/controllers/business_auth_controller.dart';
 import 'package:core/data/models/appointment_model.dart';
-import 'package:core/data/models/category_service_model.dart';
+import 'package:core/data/models/location_service_model.dart';
 import 'package:flutter/material.dart';
 import 'package:ui/widgets/button/selectable_entity_button.dart';
 import 'package:get/get.dart';
@@ -70,26 +70,26 @@ class ScheduleAppointment extends StatelessWidget {
                                         (category) => Column(
                                           children: [
                                             Text(category.name ?? ""),
-                                            Row(
-                                              children: selectableEntityButtonList<
-                                                CategoryServiceModel
-                                              >(
-                                                category.services,
-                                                (
-                                                  List<CategoryServiceModel>
-                                                  services,
-                                                ) =>
-                                                    scheduleAppointmentController
-                                                        .updateCategoryServices(
-                                                          category.id,
-                                                          services,
-                                                        ),
-                                                atLeatOne:
-                                                    scheduleAppointmentController
-                                                        .onlyOneServiceSelected
-                                                        .value,
-                                              ),
-                                            ),
+                                            // Row(
+                                            //   children: selectableEntityButtonList<
+                                            //     LocationServiceModel
+                                            //   >(
+                                            //     category.services,
+                                            //     (
+                                            //       List<LocationServiceModel>
+                                            //       services,
+                                            //     ) =>
+                                            //         scheduleAppointmentController
+                                            //             .updateCategoryServices(
+                                            //               category.id,
+                                            //               services,
+                                            //             ),
+                                            //     atLeatOne:
+                                            //         scheduleAppointmentController
+                                            //             .onlyOneServiceSelected
+                                            //             .value,
+                                            //   ),
+                                            // ),
                                           ],
                                         ),
                                       )

@@ -312,12 +312,12 @@ class LocationFormController extends GetxController
       late String profileId;
 
       if (scope is ProfileScope) {
-        profileId = scope.profile.id;
+        profileId = scope.profile.id!;
       } else if (scope is LocationMemberScope) {
         if (scope.locationMember.organization == null) {
           throw Exception('No organization found in scope');
         }
-        profileId = scope.locationMember.organization!.id;
+        profileId = scope.locationMember.organization!.id!;
       } else {
         throw Exception('Invalid scope type for creating location');
       }

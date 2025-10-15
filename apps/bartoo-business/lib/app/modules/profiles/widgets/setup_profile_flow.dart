@@ -1,6 +1,7 @@
 import 'package:bartoo/app/modules/locations/widgets/forms/location_form.dart';
 import 'package:bartoo/app/modules/profiles/controllers/setup_scope_controller.dart';
 import 'package:bartoo/app/modules/profiles/widgets/forms/profile_form.dart';
+import 'package:bartoo/app/modules/services/widgets/location_services_form/location_services_form.dart';
 import 'package:core/data/models/profile_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -81,7 +82,23 @@ class SetupScopeFlow extends StatelessWidget {
                   title: 'Servicios',
                   stepTitle: 'Configurar Servicios',
                   svgAsset: "assets/images/svgs/services.svg",
-                  build: () => const SizedBox(height: 200),
+                  build:
+                      () =>
+                          controller.currentProfile.value?.id != null &&
+                                  controller.currentLocation.value?.id != null
+                              ? LocationServicesForm(
+                                profileId: controller.currentProfile.value!.id!,
+                                locationId:
+                                    controller.currentLocation.value!.id!,
+                                servicesUp: false,
+                                selectedCategoryIds:
+                                    controller.currentProfile.value!.categories
+                                        ?.map((c) => c.id)
+                                        .toList() ??
+                                    [],
+                                onSaved: (success) => (success),
+                              )
+                              : const SizedBox(),
                 ),
         CreateProfileStep.availability:
             (CreateProfileStep step, SetupScopeController controller) =>

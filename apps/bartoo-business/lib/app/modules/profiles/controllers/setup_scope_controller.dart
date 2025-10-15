@@ -1,4 +1,5 @@
 import 'package:bartoo/app/modules/auth/controllers/business_auth_controller.dart';
+import 'package:core/data/models/location_service_model.dart';
 import 'package:core/data/models/profile_model.dart';
 import 'package:core/data/models/shared/location_model.dart';
 import 'package:core/modules/auth/classes/selected_scope.dart';
@@ -114,15 +115,30 @@ class SetupScopeController extends GetxController {
     }
 
     await _authController.refreshUser();
-    await _authController.setAuthDefaultScope(
-      preferredScope: ProfileScope(profile),
-    );
+    _authController.selectLocationMemberScope(profile.id!);
     currentProfile.value = profile;
+    currentLocation.value = LocationModel(name: profile.name);
     next();
   }
 
-  void onLocationSaved(LocationModel location) {
+  void onLocationSaved(LocationModel location) async {
     currentLocation.value = location;
+    await _authController.refreshUser();
+
+    _authController.selectLocationMemberScope(
+      currentProfile.value!.id!,
+      location.id!,
+    );
+    next();
+  }
+
+  void onServicesSaved(List<LocationServiceModel> services) async {
+    await _authController.refreshUser();
+
+    _authController.selectLocationMemberScope(
+      currentProfile.value!.id!,
+      currentLocation.value!.id!,
+    );
     next();
   }
 

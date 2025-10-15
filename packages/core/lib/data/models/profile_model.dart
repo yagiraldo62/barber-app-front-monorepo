@@ -19,7 +19,7 @@ class ProfileModel {
   });
 
   // Primary fields
-  String id;
+  String? id;
   String name; // Unique profile name
   String? title; // Profile's professional title
   String? description; // Profile description
@@ -58,7 +58,7 @@ class ProfileModel {
     final profileType = _parseProfileType(jsonData['type'] as String?);
 
     return ProfileModel(
-        id: jsonData['id'] as String? ?? '',
+        id: jsonData['id'] as String?,
         name: jsonData['name'] as String? ?? '',
         type: profileType,
       )

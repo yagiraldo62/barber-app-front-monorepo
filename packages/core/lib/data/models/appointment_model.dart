@@ -1,7 +1,7 @@
 import 'package:core/data/models/appointment_client_info_model.dart';
 import 'package:core/data/models/appointment_datetime_model.dart';
 import 'package:core/data/models/profile_model.dart';
-import 'package:core/data/models/category_service_model.dart';
+import 'package:core/data/models/location_service_model.dart';
 import 'package:core/data/models/user_model.dart';
 
 class AppointmentState {
@@ -22,7 +22,7 @@ class AppointmentModel {
   late String? state;
   late int? duration;
   late num? price;
-  late List<CategoryServiceModel>? services = [];
+  late List<LocationServiceModel>? services = [];
 
   AppointmentModel({
     this.id = "",
@@ -58,7 +58,7 @@ class AppointmentModel {
       price: jsonData['price'] as num?,
       startTime: DateTime.parse(jsonData['start_time']),
       endTime: DateTime.parse(jsonData['end_time']),
-      services: CategoryServiceModel.listFromJson(jsonData['services']),
+      services: LocationServiceModel.listFromJson(jsonData['services']),
     );
   }
 

@@ -1,5 +1,6 @@
 import 'package:core/data/models/user_model.dart';
 import 'package:core/modules/auth/classes/selected_scope.dart';
+import 'package:core/modules/auth/controllers/base_auth_actions_controller.dart';
 import 'package:core/modules/auth/repository/auth_repository.dart';
 import 'package:get/get.dart';
 
@@ -35,7 +36,7 @@ abstract class BaseAuthController extends GetxController {
 
   Future<UserModel> refreshUser() async {
     validating.value = true;
-    UserModel? currentUser = await authRepository.getAuthUser();
+    UserModel? currentUser = await authRepository?.fetchAuthData();
     setUser(currentUser);
     validating.value = false;
 

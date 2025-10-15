@@ -91,7 +91,7 @@ class LocationsSetupCheckerScreen extends StatelessWidget {
                       if (location.id != null)
                         Get.toNamed(
                           Routes.UPDATE_SERVICES
-                              .replaceAll(':artist_id', artist.id)
+                              .replaceAll(':artist_id', artist.id!)
                               .replaceAll(':artist_location_id', location.id!),
                           parameters: {'isCreation': 'true'},
                         ),

@@ -1,5 +1,5 @@
 import 'package:core/data/models/profile_model.dart';
-import 'package:core/data/models/category_service_model.dart';
+import 'package:core/data/models/location_service_model.dart';
 import 'package:core/data/models/shared/abstract/selectable_entity.dart';
 
 class ArtistLocationServiceModel extends SelectableEntity {
@@ -23,7 +23,7 @@ class ArtistLocationServiceModel extends SelectableEntity {
   double price;
 
   ProfileModel? artist;
-  List<CategoryServiceModel> items;
+  List<LocationServiceModel> items;
 
   factory ArtistLocationServiceModel.fromJson(Map<String, dynamic> json) {
     return ArtistLocationServiceModel(
@@ -33,7 +33,7 @@ class ArtistLocationServiceModel extends SelectableEntity {
       price: (json['price'] as num).toDouble(),
       items:
           json['items'] != null
-              ? CategoryServiceModel.listFromJson(json['items'])
+              ? LocationServiceModel.listFromJson(json['items'])
               : [],
       artist:
           json['artist'] != null ? ProfileModel.fromJson(json['artist']) : null,

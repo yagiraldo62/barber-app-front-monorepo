@@ -9,7 +9,7 @@ import 'package:core/data/models/artist_location_service_model.dart';
 import 'package:core/data/models/artist_week_day_availability.dart';
 import 'package:core/data/models/time_of_day.dart';
 import 'package:core/data/models/category_model.dart';
-import 'package:core/data/models/category_service_model.dart';
+import 'package:core/data/models/location_service_model.dart';
 import 'package:core/data/models/shared/duration_and_price_model.dart';
 import 'package:core/modules/appointments/repository/appointment_repository.dart';
 import 'package:get/get.dart';
@@ -126,12 +126,12 @@ class ScheduleAppointmentController extends GetxController {
   /// Update the services in a category, update duration and price
   void updateCategoryServices(
     String categoryId,
-    List<CategoryServiceModel> services,
+    List<LocationServiceModel> services,
   ) {
     List<CategoryModel> newCategories =
         categories.map((category) {
           if (category.id == categoryId) {
-            category.services = services;
+            // category.services = services;
           }
 
           return category;
@@ -143,7 +143,7 @@ class ScheduleAppointmentController extends GetxController {
   }
 
   void updateDurationAndPrice(List<CategoryModel> newCategories) {
-    List<CategoryServiceModel> preselectedServices =
+    List<LocationServiceModel> preselectedServices =
         getSelectedServicesFromcategoryList(newCategories);
 
     DurationAndPriceModel initialDurationAndPrice =
@@ -246,7 +246,7 @@ class ScheduleAppointmentController extends GetxController {
       loadingArtistAvailabilty.value = true;
 
       artistPendingAppointments = await appointmentRepository.pendingByArtist(
-        appointment.artist!.id,
+        appointment.artist!.id!,
       );
       loadingArtistAvailabilty.value = false;
 

@@ -75,7 +75,7 @@ class LocationServiceProvider extends BaseProvider {
   ) async {
     final response = await put(
       '/profiles/$profileId/locations/$locationId/services',
-      FormData({'services': services}),
+      {'services': services},
     );
 
     Log('PUT /profiles/$profileId/locations/$locationId/services');

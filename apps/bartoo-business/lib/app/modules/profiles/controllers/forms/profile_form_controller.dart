@@ -142,7 +142,7 @@ class ProfileFormController extends GetxController
 
       if (currentProfile != null) {
         artist = await profileRepository.update(
-          currentProfile!.id,
+          currentProfile!.id!,
           nameController.text,
           selectedCategoriesId,
           titleController.text,
