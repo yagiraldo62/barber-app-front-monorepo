@@ -63,7 +63,9 @@ class _LocationServicesFormState extends State<LocationServicesForm> {
 
       // Decide which phase to show
       final bool shouldShowUpsert =
-          showUpsert.value || controller.hasExistingServices || controller.editableServices.isNotEmpty;
+          showUpsert.value ||
+          controller.hasExistingServices ||
+          controller.editableServices.isNotEmpty;
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -79,7 +81,24 @@ class _LocationServicesFormState extends State<LocationServicesForm> {
               },
             ),
           ] else ...[
-            UpsertLocationServices(controller: controller),
+            UpsertLocationServices(
+              controller: controller,
+              onSelectTemplate:
+                  controller.hasExistingServices
+                      ? null
+                      : () {
+                        // Clear current services and return to template selection
+                        controller.editableServices.clear();
+                        showUpsert.value = false;
+                      },
+              onStartFromScratch:
+                  controller.hasExistingServices
+                      ? null
+                      : () {
+                        // Clear all services to start fresh
+                        controller.editableServices.clear();
+                      },
+            ),
           ],
 
           const SizedBox(height: 16),
@@ -120,10 +139,7 @@ class _ErrorState extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-          ElevatedButton(
-            onPressed: onRetry,
-            child: const Text('Reintentar'),
-          ),
+          ElevatedButton(onPressed: onRetry, child: const Text('Reintentar')),
         ],
       ),
     );

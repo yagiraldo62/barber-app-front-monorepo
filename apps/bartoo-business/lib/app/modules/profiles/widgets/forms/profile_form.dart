@@ -4,6 +4,7 @@ import 'package:bartoo/app/modules/profiles/widgets/forms/steps/description_step
 import 'package:bartoo/app/modules/profiles/widgets/forms/steps/name_step.dart';
 import 'package:bartoo/app/modules/profiles/widgets/forms/steps/photo_step.dart';
 import 'package:bartoo/app/modules/profiles/widgets/forms/steps/title_step.dart';
+import 'package:bartoo/app/modules/profiles/widgets/forms/steps/work_mode_step.dart';
 import 'package:core/data/models/profile_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,6 +16,8 @@ class ProfileForm extends StatelessWidget {
   final ScrollController? scrollController;
   final void Function(ProfileModel)?
   onSaved; // Optional override when creation completes
+  final void Function(bool)?
+  onIndependentArtistToggled; // Optional override when creation completes
 
   const ProfileForm({
     super.key,
@@ -22,6 +25,7 @@ class ProfileForm extends StatelessWidget {
     this.isCreation = false,
     this.scrollController,
     this.onSaved,
+    this.onIndependentArtistToggled,
   });
 
   @override
@@ -32,11 +36,20 @@ class ProfileForm extends StatelessWidget {
         isCreation,
         scrollController: scrollController,
         onSavedCallback: onSaved,
+        onIndependentArtistToggled: onIndependentArtistToggled,
       ),
     );
 
     final controller = Get.find<ProfileFormController>();
     final steps = [
+      if (controller.profileType.value == ProfileType.artist)
+        StepInfo(
+          stepWidget: WorkModeStep(controller: controller),
+          condition:
+              () =>
+                  controller.currentStep.value.index >=
+                  ProfileFormStep.workMode.index,
+        ),
       StepInfo(
         stepWidget: NameStep(controller: controller),
         condition:

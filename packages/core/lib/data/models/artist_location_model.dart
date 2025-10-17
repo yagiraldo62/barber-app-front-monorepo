@@ -1,5 +1,5 @@
 import 'package:core/data/models/artist_location_service_model.dart';
-import 'package:core/data/models/artist_week_day_availability.dart';
+import 'package:core/data/models/week_day_availability.dart';
 
 class ArtistLocationModel {
   ArtistLocationModel({
@@ -30,7 +30,7 @@ class ArtistLocationModel {
   bool servicesUp;
   bool availabilityUp;
   List<ArtistLocationServiceModel>? services = [];
-  List<ArtistWeekDayAvailabilityModel>? availability = [];
+  List<WeekdayAvailabilityModel>? availability = [];
 
   factory ArtistLocationModel.fromJson(Map<String, dynamic> jsonData) {
     return ArtistLocationModel()
@@ -54,7 +54,7 @@ class ArtistLocationModel {
       ..services = ArtistLocationServiceModel.listFromJson(
         jsonData['services'],
       );
-    // ..availability = ArtistWeekDayAvailabilityModel.listFromJson(
+    // ..availability = WeekdayAvailabilityModel.listFromJson(
     //   jsonData['availability'],
     // );
   }

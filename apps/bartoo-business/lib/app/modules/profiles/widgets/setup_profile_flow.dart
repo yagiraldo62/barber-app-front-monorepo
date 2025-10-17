@@ -2,6 +2,7 @@ import 'package:bartoo/app/modules/locations/widgets/forms/location_form.dart';
 import 'package:bartoo/app/modules/profiles/controllers/setup_scope_controller.dart';
 import 'package:bartoo/app/modules/profiles/widgets/forms/profile_form.dart';
 import 'package:bartoo/app/modules/services/widgets/location_services_form/location_services_form.dart';
+import 'package:bartoo/app/modules/availability/widgets/availability_form/availability_form.dart';
 import 'package:core/data/models/profile_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -43,21 +44,26 @@ class SetupScopeFlow extends StatelessWidget {
       >
       stepsConfigByType = {
         CreateProfileStep.profile:
-            (CreateProfileStep step, SetupScopeController controller) =>
-                FlowStepConfig(
-                  step: step,
-                  title: 'Perfil',
-                  stepTitle: 'Crear Organización',
-                  svgAsset: "assets/images/svgs/organization.svg",
-                  build:
-                      () => ProfileForm(
-                        currentProfile: controller.currentProfile.value,
-                        isCreation: controller.currentProfile.value?.id == null,
-                        scrollController: scrollController,
-                        onSaved:
-                            (profile) => controller.onProfileSaved(profile),
-                      ),
-                ),
+            (
+              CreateProfileStep step,
+              SetupScopeController controller,
+            ) => FlowStepConfig(
+              step: step,
+              title:
+                  controller.profileType.value == ProfileType.artist
+                      ? "Artista"
+                      : "Organización",
+              stepTitle:
+                  '${controller.currentProfile.value?.id != null ? "Editar" : "Crear"} ${controller.profileType.value == ProfileType.artist ? "Artista" : "Organización"}',
+              svgAsset: "assets/images/svgs/organization.svg",
+              build:
+                  () => ProfileForm(
+                    currentProfile: controller.currentProfile.value,
+                    isCreation: controller.currentProfile.value?.id == null,
+                    scrollController: scrollController,
+                    onSaved: (profile) => controller.onProfileSaved(profile),
+                  ),
+            ),
         CreateProfileStep.location:
             (
               CreateProfileStep step,
@@ -65,7 +71,8 @@ class SetupScopeFlow extends StatelessWidget {
             ) => FlowStepConfig(
               step: step,
               title: 'Ubicación',
-              stepTitle: 'Crear Ubicación',
+              stepTitle:
+                  '${controller.currentLocation.value?.id != null ? "Editar" : "Crear"} Ubicación',
               svgAsset: "assets/images/svgs/location.svg",
               build:
                   () => LocationForm(
@@ -76,47 +83,70 @@ class SetupScopeFlow extends StatelessWidget {
                   ),
             ),
         CreateProfileStep.services:
-            (CreateProfileStep step, SetupScopeController controller) =>
-                FlowStepConfig(
-                  step: step,
-                  title: 'Servicios',
-                  stepTitle: 'Configurar Servicios',
-                  svgAsset: "assets/images/svgs/services.svg",
-                  build:
-                      () =>
-                          controller.currentProfile.value?.id != null &&
-                                  controller.currentLocation.value?.id != null
-                              ? LocationServicesForm(
-                                profileId: controller.currentProfile.value!.id!,
-                                locationId:
-                                    controller.currentLocation.value!.id!,
-                                servicesUp: false,
-                                selectedCategoryIds:
-                                    controller.currentProfile.value!.categories
-                                        ?.map((c) => c.id)
-                                        .toList() ??
-                                    [],
-                                onSaved: (success) => (success),
-                              )
-                              : const SizedBox(),
-                ),
+            (
+              CreateProfileStep step,
+              SetupScopeController controller,
+            ) => FlowStepConfig(
+              step: step,
+              title: 'Servicios',
+              stepTitle: 'Configurar Servicios',
+              svgAsset: "assets/images/svgs/services.svg",
+              build:
+                  () =>
+                      controller.currentProfile.value?.id != null &&
+                              controller.currentLocation.value?.id != null
+                          ? LocationServicesForm(
+                            profileId: controller.currentProfile.value!.id!,
+                            locationId: controller.currentLocation.value!.id!,
+                            servicesUp: false,
+                            selectedCategoryIds:
+                                controller.currentProfile.value!.categories
+                                    ?.map((c) => c.id)
+                                    .toList() ??
+                                [],
+                            onSaved: (services) => controller.onServicesSaved(),
+                          )
+                          : const SizedBox(),
+            ),
         CreateProfileStep.availability:
-            (CreateProfileStep step, SetupScopeController controller) =>
-                FlowStepConfig(
-                  step: step,
-                  title: 'Disponibilidad',
-                  stepTitle: 'Configurar Disponibilidad',
-                  svgAsset: "assets/images/svgs/availability.svg",
-                  build: () => const SizedBox(height: 200),
-                ),
+            (
+              CreateProfileStep step,
+              SetupScopeController controller,
+            ) => FlowStepConfig(
+              step: step,
+              title: 'Disponibilidad',
+              stepTitle: 'Configurar Disponibilidad',
+              svgAsset: "assets/images/svgs/availability.svg",
+              build:
+                  () =>
+                      controller.currentProfile.value?.id != null &&
+                              controller.currentLocation.value?.id != null
+                          ? AvailabilityForm(
+                            profileId: controller.currentProfile.value!.id!,
+                            locationId: controller.currentLocation.value!.id!,
+                            isCreation:
+                                (controller
+                                        .currentLocation
+                                        .value!
+                                        .availabilityUp ==
+                                    false),
+                            scrollController: scrollController,
+                            onSaved:
+                                (updated) => controller.onAvailabilitySaved(),
+                          )
+                          : const SizedBox(),
+            ),
       };
 
       // Artist: show profile form only (current flow)
-      if (ctrl.profileType.value == ProfileType.artist) {
+      if (ctrl.profileType.value == ProfileType.artist &&
+          ctrl.isIndependentArtist.value == false) {
         return ProfileForm(
           currentProfile: ctrl.currentProfile.value,
           isCreation: ctrl.currentProfile.value == null,
           scrollController: scrollController,
+          onSaved: (profile) => ctrl.onProfileSaved(profile),
+          onIndependentArtistToggled: ctrl.toggleIsIndependentArtist,
         );
       }
 

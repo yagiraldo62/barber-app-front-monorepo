@@ -1,13 +1,14 @@
 import 'package:base/providers/base_provider.dart';
 import 'package:core/data/models/shared/location_model.dart';
 import 'package:utils/log.dart';
+import 'package:latlong2/latlong.dart';
 
 class ArtistLocationProvider extends BaseProvider {
   createLocation(
     String profileId,
     String name,
     String address,
-    Map<String, double>? location, {
+    LatLng? location, {
     String? address2,
     String? city,
     String? state,
@@ -24,7 +25,7 @@ class ArtistLocationProvider extends BaseProvider {
           location != null
               ? {
                 'type': 'Point',
-                'coordinates': [location['longitude'], location['latitude']],
+                'coordinates': [location.longitude, location.latitude],
               }
               : null,
     });
@@ -37,10 +38,7 @@ class ArtistLocationProvider extends BaseProvider {
       'country': country,
       'location':
           location != null
-              ? {
-                'longitude': location['longitude'],
-                'latitude': location['latitude'],
-              }
+              ? {'longitude': location.longitude, 'latitude': location.latitude}
               : null,
     });
 

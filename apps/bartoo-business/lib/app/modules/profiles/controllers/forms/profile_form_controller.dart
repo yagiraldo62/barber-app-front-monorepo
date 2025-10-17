@@ -14,7 +14,7 @@ import 'package:ui/widgets/form/stepper_form_fields.dart';
 import 'package:utils/log.dart';
 import 'package:utils/snackbars.dart';
 
-enum ProfileFormStep { name, title, description, categories, photo }
+enum ProfileFormStep { workMode, name, title, description, categories, photo }
 
 class ProfileFormController extends GetxController
     implements StepperFormController<Rx<ProfileFormStep>> {
@@ -22,12 +22,15 @@ class ProfileFormController extends GetxController
   final bool isCreation;
   final void Function(ProfileModel)? onSavedCallback;
   final ScrollController? scrollController;
+  final void Function(bool)?
+  onIndependentArtistToggled; // Optional override when creation completes
 
   ProfileFormController(
     this.currentProfile,
     this.isCreation, {
     this.onSavedCallback,
     this.scrollController,
+    this.onIndependentArtistToggled,
   }) {
     Log('Current Profile= ${currentProfile?.toJson()}');
   }
@@ -54,10 +57,11 @@ class ProfileFormController extends GetxController
   final loading = false.obs;
   final typeSelected = false.obs;
   final profileType = ProfileType.organization.obs;
+  final isIndependentArtist = Rx<bool?>(null);
   final animationsComplete = false.obs;
 
   @override
-  final currentStep = Rx<ProfileFormStep>(ProfileFormStep.name);
+  final currentStep = Rx<ProfileFormStep>(ProfileFormStep.workMode);
   @override
   void onInit() {
     super.onInit();
@@ -66,9 +70,17 @@ class ProfileFormController extends GetxController
     final arguments = Get.arguments as Map<String, dynamic>?;
     final userType = arguments?['userType'] as String?;
 
+    currentStep.value = ProfileFormStep.name;
+
     // Set type based on route argument
     if (userType == 'artist') {
       profileType.value = ProfileType.artist;
+      isIndependentArtist.value = currentProfile?.independentArtist;
+      // Defer callback to avoid calling setState during build
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        onIndependentArtistToggled?.call(isIndependentArtist.value ?? false);
+      });
+      currentStep.value = ProfileFormStep.workMode;
     } else if (userType == 'organization') {
       profileType.value = ProfileType.organization;
     } else {
@@ -84,7 +96,6 @@ class ProfileFormController extends GetxController
       nameController.text = currentProfile!.name;
       titleController.text = currentProfile!.title ?? '';
       descriptionController.text = currentProfile!.description ?? '';
-      currentStep.value = ProfileFormStep.name;
     }
 
     loadCategories();
@@ -148,6 +159,7 @@ class ProfileFormController extends GetxController
           titleController.text,
           descriptionController.text,
           image.value,
+          independentArtist: isIndependentArtist.value,
         );
       } else {
         artist = await profileRepository.create(
@@ -157,6 +169,7 @@ class ProfileFormController extends GetxController
           title: titleController.text,
           description: descriptionController.text,
           image: image.value,
+          independentArtist: isIndependentArtist.value,
         );
       }
 
@@ -201,7 +214,25 @@ class ProfileFormController extends GetxController
   void setType(ProfileType profileTypeType) {
     profileType.value = profileTypeType;
     typeSelected.value = true;
-    currentStep.value = ProfileFormStep.name;
+
+    if (profileTypeType == ProfileType.artist) {
+      isIndependentArtist.value = false;
+      onIndependentArtistToggled?.call(false);
+      currentStep.value = ProfileFormStep.workMode;
+    } else {
+      currentStep.value = ProfileFormStep.name;
+    }
+  }
+
+  void setWorkMode(bool independent) {
+    isIndependentArtist.value = independent;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      onIndependentArtistToggled?.call(independent);
+    });
+    // Enable button after selection
+    Future.delayed(const Duration(milliseconds: 100), () {
+      animationsComplete.value = true;
+    });
   }
 
   void onAnimationsComplete() {
@@ -211,6 +242,17 @@ class ProfileFormController extends GetxController
   @override
   void nextStep() {
     switch (currentStep.value) {
+      case ProfileFormStep.workMode:
+        if (isIndependentArtist.value == null) {
+          Snackbars.error(
+            message: 'Debes seleccionar una modalidad de trabajo',
+          );
+          return;
+        }
+        // Reset animation state when successfully moving to next step
+        animationsComplete.value = false;
+        currentStep.value = ProfileFormStep.name;
+        break;
       case ProfileFormStep.name:
         if (nameController.text.isEmpty) {
           Snackbars.error(message: 'El nombre comercial es requerido');

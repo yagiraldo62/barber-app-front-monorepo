@@ -15,7 +15,7 @@ List<TimeOfDayModel> filterTimesByArtistPendingAppointments(
   // });
   String formatedDate = date.toMoment().format("YYYY-MM-DD");
   return timesList.where((time) {
-    final itemTime = inputFormat.parse("$formatedDate ${time.hour}");
+    final itemTime = inputFormat.parse("$formatedDate ${time}");
     return artistPendingAppointments.firstWhereOrNull(
           (appointment) =>
               isTimeBetweenAppointmentDateRange(itemTime, appointment) &&

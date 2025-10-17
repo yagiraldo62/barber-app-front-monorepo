@@ -99,7 +99,6 @@ class _MapBoxViewState extends State<MapBoxView> {
     //     .map((markerResource) => markerResource["repaintBoundary"])
     //     .toList();
 
-    return const SizedBox();
     return Expanded(
       child: Stack(
         children: [

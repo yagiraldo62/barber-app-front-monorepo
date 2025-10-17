@@ -13,6 +13,8 @@ class SetupScopeController extends GetxController {
   final BusinessAuthController _authController =
       Get.find<BusinessAuthController>();
 
+  final isIndependentArtist = false.obs;
+
   /// Selected profile type for this creation flow
   final isInitialized = RxBool(false);
 
@@ -64,6 +66,12 @@ class SetupScopeController extends GetxController {
     // delay
     await Future.delayed(const Duration(milliseconds: 300));
     isInitialized.value = true;
+  }
+
+  void toggleIsIndependentArtist(bool value) {
+    isIndependentArtist.value = value;
+
+    _buildSteps();
   }
 
   int get currentIndex {
@@ -132,7 +140,7 @@ class SetupScopeController extends GetxController {
     next();
   }
 
-  void onServicesSaved(List<LocationServiceModel> services) async {
+  void onServicesSaved() async {
     await _authController.refreshUser();
 
     _authController.selectLocationMemberScope(
@@ -140,6 +148,16 @@ class SetupScopeController extends GetxController {
       currentLocation.value!.id!,
     );
     next();
+  }
+
+  void onAvailabilitySaved() async {
+    await _authController.refreshUser();
+
+    _authController.selectLocationMemberScope(
+      currentProfile.value!.id!,
+      currentLocation.value!.id!,
+    );
+    Get.offAllNamed(Routes.ARTIST_HOME);
   }
 
   /// Initializes the current profile and location based on route parameters and user context.
@@ -286,6 +304,11 @@ class SetupScopeController extends GetxController {
       }
 
       lastAvailableStep.value = currentStep.value;
+    } else if (profileType.value == ProfileType.artist &&
+        isIndependentArtist.value == true) {
+      steps.add(CreateProfileStep.location);
+      steps.add(CreateProfileStep.services);
+      steps.add(CreateProfileStep.availability);
     }
   }
 }

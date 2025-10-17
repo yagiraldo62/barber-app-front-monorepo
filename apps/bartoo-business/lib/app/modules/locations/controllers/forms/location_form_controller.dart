@@ -4,6 +4,7 @@ import 'package:core/modules/auth/classes/selected_scope.dart';
 import 'package:core/modules/locations/providers/artist_location_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:ui/widgets/form/stepper_form_fields.dart';
 import 'package:utils/snackbars.dart';
 import 'package:utils/log.dart';
@@ -20,7 +21,7 @@ class LocationFormController extends GetxController
 
   // Current location data
   LocationModel? currentLocation;
-  final location = Rx<Map<String, double>?>(null);
+  final Rx<LatLng?> location = Rx<LatLng?>(null);
 
   bool isCreation;
   final void Function(LocationModel)? onSavedCallback;
@@ -63,6 +64,10 @@ class LocationFormController extends GetxController
     setCurrentState(LocationFormStep.name);
   }
 
+  void setLocation(LatLng latLng) {
+    location.value = latLng;
+  }
+
   void _initializeControllers() async {
     // Initialize animation state
     animationsComplete.value = false;
@@ -103,10 +108,10 @@ class LocationFormController extends GetxController
         // Optionally set the coordinates
         if (locationData['latitude'] != null &&
             locationData['longitude'] != null) {
-          location.value = {
-            'latitude': locationData['latitude'] as double,
-            'longitude': locationData['longitude'] as double,
-          };
+          location.value = LatLng(
+            locationData['latitude'] as double,
+            locationData['longitude'] as double,
+          );
         }
       }
     } catch (e) {
@@ -249,10 +254,6 @@ class LocationFormController extends GetxController
       return false;
     }
     return true;
-  }
-
-  void setLocation(Map<String, double> newLocation) {
-    location.value = newLocation;
   }
 
   /// Get address information from coordinates and populate the form fields

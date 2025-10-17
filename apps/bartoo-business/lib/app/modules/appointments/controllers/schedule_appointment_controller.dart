@@ -6,7 +6,7 @@ import 'package:bartoo/app/modules/category/transformers/relate_services_to_cate
 import 'package:core/data/models/appointment_datetime_model.dart';
 import 'package:core/data/models/appointment_model.dart';
 import 'package:core/data/models/artist_location_service_model.dart';
-import 'package:core/data/models/artist_week_day_availability.dart';
+import 'package:core/data/models/week_day_availability.dart';
 import 'package:core/data/models/time_of_day.dart';
 import 'package:core/data/models/category_model.dart';
 import 'package:core/data/models/location_service_model.dart';
@@ -38,13 +38,13 @@ class ScheduleAppointmentController extends GetxController {
 
   late List<AppointmentDatetimeModel>? artistPendingAppointments;
 
-  final Rx<ArtistWeekDayAvailabilityModel?> currentDateAvailability =
-      Rxn<ArtistWeekDayAvailabilityModel>();
+  final Rx<WeekdayAvailabilityModel?> currentDateAvailability =
+      Rxn<WeekdayAvailabilityModel>();
   final RxList<TimeOfDayModel> currentTimesAvailability =
       <TimeOfDayModel>[].obs;
   late RxList<CategoryModel> categories = <CategoryModel>[].obs;
 
-  late List<ArtistWeekDayAvailabilityModel> artistAbailability;
+  late List<WeekdayAvailabilityModel> artistAbailability;
   late AppointmentModel appointment;
   late Function onAppointmentScheduled;
 
@@ -73,7 +73,7 @@ class ScheduleAppointmentController extends GetxController {
   /// initialize date value and availability
   void initializeDate(
     DateTime? datetime,
-    List<ArtistWeekDayAvailabilityModel>? availability,
+    List<WeekdayAvailabilityModel>? availability,
   ) {
     // bool timeInitialized = false;
     // Moment dateForAvailability = date.value;
@@ -164,8 +164,8 @@ class ScheduleAppointmentController extends GetxController {
     bool timeInitialized = false,
   }) async {
     // get the artist´s availability of the current date weekday from the artist availability
-    ArtistWeekDayAvailabilityModel availability = artistAbailability.firstWhere(
-      (availabilityDay) => availabilityDay.day == date.weekday,
+    WeekdayAvailabilityModel availability = artistAbailability.firstWhere(
+      (availabilityDay) => availabilityDay.weekday == date.weekday,
     );
 
     // Get the available times list based on the artist´s availability  of the current weekday and get only times after the current time

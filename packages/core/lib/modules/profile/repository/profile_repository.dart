@@ -49,6 +49,7 @@ class ProfileRepository {
     String? title,
     String? description,
     XFile? image,
+    bool? independentArtist,
   }) async {
     try {
       ProfileModel? createdProfile = await profileProvider.createProfile(
@@ -57,6 +58,7 @@ class ProfileRepository {
         type: type,
         title: title,
         description: description,
+        independentArtist: independentArtist,
       );
 
       if (createdProfile?.id != null && image != null) {
@@ -82,8 +84,9 @@ class ProfileRepository {
     List<String> categoriesId,
     String title,
     String description,
-    XFile? image,
-  ) async {
+    XFile? image, {
+    bool? independentArtist,
+  }) async {
     try {
       ProfileModel? profileResponse = await profileProvider.updateProfile(
         id,
@@ -91,6 +94,7 @@ class ProfileRepository {
         categoriesId,
         title,
         description,
+        independentArtist: independentArtist,
       );
 
       if (profileResponse?.id != null && image != null) {

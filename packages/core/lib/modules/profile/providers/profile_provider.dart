@@ -13,14 +13,21 @@ class ProfileProvider extends BaseProvider {
     String? description,
     ProfileType type = ProfileType.artist,
     List<String> categoriesId = const [],
+    bool? independentArtist,
   }) async {
-    final response = await post('$_baseUrl', {
+    final Map<String, dynamic> body = {
       'name': name,
       'categories_id': categoriesId,
       'title': title,
       'type': type.toJson(),
       'description': description,
-    });
+    };
+
+    if (independentArtist != null) {
+      body['independent_artist'] = independentArtist;
+    }
+
+    final response = await post('$_baseUrl', body);
 
     if ((response.body?["ok"] ?? false) != true) {
       return null;
@@ -38,14 +45,21 @@ class ProfileProvider extends BaseProvider {
     String name,
     List<String> categoriesId,
     String title,
-    String description,
-  ) async {
-    final response = await post('$_baseUrl/$id/update', {
+    String description, {
+    bool? independentArtist,
+  }) async {
+    final Map<String, dynamic> body = {
       'name': name,
       'categories_id': categoriesId,
       'title': title,
       'description': description,
-    });
+    };
+
+    if (independentArtist != null) {
+      body['independent_artist'] = independentArtist;
+    }
+
+    final response = await post('$_baseUrl/$id/update', body);
 
     if ((response.body?["ok"] ?? false) != true) {
       return null;

@@ -76,43 +76,32 @@ class _ServicesTemplatesSelectionState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Selected categories summary
-          Text(
-            'Categorías seleccionadas',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const SizedBox(height: 8),
-          if (widget.categories.isEmpty)
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children:
-                  widget.selectedCategoryIds
-                      .map((id) => Chip(label: Text(id)))
-                      .toList(),
-            )
-          else
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children:
-                  widget.categories
-                      .where((c) => widget.selectedCategoryIds.contains(c.id))
-                      .map((c) => Chip(label: Text(c.name ?? '')))
-                      .toList(),
-            ),
+          // Text(
+          //   'Categorías seleccionadas',
+          //   style: Theme.of(context).textTheme.titleMedium,
+          // ),
+          // const SizedBox(height: 8),
+          // if (widget.categories.isEmpty)
+          //   Wrap(
+          //     spacing: 8,
+          //     runSpacing: 8,
+          //     children:
+          //         widget.selectedCategoryIds
+          //             .map((id) => Chip(label: Text(id)))
+          //             .toList(),
+          //   )
+          // else
+          //   Wrap(
+          //     spacing: 8,
+          //     runSpacing: 8,
+          //     children:
+          //         widget.categories
+          //             .where((c) => widget.selectedCategoryIds.contains(c.id))
+          //             .map((c) => Chip(label: Text(c.name ?? '')))
+          //             .toList(),
+          //   ),
 
-          const SizedBox(height: 12),
-
-          // Selected template items summary
-          if (controller.selectedTemplateIds.isNotEmpty) ...[
-            Text(
-              'Servicios en plantillas seleccionadas',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-            _SelectedItemsList(controller: controller),
-            const SizedBox(height: 16),
-          ],
+          // const SizedBox(height: 12),
 
           // Templates list
           Text(
@@ -159,6 +148,17 @@ class _ServicesTemplatesSelectionState
                       .toList(),
             ),
           const SizedBox(height: 16),
+
+          // Selected template items summary
+          if (controller.selectedTemplateIds.isNotEmpty) ...[
+            Text(
+              'Servicios en plantillas seleccionadas',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 8),
+            _SelectedItemsList(controller: controller),
+            const SizedBox(height: 16),
+          ],
 
           // Confirm button
           Align(
