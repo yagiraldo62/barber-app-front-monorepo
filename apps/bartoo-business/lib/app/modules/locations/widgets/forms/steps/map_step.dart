@@ -87,7 +87,10 @@ class LocationMapStep extends StatelessWidget {
                   zoom: 17.0, // Same zoom as picker
                   showMarker: true,
                   markerIcon: Icons.person_pin_circle, // Same icon as picker
-                  markerColor: Colors.red, // Same color as picker
+                  markerColor:
+                      Theme.of(
+                        context,
+                      ).colorScheme.primary, // Same color as picker
                   markerSize: 50, // Same size as picker
                   enableInteractions: false,
                 ),
@@ -96,69 +99,6 @@ class LocationMapStep extends StatelessWidget {
               const SizedBox(height: 16),
 
               // Location info card
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.check_circle,
-                            color: Colors.green[700],
-                            size: 20,
-                          ),
-                          const SizedBox(width: 8),
-                          const Text(
-                            'Ubicación seleccionada',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          const Icon(Icons.location_on, size: 16),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              'Lat: ${selectedLocation.latitude.toStringAsFixed(6)}, '
-                              'Lng: ${selectedLocation.longitude.toStringAsFixed(6)}',
-                              style: const TextStyle(fontSize: 12),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ] else ...[
-              // Info banner when no location selected
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.orange[50],
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.orange[200]!),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.info_outline, color: Colors.orange[700]),
-                    const SizedBox(width: 12),
-                    const Expanded(
-                      child: Text(
-                        'Selecciona la ubicación exacta de tu negocio en el mapa',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             ],
 
             const SizedBox(height: 24),

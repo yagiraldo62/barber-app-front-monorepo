@@ -42,6 +42,23 @@ class TimeOfDayModel {
 
   const TimeOfDayModel({required this.id, required this.time});
 
+  /// Formats the time in 12-hour format with AM/PM
+  /// Example: 14:30 -> 2:30 PM
+  String format12Hour() {
+    final hour = time.hourOfPeriod == 0 ? 12 : time.hourOfPeriod;
+    final minute = time.minute.toString().padLeft(2, '0');
+    final period = time.period == DayPeriod.am ? 'AM' : 'PM';
+    return '$hour:$minute $period';
+  }
+
+  /// Formats the time in 24-hour format
+  /// Example: 14:30 -> 14:30
+  String format24Hour() {
+    final hour = time.hour.toString().padLeft(2, '0');
+    final minute = time.minute.toString().padLeft(2, '0');
+    return '$hour:$minute';
+  }
+
   /// Parses a time string in "HH:mm:ss" format and returns a TimeOfDay object
   static TimeOfDay timeFromString(String timeString) {
     final parts = timeString.split(':');

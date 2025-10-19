@@ -174,11 +174,8 @@ class AvailabilityFormController extends GetxController
     loading.value = true;
     try {
       final payload = buildUpsertPayload();
-      final updated = await _locationAvailabilityProvider.upsertLocationAvailability(
-        profileId,
-        locationId,
-        payload,
-      );
+      final updated = await _locationAvailabilityProvider
+          .upsertLocationAvailability(profileId, locationId, payload);
       existingAvailability.assignAll(updated);
       _setEditableFromExisting();
       onSavedCallback?.call(updated);
@@ -192,16 +189,44 @@ class AvailabilityFormController extends GetxController
   // Editable operations
   void addSlot(int weekday) {
     if (times.isEmpty) return;
-    final defaultStart = times.first;
-    final defaultEnd = times.length > 1 ? times[1] : times.first;
+
+    final List<WeekdayAvailabilityModel> existingSlots =
+        editableAvailability[weekday] ?? <WeekdayAvailabilityModel>[];
+
+    // Find the slot with the latest end time
+    TimeOfDayModel defaultStart;
+    TimeOfDayModel defaultEnd;
+
+    if (existingSlots.isEmpty) {
+      // If no slots exist, use first and second time from available times
+      defaultStart = times.first;
+      defaultEnd = times.length > 1 ? times[1] : times.first;
+    } else {
+      // Find the slot with the latest end time
+      final latestSlot = existingSlots.reduce((current, next) {
+        return current.endTime.id > next.endTime.id ? current : next;
+      });
+
+      // New slot starts where the latest slot ends
+      defaultStart = latestSlot.endTime;
+
+      // Find the next available time after the start time
+      final startIndex = times.indexWhere((t) => t.id == defaultStart.id);
+      if (startIndex >= 0 && startIndex < times.length - 1) {
+        defaultEnd = times[startIndex + 1];
+      } else {
+        // If we're at the end, just use the same time (will be invalid but user can change it)
+        defaultEnd = defaultStart;
+      }
+    }
+
     final slot = WeekdayAvailabilityModel(
       weekday: weekday,
       startTime: defaultStart,
       endTime: defaultEnd,
     );
-    final List<WeekdayAvailabilityModel> list = [
-      ...(editableAvailability[weekday] ?? <WeekdayAvailabilityModel>[]),
-    ];
+
+    final List<WeekdayAvailabilityModel> list = [...existingSlots];
     list.add(slot);
     editableAvailability[weekday] = list;
   }
@@ -241,6 +266,61 @@ class AvailabilityFormController extends GetxController
       endTime: value,
     );
     editableAvailability[weekday] = list;
+  }
+
+  /// Checks if a time should be disabled for a specific slot
+  ///
+  /// For start time: disable times that overlap with other slots
+  /// For end time: disable times that are before or equal to start time, or overlap with other slots
+  bool isTimeDisabledForSlot({
+    required int weekday,
+    required int slotIndex,
+    required TimeOfDayModel time,
+    required bool isStartTime,
+  }) {
+    final slots = editableAvailability[weekday] ?? <WeekdayAvailabilityModel>[];
+    if (slotIndex < 0 || slotIndex >= slots.length) return false;
+
+    final currentSlot = slots[slotIndex];
+
+    // For end time: must be after start time
+    if (!isStartTime) {
+      if (time.id <= currentSlot.startTime.id) {
+        return true;
+      }
+    }
+
+    // Check for overlaps with other slots
+    for (int i = 0; i < slots.length; i++) {
+      if (i == slotIndex) continue; // Skip the current slot
+
+      final otherSlot = slots[i];
+      final otherStart = otherSlot.startTime.id;
+      final otherEnd = otherSlot.endTime.id;
+
+      if (isStartTime) {
+        // For start time: disable if it falls within another slot's range
+        // or if it would cause the end time to overlap
+        if (time.id >= otherStart && time.id < otherEnd) {
+          return true;
+        }
+        // Also disable if the current end time would overlap
+        if (currentSlot.endTime.id > otherStart && time.id < otherStart) {
+          return true;
+        }
+      } else {
+        // For end time: disable if it falls within another slot's range
+        if (time.id > otherStart && time.id <= otherEnd) {
+          return true;
+        }
+        // Also disable if it would cause overlap
+        if (time.id > otherEnd && currentSlot.startTime.id < otherEnd) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 
   List<Map<String, dynamic>> buildUpsertPayload() {

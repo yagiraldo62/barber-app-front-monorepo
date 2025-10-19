@@ -1,11 +1,14 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Typography;
 import 'package:get/get.dart';
-import 'package:ui/widgets/button/selectable_button.dart';
+import 'package:intl/intl.dart';
+import 'package:ui/widgets/button/app_button.dart';
+import 'package:ui/widgets/typography/typography.dart';
 import 'package:core/data/models/category_model.dart';
 import 'package:core/data/models/services_template_item_model.dart';
 import 'package:core/data/models/location_service_model.dart';
 
 import 'services_templates_selection_controller.dart';
+import 'template_selection_buttons.dart';
 
 class ServicesTemplatesSelection extends StatefulWidget {
   const ServicesTemplatesSelection({
@@ -75,95 +78,29 @@ class _ServicesTemplatesSelectionState
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Selected categories summary
-          // Text(
-          //   'Categorías seleccionadas',
-          //   style: Theme.of(context).textTheme.titleMedium,
-          // ),
-          // const SizedBox(height: 8),
-          // if (widget.categories.isEmpty)
-          //   Wrap(
-          //     spacing: 8,
-          //     runSpacing: 8,
-          //     children:
-          //         widget.selectedCategoryIds
-          //             .map((id) => Chip(label: Text(id)))
-          //             .toList(),
-          //   )
-          // else
-          //   Wrap(
-          //     spacing: 8,
-          //     runSpacing: 8,
-          //     children:
-          //         widget.categories
-          //             .where((c) => widget.selectedCategoryIds.contains(c.id))
-          //             .map((c) => Chip(label: Text(c.name ?? '')))
-          //             .toList(),
-          //   ),
-
-          // const SizedBox(height: 12),
-
-          // Templates list
-          Text(
-            'Plantillas disponibles',
-            style: Theme.of(context).textTheme.titleMedium,
+          TemplateSelectionButtons(
+            templates: controller.templates,
+            selectedTemplateIds: controller.selectedTemplateIds.toList(),
+            onTemplateToggle: controller.toggleTemplateSelection,
           ),
-          const SizedBox(height: 8),
-          if (controller.templates.isEmpty)
-            const Text('No hay plantillas para las categorías seleccionadas')
-          else
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children:
-                  controller.templates
-                      .map(
-                        (t) => SelectableButton(
-                          selected: controller.selectedTemplateIds.contains(
-                            t.id,
-                          ),
-                          onSelectionChange:
-                              () => controller.toggleTemplateSelection(t.id),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(t.name),
-                                if (t.category != null)
-                                  Text(
-                                    t.category!.name ?? '',
-                                    style:
-                                        Theme.of(context).textTheme.labelMedium,
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      )
-                      .toList(),
-            ),
           const SizedBox(height: 16),
 
           // Selected template items summary
           if (controller.selectedTemplateIds.isNotEmpty) ...[
-            Text(
-              'Servicios en plantillas seleccionadas',
-              style: Theme.of(context).textTheme.titleMedium,
+            Typography(
+              'Seleccione servicios en las plantillas de tus categorias seleccionadas',
+              variation: TypographyVariation.bodyMedium,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
             _SelectedItemsList(controller: controller),
             const SizedBox(height: 16),
           ],
 
           // Confirm button
           Align(
-            alignment: Alignment.centerLeft,
-            child: ElevatedButton.icon(
+            alignment: Alignment.centerRight,
+            child: AppButton(
+              label: 'Personalizar',
               onPressed:
                   controller.selectedTemplateIds.isNotEmpty
                       ? () {
@@ -171,8 +108,7 @@ class _ServicesTemplatesSelectionState
                         widget.onConfirmed(services);
                       }
                       : null,
-              icon: const Icon(Icons.check_circle),
-              label: const Text('Confirmar selección y personalizar'),
+              icon: const Icon(Icons.dashboard_customize),
             ),
           ),
         ],
@@ -208,24 +144,59 @@ class _SelectedItemsList extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  Typography(
                     '$categoryName · $subName',
-                    style: Theme.of(context).textTheme.labelLarge,
+                    variation: TypographyVariation.displayMedium,
                   ),
                   const SizedBox(height: 6),
-                  Wrap(
-                    spacing: 6,
-                    runSpacing: 6,
-                    children:
-                        list
-                            .map(
-                              (e) => Chip(
-                                label: Text(
-                                  '${e.name} · ${e.duration}min · ${e.price}',
-                                ),
-                              ),
-                            )
-                            .toList(),
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      final cardWidth = (constraints.maxWidth - 6) / 2;
+                      final currencyFormat = NumberFormat.currency(
+                        locale: 'es_CO',
+                        symbol: '',
+                        decimalDigits: 0,
+                      );
+                      return Wrap(
+                        spacing: 6,
+                        runSpacing: 6,
+                        children:
+                            list
+                                .map(
+                                  (e) => SizedBox(
+                                    width: cardWidth,
+                                    child: Card(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(12.0),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Typography(
+                                              e.name,
+                                              variation:
+                                                  TypographyVariation
+                                                      .labelMedium,
+                                              overflow: TextOverflow.ellipsis,
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Typography(
+                                              '${e.duration}min · \$${currencyFormat.format(e.price)}',
+                                              variation:
+                                                  TypographyVariation
+                                                      .labelSmall,
+                                              overflow: TextOverflow.ellipsis,
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                      );
+                    },
                   ),
                 ],
               ),

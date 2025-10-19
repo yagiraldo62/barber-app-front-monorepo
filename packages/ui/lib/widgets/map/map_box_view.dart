@@ -1,12 +1,11 @@
-import 'dart:typed_data';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'dart:ui' as ui;
 import 'package:latlong2/latlong.dart';
 import 'package:ui/widgets/map/map_marker.dart';
+import 'package:ui/widgets/map/base_themed_map.dart';
 
 List<Map<String, dynamic>> data = [
   {'id': '1', 'globalKey': GlobalKey(), 'widget': MarkerImage()},
@@ -20,14 +19,11 @@ class MapBoxView extends StatefulWidget {
 }
 
 class _MapBoxViewState extends State<MapBoxView> {
-  String? lightMapStyle;
-  String? darkMapStyle;
-  bool isDark = false;
   Map<String, Marker> markers = {};
   List<Map<String, dynamic>> markersResources = <Map<String, dynamic>>[];
-  // LatLng? center = const LatLng(45.521563, -122.677433);
-  LatLng? center;
+  LatLng center = const LatLng(45.521563, -122.677433);
   bool isLoaded = false;
+  final MapController mapController = MapController();
 
   // void _onMapCreated() {
   //   setMapStyle();
@@ -49,48 +45,7 @@ class _MapBoxViewState extends State<MapBoxView> {
   @override
   void initState() {
     super.initState();
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   Map<String, dynamic>? pos = authController.user.value?.location;
-    //   print(pos);
-    //   if (pos != null) {
-    //     Timer(const Duration(milliseconds: 300), () {
-    //       setState(() {
-    //         center = LatLng(pos['latitude'], pos['longitude']);
-    //       });
-    //       onBuildComplete();
-    //     });
-    //   } else {
-    //     getUserCurrentLocation().then((Position? pos) {
-    //       if (pos != null) {
-    //         setState(() {
-    //           center = LatLng(pos.latitude, pos.longitude);
-    //         });
-    //         onBuildComplete();
-    //       }
-    //     });
-    //   }
-    // });
-
-    // rootBundle
-    //     .loadString('assets/map_styles/light_map_style.txt')
-    //     .then((string) {
-    //   lightMapStyle = string;
-    //   // setMapStyle();
-    // });
-    // rootBundle
-    //     .loadString('assets/map_styles/dark_map_style.txt')
-    //     .then((string) {
-    //   darkMapStyle = string;
-    //   // setMapStyle();
-    // });
-
-    // themeManager.addListener(setMapStyle);
-  }
-
-  @override
-  void dispose() {
-    // themeManager.removeListener(setMapStyle);
-    super.dispose();
+    // Map initialization can be customized here if needed
   }
 
   @override
@@ -106,27 +61,12 @@ class _MapBoxViewState extends State<MapBoxView> {
             children: [
               const SizedBox(height: 3),
               Expanded(
-                child: FlutterMap(
-                  options: MapOptions(
-                    minZoom: 5,
-                    maxZoom: 18,
-                    // zoom: 13,
-                    // center: center,
-                  ),
-                  children: [
-                    TileLayer(
-                      urlTemplate: dotenv.env['MAPBOX_DARK_URL']!,
-                      additionalOptions: {
-                        'mapStyleId': dotenv.env['MAPBOX_DARK_STYLE_ID']!,
-                        'accessToken': dotenv.env['MAPBOX_ACCESS_TOKEN']!,
-                      },
-                      errorTileCallback: (tileimage, obj, stk) {
-                        print(tileimage);
-                        print(obj);
-                        print(stk);
-                      },
-                    ),
-                  ],
+                child: BaseThemedMap(
+                  mapController: mapController,
+                  center: center,
+                  zoom: 13,
+                  minZoom: 5.0,
+                  maxZoom: 18.0,
                 ),
                 // MapBox(
                 //   tiltGesturesEnabled: true,
@@ -205,10 +145,11 @@ class _MapBoxViewState extends State<MapBoxView> {
         data["globalKey"].currentContext?.findRenderObject()
             as RenderRepaintBoundary;
     ui.Image image = await boundary.toImage(pixelRatio: 1);
-    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    await image.toByteData(format: ui.ImageByteFormat.png);
+    // TODO: Implement marker generation if needed
     // return Marker(
     //   markerId: MarkerId(data["id"]),
-    //   position: center!,
+    //   position: center,
     //   icon: BitmapDescriptor.fromBytes(
     //     size: const Size(40, 40),
     //     byteData.buffer.asUint8List(),

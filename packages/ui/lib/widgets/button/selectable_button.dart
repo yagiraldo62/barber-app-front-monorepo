@@ -25,27 +25,14 @@ class SelectableButton extends StatelessWidget {
 
     return ElevatedButton(
       onPressed: () => onSelectionChange(),
-      style:
-          selected
-              ? ElevatedButton.styleFrom(shape: shape, padding: padding)
-              : ElevatedButton.styleFrom(
-                surfaceTintColor: Theme.of(context).cardTheme.color,
-                foregroundColor: Theme.of(context).cardTheme.color,
-                shadowColor: Theme.of(context).cardTheme.color,
-                shape: shape,
-                padding: padding,
-              ),
-      child: ColorFiltered(
-        colorFilter: ColorFilter.mode(color, BlendMode.modulate),
-        child: child,
+      style: ElevatedButton.styleFrom(
+        surfaceTintColor: color,
+        foregroundColor: color,
+        shadowColor: color,
+        shape: shape,
+        padding: padding,
       ),
-      // Text(text,
-      //     style: selected
-      //         ? const TextStyle()
-      //         : TextStyle(
-      //             color: Theme.of(context).textTheme.labelMedium?.color ??
-      //                 Colors.grey,
-      //           )),
+      child: child,
     );
   }
 }

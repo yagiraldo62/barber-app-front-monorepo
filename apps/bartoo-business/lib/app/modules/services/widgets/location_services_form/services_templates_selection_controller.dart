@@ -80,6 +80,11 @@ class ServicesTemplatesSelectionController extends GetxController {
       final fetched = await _servicesTemplateRepository
           .getServiceTemplatesByCategories(categoryIds);
       templates.assignAll(fetched);
+      
+      // Preselect the first template if available
+      if (templates.isNotEmpty && selectedTemplateIds.isEmpty) {
+        selectedTemplateIds.add(templates.first.id);
+      }
     } catch (e) {
       error.value = e.toString();
     } finally {
@@ -89,6 +94,10 @@ class ServicesTemplatesSelectionController extends GetxController {
 
   void toggleTemplateSelection(String templateId) {
     if (selectedTemplateIds.contains(templateId)) {
+      // Prevent deselecting if it's the only selected template
+      if (selectedTemplateIds.length <= 1) {
+        return;
+      }
       selectedTemplateIds.remove(templateId);
     } else {
       selectedTemplateIds.add(templateId);

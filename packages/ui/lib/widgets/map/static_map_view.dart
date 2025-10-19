@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:ui/widgets/map/base_themed_map.dart';
 
 /// A static map widget that displays a location with a marker
 /// and adjusts to its parent container size
@@ -68,32 +68,20 @@ class _StaticMapViewState extends State<StaticMapView> {
       borderRadius: BorderRadius.circular(8),
       child: Stack(
         children: [
-          FlutterMap(
+          // Use base themed map with marker layer
+          BaseThemedMap(
             mapController: _mapController,
-            options: MapOptions(
-              initialCenter: widget.location,
-              initialZoom: widget.zoom,
-              minZoom: 5.0,
-              maxZoom: 18.0,
-              // Disable interactions for static view
-              interactionOptions: InteractionOptions(
-                flags:
-                    widget.enableInteractions
-                        ? InteractiveFlag.all
-                        : InteractiveFlag.none,
-              ),
+            center: widget.location,
+            zoom: widget.zoom,
+            minZoom: 5.0,
+            maxZoom: 18.0,
+            interactionOptions: InteractionOptions(
+              flags:
+                  widget.enableInteractions
+                      ? InteractiveFlag.all
+                      : InteractiveFlag.none,
             ),
-            children: [
-              TileLayer(
-                urlTemplate:
-                    dotenv.env['MAPBOX_DARK_URL'] ??
-                    'https://api.mapbox.com/styles/v1/{mapStyleId}/tiles/256/{z}/{x}/{y}@2x?access_token={accessToken}',
-                additionalOptions: {
-                  'mapStyleId':
-                      dotenv.env['MAPBOX_DARK_STYLE_ID'] ?? 'mapbox/dark-v11',
-                  'accessToken': dotenv.env['MAPBOX_ACCESS_TOKEN'] ?? '',
-                },
-              ),
+            additionalLayers: [
               if (widget.showMarker)
                 MarkerLayer(
                   markers: [

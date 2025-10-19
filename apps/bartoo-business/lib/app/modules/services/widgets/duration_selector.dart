@@ -1,4 +1,5 @@
 import 'package:ui/widgets/input/text_field.dart';
+import 'package:ui/widgets/selector/common_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -72,88 +73,40 @@ class DurationSelector extends StatelessWidget {
 
   // Función para mostrar el diálogo de selección
   void _showDurationPicker(BuildContext context) {
-    final theme = Theme.of(context);
-
-    showModalBottomSheet(
+    CommonSelector.show<int>(
       context: context,
-      backgroundColor: theme.colorScheme.surface,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (context) {
-        return Container(
-          padding: EdgeInsets.symmetric(vertical: 20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 8,
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.schedule, color: theme.colorScheme.primary),
-                    SizedBox(width: 12),
-                    Text(
-                      'Seleccionar duración',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.onSurface,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Divider(),
-              Flexible(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: _durations.length,
-                  itemBuilder: (context, index) {
-                    final duration = _durations[index];
-                    final isSelected = duration == _selectedDuration.value;
-
-                    return ListTile(
-                      leading: Icon(
-                        Icons.timer_outlined,
-                        color: isSelected ? theme.colorScheme.primary : null,
-                      ),
-                      title: Text(
-                        _formatDuration(duration),
-                        style: TextStyle(
-                          fontWeight:
-                              isSelected ? FontWeight.w600 : FontWeight.normal,
-                          color: isSelected ? theme.colorScheme.primary : null,
-                        ),
-                      ),
-                      trailing:
-                          isSelected
-                              ? Icon(
-                                Icons.check_circle,
-                                color: theme.colorScheme.primary,
-                              )
-                              : null,
-                      onTap: () {
-                        _selectedDuration.value = duration;
-                        _textController.text = _formatDuration(duration);
-                        onChanged(duration);
-                        Navigator.pop(context);
-                      },
-                      tileColor:
-                          isSelected
-                              ? theme.colorScheme.primaryContainer.withOpacity(
-                                0.2,
-                              )
-                              : null,
-                    );
-                  },
-                ),
-              ),
-            ],
+      title: 'Seleccionar duración',
+      icon: Icons.schedule,
+      items: _durations,
+      selectedItem: _selectedDuration.value,
+      itemBuilder: (context, duration, isSelected) {
+        final theme = Theme.of(context);
+        return ListTile(
+          leading: Icon(
+            Icons.timer_outlined,
+            color: isSelected ? theme.colorScheme.primary : null,
           ),
+          title: Text(
+            _formatDuration(duration),
+            style: TextStyle(
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+              color: isSelected ? theme.colorScheme.primary : null,
+            ),
+          ),
+          trailing:
+              isSelected
+                  ? Icon(Icons.check_circle, color: theme.colorScheme.primary)
+                  : null,
+          tileColor:
+              isSelected
+                  ? theme.colorScheme.primaryContainer.withOpacity(0.2)
+                  : null,
         );
+      },
+      onItemSelected: (duration) {
+        _selectedDuration.value = duration;
+        _textController.text = _formatDuration(duration);
+        onChanged(duration);
       },
     );
   }

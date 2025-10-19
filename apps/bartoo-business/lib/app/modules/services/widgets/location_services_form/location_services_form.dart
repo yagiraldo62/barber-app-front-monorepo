@@ -102,18 +102,18 @@ class _LocationServicesFormState extends State<LocationServicesForm> {
           ],
 
           const SizedBox(height: 16),
-
-          Align(
-            alignment: Alignment.centerRight,
-            child: AppButton(
-              label: 'Guardar servicios',
-              isLoading: controller.isSaving.value,
-              onPressed: () async {
-                final updated = await controller.save();
-                widget.onSaved?.call(updated.isNotEmpty);
-              },
+          if (shouldShowUpsert)
+            Align(
+              alignment: Alignment.centerRight,
+              child: AppButton(
+                label: 'Guardar servicios',
+                isLoading: controller.isSaving.value,
+                onPressed: () async {
+                  final updated = await controller.save();
+                  widget.onSaved?.call(updated.isNotEmpty);
+                },
+              ),
             ),
-          ),
         ],
       );
     });

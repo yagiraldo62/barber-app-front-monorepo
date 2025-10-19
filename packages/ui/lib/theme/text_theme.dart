@@ -78,7 +78,7 @@ TextTheme getTextTheme(bool isDark) {
       fontFamily: defaultFontFamily,
     ),
     labelLarge: TextStyle(
-      fontSize: 12,
+      fontSize: 20,
       fontWeight: FontWeight.bold,
       color: textColor,
       fontFamily: defaultFontFamily,
@@ -90,7 +90,7 @@ TextTheme getTextTheme(bool isDark) {
       fontFamily: defaultFontFamily,
     ),
     labelSmall: TextStyle(
-      fontSize: 10,
+      fontSize: 12,
       fontWeight: FontWeight.bold,
       color: blurredColor,
       fontFamily: defaultFontFamily,

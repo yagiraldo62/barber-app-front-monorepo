@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Typography;
 import 'package:get/get.dart';
-import 'package:ui/widgets/button/selectable_button.dart';
 
 import 'package:core/data/models/availability_template_model.dart';
+import 'package:ui/widgets/template/template_selector.dart';
 import '../availability_form_controller.dart';
 
 class TemplateSelectionStep extends StatelessWidget {
@@ -25,10 +25,9 @@ class TemplateSelectionStep extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 8.0),
               child: Text(
                 'Ya tienes una disponibilidad configurada. Puedes conservarla o seleccionar una plantilla nueva.',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium
-                    ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
               ),
             ),
           Text(
@@ -36,48 +35,25 @@ class TemplateSelectionStep extends StatelessWidget {
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
-          if (templates.isEmpty)
-            const Text('No hay plantillas de disponibilidad disponibles')
-          else
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: templates
-                  .map(
-                    (AvailabilityTemplateModel t) => SelectableButton(
-                      selected: controller.selectedTemplateId.value == t.id,
-                      onSelectionChange: () {
-                        controller.selectedTemplateId.value = t.id;
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(t.name),
-                            if ((t.description).isNotEmpty)
-                              Text(
-                                t.description,
-                                style: Theme.of(context).textTheme.labelMedium,
-                              ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
-                  .toList(),
-            ),
+          TemplateSelector<AvailabilityTemplateModel>(
+            templates: templates,
+            isSelected:
+                (template) =>
+                    controller.selectedTemplateId.value == template.id,
+            onTemplateToggle: (template) {
+              controller.selectedTemplateId.value = template.id;
+            },
+            getTemplateName: (template) => template.name,
+            emptyMessage: 'No hay plantillas de disponibilidad disponibles',
+          ),
           const SizedBox(height: 16),
 
           Align(
             alignment: Alignment.centerLeft,
             child: ElevatedButton.icon(
               onPressed: () {
-                if (controller.selectedTemplateId.value.isEmpty && !hasExisting) {
+                if (controller.selectedTemplateId.value.isEmpty &&
+                    !hasExisting) {
                   return;
                 }
                 if (controller.selectedTemplateId.value.isNotEmpty) {
@@ -101,4 +77,3 @@ class TemplateSelectionStep extends StatelessWidget {
     });
   }
 }
-

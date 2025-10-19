@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:ui/widgets/map/base_themed_map.dart';
 
 /// A page widget that allows users to select a location on a map
 /// by moving the map and placing a centered pin marker
@@ -164,26 +164,14 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
       ),
       body: Stack(
         children: [
-          // Map widget
-          FlutterMap(
+          // Base themed map widget
+          BaseThemedMap(
             mapController: _mapController,
-            options: MapOptions(
-              initialCenter: _currentCenter!,
-              initialZoom: 17.0,
-              minZoom: 5.0,
-              maxZoom: 18.0,
-              onPositionChanged: _onMapPositionChanged,
-            ),
-            children: [
-              TileLayer(
-                urlTemplate: dotenv.env['MAPBOX_DARK_URL']!,
-                additionalOptions: {
-                  'mapStyleId':
-                      dotenv.env['MAPBOX_DARK_STYLE_ID'] ?? 'mapbox/dark-v11',
-                  'accessToken': dotenv.env['MAPBOX_ACCESS_TOKEN'] ?? '',
-                },
-              ),
-            ],
+            center: _currentCenter!,
+            zoom: 17.0,
+            minZoom: 5.0,
+            maxZoom: 18.0,
+            onPositionChanged: _onMapPositionChanged,
           ),
 
           // Center pin marker (person icon) - Offset upwards by 50% of icon size
@@ -208,10 +196,10 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
                         ),
                       ],
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.person_pin_circle,
                       size: 50,
-                      color: Colors.red,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 ],

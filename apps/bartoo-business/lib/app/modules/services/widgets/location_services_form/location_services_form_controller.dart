@@ -26,10 +26,20 @@ class LocationServicesFormController extends GetxController {
   final RxString error = ''.obs;
 
   // Data
-  final RxList<LocationServiceModel> existingServices = <LocationServiceModel>[].obs;
-  final RxList<LocationServiceModel> editableServices = <LocationServiceModel>[].obs;
+  final RxList<LocationServiceModel> existingServices =
+      <LocationServiceModel>[].obs;
+  final RxList<LocationServiceModel> editableServices =
+      <LocationServiceModel>[].obs;
 
   final RxList<CategoryModel> categories = <CategoryModel>[].obs;
+
+  // Search
+  final RxString searchQuery = ''.obs;
+
+  // Newly added service for highlighting
+  final Rx<LocationServiceModel?> newlyAddedService = Rx<LocationServiceModel?>(
+    null,
+  );
 
   // Lookup maps
   final Map<String, CategoryModel> _categoryById = {};
@@ -66,10 +76,7 @@ class LocationServicesFormController extends GetxController {
     error.value = '';
 
     try {
-      await Future.wait([
-        _loadCategories(),
-        _loadExistingServices(),
-      ]);
+      await Future.wait([_loadCategories(), _loadExistingServices()]);
 
       // Initialize editable list from existing if present
       if (existingServices.isNotEmpty) {
@@ -93,7 +100,9 @@ class LocationServicesFormController extends GetxController {
   }
 
   Future<void> _loadCategories() async {
-    final result = await _categoryProvider.getCategories(withSubcategories: true);
+    final result = await _categoryProvider.getCategories(
+      withSubcategories: true,
+    );
     if (result != null) {
       categories.assignAll(result);
       _buildLookups(result);
@@ -129,17 +138,24 @@ class LocationServicesFormController extends GetxController {
   }
 
   void addService({required String subcategoryId}) {
-    editableServices.add(
-      LocationServiceModel(
-        id: '',
-        locationId: locationId,
-        name: 'Nuevo servicio',
-        duration: 30,
-        price: 0,
-        isActive: true,
-        subcategoryId: subcategoryId,
-      ),
+    final newService = LocationServiceModel(
+      id: '',
+      locationId: locationId,
+      name: 'Nuevo servicio',
+      duration: 30,
+      price: 0,
+      isActive: true,
+      subcategoryId: subcategoryId,
     );
+    editableServices.add(newService);
+    newlyAddedService.value = newService;
+
+    // Clear the newly added service after a delay
+    Future.delayed(const Duration(milliseconds: 2000), () {
+      if (newlyAddedService.value == newService) {
+        newlyAddedService.value = null;
+      }
+    });
   }
 
   void removeService(LocationServiceModel service) {
@@ -193,26 +209,45 @@ class LocationServicesFormController extends GetxController {
 
   Map<String, List<LocationServiceModel>> get servicesBySubcategory {
     final map = <String, List<LocationServiceModel>>{};
+    final query = searchQuery.value.toLowerCase().trim();
+
     for (final s in editableServices) {
+      // Filter by search query if present
+      if (query.isNotEmpty) {
+        final matchesName = s.name.toLowerCase().contains(query);
+        final matchesPrice = s.price.toString().contains(query);
+        final matchesDuration = s.duration.toString().contains(query);
+
+        if ((!matchesName && !matchesPrice && !matchesDuration) ||
+            !s.isActive) {
+          continue;
+        }
+      }
+
       map.putIfAbsent(s.subcategoryId, () => []).add(s);
     }
     return map;
   }
 
+  void updateSearchQuery(String query) {
+    searchQuery.value = query;
+  }
+
   Future<List<LocationServiceModel>> save() async {
     isSaving.value = true;
     try {
-      final payload = editableServices.map((s) {
-        return <String, dynamic>{
-          if (s.id.isNotEmpty) 'id': s.id,
-          'name': s.name,
-          'duration': s.duration,
-          'price': s.price,
-          'subcategory_id': s.subcategoryId,
-          'is_active': s.isActive,
-          if (s.description != null) 'description': s.description,
-        };
-      }).toList();
+      final payload =
+          editableServices.map((s) {
+            return <String, dynamic>{
+              if (s.id.isNotEmpty) 'id': s.id,
+              'name': s.name,
+              'duration': s.duration,
+              'price': s.price,
+              'subcategory_id': s.subcategoryId,
+              'is_active': s.isActive,
+              if (s.description != null) 'description': s.description,
+            };
+          }).toList();
 
       final updated = await _locationServiceRepository.upsertLocationServices(
         profileId,
@@ -227,4 +262,3 @@ class LocationServicesFormController extends GetxController {
     }
   }
 }
-
