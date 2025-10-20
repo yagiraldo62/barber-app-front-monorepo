@@ -3,7 +3,7 @@ import 'package:ui/widgets/input/text_field.dart';
 
 import '../classes/location_services_item_model.dart';
 import '../controllers/update_services_controller.dart';
-import 'duration_selector.dart';
+import 'package:ui/widgets/input/duration_selector.dart';
 
 class ServiceCard extends StatelessWidget {
   final LocationServicesItemModel service;

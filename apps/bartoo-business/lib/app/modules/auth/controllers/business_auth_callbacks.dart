@@ -95,10 +95,17 @@ class BusinessAuthCallbacks implements AuthCallbacks {
 
           break;
         case LocationMemberScope(:final locationMember):
+          Log(
+            'Redirecting based on LocationMemberScope: ${locationMember.toJson()}',
+          );
           if (locationMember.role == LocationMemberRole.superAdmin ||
               locationMember.role == LocationMemberRole.manager) {
+            Log('User is admin of a location, checking setup status');
             if (locationMember.organization != null &&
                 locationMember.location == null) {
+              Log(
+                'Redirecting to setup organization profile: ${locationMember.organization!.toJson()}',
+              );
               Get.offNamed(
                 Routes.SETUP_PROFILE.replaceAll(
                   ':profile_id',

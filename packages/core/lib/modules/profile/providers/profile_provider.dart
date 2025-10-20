@@ -24,7 +24,7 @@ class ProfileProvider extends BaseProvider {
     };
 
     if (independentArtist != null) {
-      body['independent_artist'] = independentArtist;
+      body['profile_settings'] = {'independent_artist': independentArtist};
     }
 
     final response = await post('$_baseUrl', body);

@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart' hide Typography;
 import 'package:ui/widgets/typography/typography.dart';
 
+enum AppButtonVariation {
+  primary,
+  secondary,
+  cancel,
+}
+
 class AppButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
@@ -13,6 +19,7 @@ class AppButton extends StatelessWidget {
   final Color? backgroundColor;
   final Color? textColor;
   final double? elevation;
+  final AppButtonVariation variation;
 
   const AppButton({
     super.key,
@@ -27,37 +34,66 @@ class AppButton extends StatelessWidget {
     this.backgroundColor,
     this.textColor,
     this.elevation,
+    this.variation = AppButtonVariation.primary,
   });
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context).elevatedButtonTheme.style;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
+    // Determine colors based on variation
+    final Color defaultBackgroundColor;
+    final Color defaultTextColor;
+    
+    switch (variation) {
+      case AppButtonVariation.primary:
+        defaultBackgroundColor = colorScheme.primary;
+        defaultTextColor = colorScheme.onPrimary;
+        break;
+      case AppButtonVariation.secondary:
+        defaultBackgroundColor = colorScheme.secondary;
+        defaultTextColor = colorScheme.onSecondary;
+        break;
+      case AppButtonVariation.cancel:
+        defaultBackgroundColor = colorScheme.errorContainer;
+        defaultTextColor = colorScheme.onErrorContainer;
+        break;
+    }
+
     return SizedBox(
       width: width,
       height: height ?? 50,
       child: FilledButton(
         onPressed: isLoading ? null : onPressed,
-        style: theme?.copyWith(
+        style: theme.elevatedButtonTheme.style?.copyWith(
           backgroundColor: WidgetStateProperty.all(
-            backgroundColor ?? Theme.of(context).primaryColor,
+            backgroundColor ?? defaultBackgroundColor,
           ),
-          foregroundColor: WidgetStateProperty.all(textColor ?? Colors.black),
+          foregroundColor: WidgetStateProperty.all(
+            textColor ?? defaultTextColor,
+          ),
           padding: WidgetStateProperty.all(
             padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
           shape: WidgetStateProperty.all(
             RoundedRectangleBorder(
-              borderRadius: borderRadius ?? BorderRadius.zero,
+              borderRadius: borderRadius ?? BorderRadius.circular(8),
             ),
           ),
-          elevation: WidgetStateProperty.all(
-            elevation ?? theme.elevation?.resolve({}) ?? 2,
-          ),
+          elevation: WidgetStateProperty.all(elevation ?? 2),
         ),
         child:
             isLoading
-                ? const CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ? SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      textColor ?? defaultTextColor,
+                    ),
+                  ),
                 )
                 : Row(
                   mainAxisSize: MainAxisSize.min,
@@ -66,7 +102,7 @@ class AppButton extends StatelessWidget {
                     Typography(
                       label,
                       variation: TypographyVariation.displaySmall,
-                      color: textColor ?? Colors.black87,
+                      color: textColor ?? defaultTextColor,
                     ),
                   ],
                 ),

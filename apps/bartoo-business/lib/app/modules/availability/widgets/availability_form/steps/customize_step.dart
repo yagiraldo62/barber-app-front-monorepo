@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:core/data/models/time_of_day.dart';
 import 'package:utils/date_time/format_date_utils.dart';
+import 'package:ui/widgets/input/time_selector.dart';
 
 import '../availability_form_controller.dart';
-import '../../../../services/widgets/time_selector.dart';
 
 class CustomizeAvailabilityStep extends StatelessWidget {
   const CustomizeAvailabilityStep({super.key, required this.controller});
@@ -18,24 +18,6 @@ class CustomizeAvailabilityStep extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Personaliza tu disponibilidad',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              TextButton.icon(
-                onPressed: () {
-                  controller.currentStep.value = AvailabilityFormStep.template;
-                },
-                icon: const Icon(Icons.content_copy),
-                label: const Text('Seleccionar plantilla'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          const Divider(),
           const SizedBox(height: 8),
           // Weekdays 1..7 (Mon..Sun)
           for (

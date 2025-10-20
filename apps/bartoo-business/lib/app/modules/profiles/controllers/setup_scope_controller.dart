@@ -247,7 +247,11 @@ class SetupScopeController extends GetxController {
             currentLocation.value = found.location;
           }
           // LocationMemberScope always implies an organization context
-          profileType.value = ProfileType.organization;
+          profileType.value = currentProfile.value!.type;
+          isIndependentArtist.value =
+              currentProfile.value!.type == ProfileType.artist
+                  ? (currentProfile.value!.independentArtist ?? false)
+                  : false;
           return;
         } catch (_) {
           // Location not found in user's worked locations - silently ignore

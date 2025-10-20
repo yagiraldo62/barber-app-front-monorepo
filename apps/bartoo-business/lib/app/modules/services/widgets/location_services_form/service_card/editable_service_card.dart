@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ui/widgets/input/text_field.dart';
 
 import 'package:core/data/models/location_service_model.dart';
-import '../duration_selector.dart';
-import 'location_services_form_controller.dart';
+import 'package:ui/widgets/input/duration_selector.dart';
+import '../../../controllers/location_services_form_controller.dart';
 
 class EditableServiceCard extends StatelessWidget {
   const EditableServiceCard({
@@ -27,12 +27,12 @@ class EditableServiceCard extends StatelessWidget {
     );
 
     return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: Padding(
-        padding: const EdgeInsets.all(30),
-        child: Stack(
-          children: [
-            Column(
+      // margin: const EdgeInsets.only(bottom: 12),
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(30),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (showHeader && header != null) ...[
@@ -78,20 +78,20 @@ class EditableServiceCard extends StatelessWidget {
                 ),
               ],
             ),
-            Positioned(
-              right: -10,
-              top: -10,
-              child: IconButton(
-                tooltip: 'Eliminar',
-                onPressed: () => controller.removeService(service),
-                icon: Icon(
-                  Icons.delete_outline,
-                  color: Theme.of(context).colorScheme.error,
-                ),
+          ),
+          Positioned(
+            right: 10,
+            top: 15,
+            child: IconButton(
+              tooltip: 'Eliminar',
+              onPressed: () => controller.removeService(service),
+              icon: Icon(
+                Icons.delete_outline,
+                color: Theme.of(context).colorScheme.error,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

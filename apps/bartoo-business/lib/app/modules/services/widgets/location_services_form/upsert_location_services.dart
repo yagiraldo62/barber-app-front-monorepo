@@ -1,3 +1,4 @@
+import 'package:bartoo/app/modules/services/widgets/location_services_form/service_card/animated_service_card.dart';
 import 'package:flutter/material.dart' hide Typography;
 import 'package:get/get.dart';
 import 'package:core/data/models/location_service_model.dart';
@@ -6,8 +7,7 @@ import 'package:ui/widgets/button/app_text_button.dart';
 import 'package:ui/widgets/button/app_icon_button.dart';
 import 'package:ui/widgets/search/search_input.dart';
 
-import 'editable_service_card.dart';
-import 'location_services_form_controller.dart';
+import '../../controllers/location_services_form_controller.dart';
 
 class UpsertLocationServices extends StatefulWidget {
   const UpsertLocationServices({
@@ -15,11 +15,13 @@ class UpsertLocationServices extends StatefulWidget {
     required this.controller,
     this.onSelectTemplate,
     this.onStartFromScratch,
+    this.onCancelTemplate,
   });
 
   final LocationServicesFormController controller;
   final VoidCallback? onSelectTemplate;
   final VoidCallback? onStartFromScratch;
+  final VoidCallback? onCancelTemplate;
 
   @override
   State<UpsertLocationServices> createState() => _UpsertLocationServicesState();
@@ -73,14 +75,18 @@ class _UpsertLocationServicesState extends State<UpsertLocationServices> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      if (widget.controller.editableServices.isEmpty) {
+      final bySub = widget.controller.servicesBySubcategory;
+      final visibleSubcategoryIds = widget.controller.visibleSubcategoryIds;
+      final hasAnyServices = widget.controller.editableServices.isNotEmpty;
+
+      // If no services and should show empty state
+      if (!hasAnyServices && visibleSubcategoryIds.isEmpty) {
         return _EmptyState(
           onSelectTemplate: widget.onSelectTemplate,
           onStartFromScratch: widget.onStartFromScratch,
         );
       }
 
-      final bySub = widget.controller.servicesBySubcategory;
       final List<Widget> children = [];
 
       // Search bar and template selection button
@@ -106,13 +112,29 @@ class _UpsertLocationServicesState extends State<UpsertLocationServices> {
           ],
         ),
       );
+
+      if (widget.onCancelTemplate != null) {
+        children.addAll([
+          const SizedBox(height: 16),
+          Typography(
+            'Estás editando toda tu base de servicios. ¿Deseas cancelar la selección de la plantilla y restaurar los servicios anteriores?',
+            variation: TypographyVariation.bodyMedium,
+          ),
+          const SizedBox(height: 16),
+          AppTextButton(
+            onPressed: widget.onCancelTemplate,
+            icon: const Icon(Icons.cancel_outlined),
+            label: 'Cancelar y restaurar',
+          ),
+        ]);
+      }
+
       children.add(const SizedBox(height: 16));
 
-      bySub.forEach((subId, list) {
-        final categoryName = widget.controller.categoryNameForSubcategory(
-          subId,
-        );
+      // Show all visible subcategories (even if they don't have services yet)
+      for (final subId in visibleSubcategoryIds) {
         final subName = widget.controller.subcategoryName(subId);
+        final servicesInSubcategory = bySub[subId] ?? [];
 
         children.addAll([
           Row(
@@ -120,7 +142,7 @@ class _UpsertLocationServicesState extends State<UpsertLocationServices> {
             children: [
               Expanded(
                 child: Typography(
-                  '$subName',
+                  subName,
                   variation: TypographyVariation.displayMedium,
                 ),
               ),
@@ -135,21 +157,59 @@ class _UpsertLocationServicesState extends State<UpsertLocationServices> {
           const SizedBox(height: 16),
         ]);
 
-        for (final s in list) {
-          final isNewlyAdded = widget.controller.newlyAddedService.value == s;
+        // Show services if any
+        if (servicesInSubcategory.isNotEmpty) {
+          for (final s in servicesInSubcategory) {
+            final isNewlyAdded = widget.controller.newlyAddedService.value == s;
+            children.add(
+              AnimatedServiceCard(
+                key: _getKeyForService(s),
+                controller: widget.controller,
+                service: s,
+                isHighlighted: isNewlyAdded,
+              ),
+            );
+          }
+        } else {
+          // Show empty message for subcategory without services
           children.add(
-            _AnimatedServiceCard(
-              key: _getKeyForService(s),
-              controller: widget.controller,
-              service: s,
-              isHighlighted: isNewlyAdded,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Text(
+                'No hay servicios en esta subcategoría. Presiona "Añadir servicio" para crear uno.',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
             ),
           );
         }
 
-        children.add(const SizedBox(height: 8));
-      });
+        children.add(const SizedBox(height: 16));
+      }
 
+      if (widget.onCancelTemplate != null) {
+        children.addAll([
+          Align(
+            alignment: Alignment.center,
+            child: Typography(
+              '¡Cuidado!',
+              variation: TypographyVariation.displayMedium,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Typography(
+            'Estás editando toda tu base de servicios. ¿Deseas cancelar la selección de la plantilla y restaurar los servicios anteriores?',
+            variation: TypographyVariation.bodyMedium,
+          ),
+          AppTextButton(
+            onPressed: widget.onCancelTemplate,
+            icon: const Icon(Icons.cancel_outlined),
+            label: 'Cancelar y restaurar',
+          ),
+        ]);
+      }
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: children,
@@ -220,82 +280,6 @@ class _TemplateOptions extends StatelessWidget {
             label: const Text('Seleccionar plantilla'),
           ),
       ],
-    );
-  }
-}
-
-class _AnimatedServiceCard extends StatefulWidget {
-  const _AnimatedServiceCard({
-    super.key,
-    required this.controller,
-    required this.service,
-    required this.isHighlighted,
-  });
-
-  final LocationServicesFormController controller;
-  final LocationServiceModel service;
-  final bool isHighlighted;
-
-  @override
-  State<_AnimatedServiceCard> createState() => _AnimatedServiceCardState();
-}
-
-class _AnimatedServiceCardState extends State<_AnimatedServiceCard>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<Color?> _colorAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 1500),
-      vsync: this,
-    );
-
-    _colorAnimation = ColorTween(
-      end: Colors.amber.withOpacity(0.3),
-      begin: Colors.transparent,
-    ).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
-    );
-
-    if (widget.isHighlighted) {
-      _animationController.forward();
-    }
-  }
-
-  @override
-  void didUpdateWidget(_AnimatedServiceCard oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.isHighlighted && !oldWidget.isHighlighted) {
-      _animationController.forward(from: 0);
-    }
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _colorAnimation,
-      builder: (context, child) {
-        return Container(
-          decoration: BoxDecoration(
-            color: _colorAnimation.value,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: child,
-        );
-      },
-      child: EditableServiceCard(
-        controller: widget.controller,
-        service: widget.service,
-      ),
     );
   }
 }

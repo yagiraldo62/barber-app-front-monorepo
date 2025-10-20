@@ -10,15 +10,18 @@ class LocationServicesFormController extends GetxController {
     required this.profileId,
     required this.locationId,
     required this.servicesUp,
+    this.selectedCategoryIds = const [],
   });
 
   final String profileId;
   final String locationId;
   final bool servicesUp;
+  final List<String> selectedCategoryIds;
 
   // Dependencies (lazy ensure)
   late final LocationServiceRepository _locationServiceRepository;
   late final CategoryProvider _categoryProvider;
+  bool _dependenciesInitialized = false;
 
   // State
   final RxBool isLoading = false.obs;
@@ -33,8 +36,16 @@ class LocationServicesFormController extends GetxController {
 
   final RxList<CategoryModel> categories = <CategoryModel>[].obs;
 
+  // Template selection tracking
+  final RxBool hasSelectedTemplate = false.obs;
+  final RxBool showUpsert = false.obs;
+
   // Search
   final RxString searchQuery = ''.obs;
+
+  // Processed services grouped by subcategory (reactive)
+  final RxMap<String, List<LocationServiceModel>> servicesBySubcategory =
+      <String, List<LocationServiceModel>>{}.obs;
 
   // Newly added service for highlighting
   final Rx<LocationServiceModel?> newlyAddedService = Rx<LocationServiceModel?>(
@@ -54,21 +65,29 @@ class LocationServicesFormController extends GetxController {
     super.onInit();
     _ensureDependencies();
     _bootstrap();
+
+    // Listen to changes in editableServices and searchQuery to update servicesBySubcategory
+    ever(editableServices, (_) => _updateServicesBySubcategory());
+    ever(searchQuery, (_) => _updateServicesBySubcategory());
   }
 
   void _ensureDependencies() {
+    // Prevent double initialization
+    if (_dependenciesInitialized) return;
+
     if (!Get.isRegistered<LocationServiceProvider>()) {
       Get.put(LocationServiceProvider());
-    }
-    if (!Get.isRegistered<LocationServiceRepository>()) {
-      Get.put(LocationServiceRepository());
     }
     if (!Get.isRegistered<CategoryProvider>()) {
       Get.put(CategoryProvider());
     }
+    if (!Get.isRegistered<LocationServiceRepository>()) {
+      Get.put(LocationServiceRepository());
+    }
 
     _locationServiceRepository = Get.find<LocationServiceRepository>();
     _categoryProvider = Get.find<CategoryProvider>();
+    _dependenciesInitialized = true;
   }
 
   Future<void> _bootstrap() async {
@@ -81,7 +100,11 @@ class LocationServicesFormController extends GetxController {
       // Initialize editable list from existing if present
       if (existingServices.isNotEmpty) {
         editableServices.assignAll(existingServices);
+        showUpsert.value = true;
       }
+
+      // Update the processed services map
+      _updateServicesBySubcategory();
 
       // Templates flow handled by ServicesTemplatesSelectionController
     } catch (e) {
@@ -135,6 +158,28 @@ class LocationServicesFormController extends GetxController {
 
   String subcategoryName(String subcategoryId) {
     return _subcategoryById[subcategoryId]?.name ?? 'SubcategorÃ­a';
+  }
+
+  /// Get all subcategories that should be displayed based on selected categories
+  List<String> get visibleSubcategoryIds {
+    if (selectedCategoryIds.isEmpty) {
+      // If no categories selected, show all subcategories that have services
+      return _subcategoryById.keys.toList();
+    }
+
+    // Return subcategories of selected categories
+    final subcategoryIds = <String>[];
+    for (final categoryId in selectedCategoryIds) {
+      final category = _categoryById[categoryId];
+      if (category != null) {
+        for (final subcategory in category.subcategories) {
+          if (subcategory.id.isNotEmpty) {
+            subcategoryIds.add(subcategory.id);
+          }
+        }
+      }
+    }
+    return subcategoryIds;
   }
 
   void addService({required String subcategoryId}) {
@@ -207,30 +252,48 @@ class LocationServicesFormController extends GetxController {
     );
   }
 
-  Map<String, List<LocationServiceModel>> get servicesBySubcategory {
+  void _updateServicesBySubcategory() {
     final map = <String, List<LocationServiceModel>>{};
     final query = searchQuery.value.toLowerCase().trim();
 
     for (final s in editableServices) {
+      // Always skip inactive services
+      if (!s.isActive) {
+        continue;
+      }
+
       // Filter by search query if present
       if (query.isNotEmpty) {
         final matchesName = s.name.toLowerCase().contains(query);
         final matchesPrice = s.price.toString().contains(query);
         final matchesDuration = s.duration.toString().contains(query);
 
-        if ((!matchesName && !matchesPrice && !matchesDuration) ||
-            !s.isActive) {
+        if (!matchesName && !matchesPrice && !matchesDuration) {
           continue;
         }
       }
 
       map.putIfAbsent(s.subcategoryId, () => []).add(s);
     }
-    return map;
+    servicesBySubcategory.value = map;
   }
 
   void updateSearchQuery(String query) {
     searchQuery.value = query;
+  }
+
+  void applyTemplateServices(List<LocationServiceModel> templateServices) {
+    hasSelectedTemplate.value = true;
+    editableServices.assignAll(templateServices);
+  }
+
+  void cancelTemplateSelection() {
+    if (hasExistingServices) {
+      editableServices.assignAll(existingServices);
+    } else {
+      editableServices.clear();
+    }
+    hasSelectedTemplate.value = false;
   }
 
   Future<List<LocationServiceModel>> save() async {

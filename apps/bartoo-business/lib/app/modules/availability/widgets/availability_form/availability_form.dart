@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ui/widgets/button/app_button.dart';
 
 import 'package:ui/widgets/form/stepper_form_fields.dart';
 
@@ -22,7 +23,8 @@ class AvailabilityForm extends StatelessWidget {
   final String locationId;
   final bool isCreation;
   final ScrollController? scrollController;
-  final void Function(List<WeekdayAvailabilityModel> updatedAvailability)? onSaved;
+  final void Function(List<WeekdayAvailabilityModel> updatedAvailability)?
+  onSaved;
 
   @override
   Widget build(BuildContext context) {
@@ -44,22 +46,11 @@ class AvailabilityForm extends StatelessWidget {
     final controller = Get.find<AvailabilityFormController>();
 
     final steps = [
-      StepInfo(
-        stepWidget: TemplateSelectionStep(controller: controller),
-        condition: () => controller.currentStep.value.index >=
-            AvailabilityFormStep.template.index,
-      ),
-      StepInfo(
-        stepWidget: CustomizeAvailabilityStep(controller: controller),
-        condition: () => controller.currentStep.value.index >=
-            AvailabilityFormStep.customize.index,
-      ),
+      TemplateSelectionStep(controller: controller),
+      CustomizeAvailabilityStep(controller: controller),
     ];
 
     return Obx(() {
-      if (controller.isLoading) {
-        return const Center(child: CircularProgressIndicator());
-      }
       if (controller.error.isNotEmpty) {
         return Center(
           child: Column(
@@ -83,24 +74,14 @@ class AvailabilityForm extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            StepperFormFields<Rx<AvailabilityFormStep>>(
-              controller: controller,
-              steps: steps,
-              showAllSteps: !isCreation,
-              scrollController: scrollController,
-              enableAutoScroll: isCreation,
-              showButtonCondition: () => controller.animationsComplete.value,
-              isFinalStep: (step) => step.value == AvailabilityFormStep.customize,
-              buttonLabelBuilder: (step) {
-                return step.value == AvailabilityFormStep.customize
-                    ? 'Guardar disponibilidad'
-                    : 'Continuar';
-              },
-              buttonIconBuilder: (step) {
-                return step.value == AvailabilityFormStep.customize
-                    ? Icons.check
-                    : Icons.arrow_forward;
-              },
+            ...steps,
+            Align(
+              alignment: Alignment.centerRight,
+              child: AppButton(
+                label: "Guardar",
+                onPressed: () => controller.submitForm(),
+                icon: const Icon(Icons.check),
+              ),
             ),
           ],
         ),

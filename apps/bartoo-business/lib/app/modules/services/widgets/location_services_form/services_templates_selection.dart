@@ -7,7 +7,7 @@ import 'package:core/data/models/category_model.dart';
 import 'package:core/data/models/services_template_item_model.dart';
 import 'package:core/data/models/location_service_model.dart';
 
-import 'services_templates_selection_controller.dart';
+import '../../controllers/services_templates_selection_controller.dart';
 import 'template_selection_buttons.dart';
 
 class ServicesTemplatesSelection extends StatefulWidget {
@@ -137,7 +137,6 @@ class _SelectedItemsList extends StatelessWidget {
           bySub.entries.map((entry) {
             final subId = entry.key;
             final list = entry.value;
-            final categoryName = controller.categoryNameForSubcategory(subId);
             final subName = controller.subcategoryName(subId);
             return Padding(
               padding: const EdgeInsets.only(bottom: 12.0),
@@ -145,7 +144,7 @@ class _SelectedItemsList extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Typography(
-                    '$categoryName · $subName',
+                    subName,
                     variation: TypographyVariation.displayMedium,
                   ),
                   const SizedBox(height: 6),

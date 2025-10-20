@@ -28,7 +28,7 @@ Represents platform users who can book appointments and own profiles.
 - `phone_number_verification_code`: Verification code for phone (excluded from serialization)
 - `phone_number_verified_at`: Timestamp when phone was verified (excluded from serialization)
 - `photo_url`: Profile photo URL (nullable)
-- `user_seetings`: JSONB field for user settings
+- `user_settings`: JSONB field for user settings
 - `location`: Geographic point for user location (nullable)
 
 **Relations:**
@@ -388,15 +388,15 @@ This structure supports a comprehensive beauty and wellness appointment booking 
 - Geographic location services
 - Location-based service offerings architecture
 - Enhanced service management with multiple service entity types
-- JSONB-based settings for flexible configuration (user_seetings, profile_settings, location_settings, location_member_settings)
+- JSONB-based settings for flexible configuration (user_settings, profile_settings, location_settings, location_member_settings)
 - Soft deletion support through BaseEntity
 
 ## Important Notes:
 
 ### Settings Structures (JSONB Fields):
 
-#### 1. User Settings (`user_seetings`)
-**Type:** `UserSeetings`
+#### 1. User Settings (`user_settings`)
+**Type:** `Usersettings`
 
 **Fields:**
 - `is_organization_member`: boolean - Indicates if the user is a member of any organization
@@ -411,7 +411,7 @@ This structure supports a comprehensive beauty and wellness appointment booking 
 ```
 
 #### 2. Profile Settings (`profile_settings`)
-**Type:** `ProfileSettings` (union of `ArtistProfileSeetings` | `OrganizationProfileSeetings`)
+**Type:** `ProfileSettings` (union of `ArtistProfilesettings` | `OrganizationProfilesettings`)
 
 **Common Fields (for all profile types):**
 - `rate`: number - Profile rating (default: 5)
@@ -437,7 +437,7 @@ This structure supports a comprehensive beauty and wellness appointment booking 
 ```
 
 #### 3. Location Settings (`location_settings`)
-**Type:** `LocationSeetings`
+**Type:** `Locationsettings`
 
 **Fields:**
 - `location_up`: boolean - Location setup completion status
@@ -456,7 +456,7 @@ This structure supports a comprehensive beauty and wellness appointment booking 
 ```
 
 #### 4. Location Member Settings (`location_member_settings`)
-**Type:** `LocationMemberSeetings`
+**Type:** `LocationMembersettings`
 
 **Fields:**
 - `services_up`: boolean - Member services configuration status
@@ -482,7 +482,7 @@ This structure supports a comprehensive beauty and wellness appointment booking 
 
 ### Settings Architecture:
 All major entities now use JSONB fields for flexible configuration:
-- Users: `user_seetings`
+- Users: `user_settings`
 - Profiles: `profile_settings`
 - Locations: `location_settings`
 - LocationMembers: `location_member_settings`

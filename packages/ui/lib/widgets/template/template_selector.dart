@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart' hide Typography;
 import 'package:ui/widgets/button/selectable_button.dart';
 import 'package:ui/widgets/typography/typography.dart';
+import 'package:utils/log.dart';
 
 /// A generic reusable widget for selecting templates
 ///
@@ -50,28 +51,31 @@ class TemplateSelector<T> extends StatelessWidget {
       );
     }
 
-    return Wrap(
-      spacing: spacing,
-      runSpacing: runSpacing,
-      children:
-          templates
-              .map(
-                (template) => SelectableButton(
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: templates
+            .map(
+              (template) => Padding(
+                padding: EdgeInsets.only(right: spacing),
+                child: SelectableButton(
                   selected: isSelected(template),
                   onSelectionChange: () => onTemplateToggle(template),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
+                      horizontal: 12,
+                      vertical: 8,
                     ),
                     child: Text(
                       getTemplateName(template),
-                      style: TextStyle(fontSize: 14),
+                      style: const TextStyle(fontSize: 14),
                     ),
                   ),
                 ),
-              )
-              .toList(),
+              ),
+            )
+            .toList(),
+      ),
     );
   }
 }

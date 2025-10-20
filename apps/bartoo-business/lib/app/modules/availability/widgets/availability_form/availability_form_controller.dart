@@ -11,10 +11,7 @@ import 'package:core/modules/availability/providers/availability_template_provid
 import 'package:core/modules/availability/providers/location_availability_provider.dart';
 import 'package:core/modules/availability/providers/times_provider.dart';
 
-enum AvailabilityFormStep { template, customize }
-
-class AvailabilityFormController extends GetxController
-    implements StepperFormController<Rx<AvailabilityFormStep>> {
+class AvailabilityFormController extends GetxController {
   AvailabilityFormController({
     required this.profileId,
     required this.locationId,
@@ -38,12 +35,6 @@ class AvailabilityFormController extends GetxController
   final loading = false.obs;
   final animationsComplete = false.obs;
   final error = ''.obs;
-
-  @override
-  final currentStep = Rx<AvailabilityFormStep>(AvailabilityFormStep.template);
-
-  @override
-  bool get isLoading => loading.value;
 
   // Data
   final RxList<AvailabilityTemplateModel> templates =
@@ -95,7 +86,8 @@ class AvailabilityFormController extends GetxController
 
       if (hasExistingAvailability) {
         _setEditableFromExisting();
-        currentStep.value = AvailabilityFormStep.customize;
+      } else {
+        setEditableFromTemplate(templates.first);
       }
 
       // allow the UI button
@@ -148,29 +140,14 @@ class AvailabilityFormController extends GetxController
     editableAvailability.addAll(template.items);
   }
 
-  // Stepper navigation
-  @override
-  void nextStep() {
-    if (isLoading) return;
-    switch (currentStep.value) {
-      case AvailabilityFormStep.template:
-        if (_validateTemplateStep()) {
-          currentStep.value = AvailabilityFormStep.customize;
-        }
-        break;
-      case AvailabilityFormStep.customize:
-        _submitForm();
-        break;
+  void cancelTemplateSelection() {
+    selectedTemplateId.value = '';
+    if (hasExistingAvailability) {
+      _setEditableFromExisting();
     }
   }
 
-  bool _validateTemplateStep() {
-    if (hasExistingAvailability) return true; // allow editing existing
-    if (selectedTemplateId.value.isEmpty) return false;
-    return true;
-  }
-
-  Future<void> _submitForm() async {
+  Future<void> submitForm() async {
     loading.value = true;
     try {
       final payload = buildUpsertPayload();

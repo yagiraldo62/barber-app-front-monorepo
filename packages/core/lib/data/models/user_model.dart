@@ -37,7 +37,7 @@ class UserModel {
   /// FACTORY UserModel from a json user object
   factory UserModel.fromJson(Map<String, dynamic> jsonData) {
     final userSettings =
-        jsonData['user_seetings'] as Map<String, dynamic>? ?? {};
+        jsonData['user_settings'] as Map<String, dynamic>? ?? {};
 
     return UserModel()
       ..id = jsonData['id'] as String? ?? ""
@@ -99,7 +99,7 @@ class UserModel {
     'phone_number': phoneNumber,
     'photo_url': photoURL,
     'location': location,
-    'user_seetings': {
+    'user_settings': {
       'is_first_login': isFirstLogin,
       'is_organization_member': isOrganizationMember,
     },
@@ -123,7 +123,7 @@ class UserModel {
     'email': email,
     'phone_number': phoneNumber,
     'photo_url': photoURL,
-    'user_seetings': {
+    'user_settings': {
       'is_first_login': isFirstLogin,
       'is_organization_member': isOrganizationMember,
     },
