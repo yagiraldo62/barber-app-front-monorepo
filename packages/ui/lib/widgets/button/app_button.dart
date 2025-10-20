@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart' hide Typography;
 import 'package:ui/widgets/typography/typography.dart';
 
-enum AppButtonVariation {
-  primary,
-  secondary,
-  cancel,
-}
+enum AppButtonVariation { primary, secondary, cancel }
 
 class AppButton extends StatelessWidget {
   final String label;
@@ -41,11 +37,11 @@ class AppButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     // Determine colors based on variation
     final Color defaultBackgroundColor;
     final Color defaultTextColor;
-    
+
     switch (variation) {
       case AppButtonVariation.primary:
         defaultBackgroundColor = colorScheme.primary;

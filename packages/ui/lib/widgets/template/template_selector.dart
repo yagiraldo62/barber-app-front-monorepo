@@ -54,27 +54,28 @@ class TemplateSelector<T> extends StatelessWidget {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: templates
-            .map(
-              (template) => Padding(
-                padding: EdgeInsets.only(right: spacing),
-                child: SelectableButton(
-                  selected: isSelected(template),
-                  onSelectionChange: () => onTemplateToggle(template),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
-                    ),
-                    child: Text(
-                      getTemplateName(template),
-                      style: const TextStyle(fontSize: 14),
+        children:
+            templates
+                .map(
+                  (template) => Padding(
+                    padding: EdgeInsets.only(right: spacing),
+                    child: SelectableButton(
+                      selected: isSelected(template),
+                      onSelectionChange: () => onTemplateToggle(template),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        child: Text(
+                          getTemplateName(template),
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-            )
-            .toList(),
+                )
+                .toList(),
       ),
     );
   }
