@@ -123,7 +123,16 @@ class SetupScopeController extends GetxController {
     }
 
     await _authController.refreshUser();
+
+    if (profile.type == ProfileType.artist &&
+        profile.independentArtist == false) {
+      _authController.setSelectedScope(ProfileScope(profile));
+      Get.offAllNamed(Routes.ARTIST_HOME);
+      return;
+    }
+
     _authController.selectLocationMemberScope(profile.id!);
+
     currentProfile.value = profile;
     currentLocation.value = LocationModel(name: profile.name);
     next();
@@ -281,15 +290,9 @@ class SetupScopeController extends GetxController {
       steps.add(CreateProfileStep.profile);
     }
 
-    // if (currentLocation.value != null ||
-    //     locationRoutes.contains(Get.currentRoute)) {
-    //   steps.add(CreateProfileStep.location);
-    // } else {
-    //   // Creating new location
-    //   // (Location step would be added here if implemented)
-    // }
-
-    if (profileType.value == ProfileType.organization) {
+    if (profileType.value == ProfileType.organization ||
+        (profileType.value == ProfileType.artist &&
+            isIndependentArtist.value == true)) {
       // Add organization-specific steps
       steps.add(CreateProfileStep.location);
       steps.add(CreateProfileStep.services);
@@ -306,13 +309,8 @@ class SetupScopeController extends GetxController {
           }
         }
       }
-
-      lastAvailableStep.value = currentStep.value;
-    } else if (profileType.value == ProfileType.artist &&
-        isIndependentArtist.value == true) {
-      steps.add(CreateProfileStep.location);
-      steps.add(CreateProfileStep.services);
-      steps.add(CreateProfileStep.availability);
     }
+
+    lastAvailableStep.value = currentStep.value;
   }
 }

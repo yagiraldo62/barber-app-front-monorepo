@@ -1,6 +1,7 @@
 import 'package:ui/widgets/input/text_field.dart';
+import 'package:ui/widgets/typography/typography.dart';
 import 'package:ui/widgets/selector/common_selector.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Typography;
 import 'package:get/get.dart';
 import 'package:base/constants/times_contants.dart';
 
@@ -59,27 +60,27 @@ class TimeSelector extends StatelessWidget {
         final isDisabled = isTimeDisabled?.call(time) ?? false;
 
         return ListTile(
+          minTileHeight: 50,
           enabled: !isDisabled,
           leading: Icon(
             Icons.schedule_outlined,
             color:
                 isDisabled
-                    ? theme.colorScheme.onSurface.withOpacity(0.3)
+                    ? theme.colorScheme.onSurface.withValues(alpha: 0.3)
                     : isSelected
                     ? theme.colorScheme.primary
                     : null,
           ),
-          title: Text(
+          title: Typography(
             time.format12Hour(),
-            style: TextStyle(
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-              color:
-                  isDisabled
-                      ? theme.colorScheme.onSurface.withOpacity(0.3)
-                      : isSelected
-                      ? theme.colorScheme.primary
-                      : null,
-            ),
+            variation: TypographyVariation.bodyMedium,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+            color:
+                isDisabled
+                    ? theme.colorScheme.onSurface.withValues(alpha: 0.3)
+                    : isSelected
+                    ? theme.colorScheme.primary
+                    : null,
           ),
           trailing:
               isSelected
@@ -87,7 +88,7 @@ class TimeSelector extends StatelessWidget {
                   : null,
           tileColor:
               isSelected
-                  ? theme.colorScheme.primaryContainer.withOpacity(0.2)
+                  ? theme.colorScheme.primaryContainer.withValues(alpha: 0.2)
                   : null,
         );
       },

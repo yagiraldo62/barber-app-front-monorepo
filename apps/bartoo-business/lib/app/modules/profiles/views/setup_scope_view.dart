@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:ui/layout/app_layout.dart';
 import 'package:ui/widgets/typing_text/secuential_typing_messages.dart';
 
-import 'package:bartoo/app/modules/profiles/widgets/setup_profile_flow.dart';
+import 'package:bartoo/app/modules/profiles/widgets/setup_scope_flow.dart';
 
 class SetupScopeView extends GetView {
   SetupScopeView({super.key});

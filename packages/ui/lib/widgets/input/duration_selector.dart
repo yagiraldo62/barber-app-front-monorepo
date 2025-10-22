@@ -82,6 +82,7 @@ class DurationSelector extends StatelessWidget {
       itemBuilder: (context, duration, isSelected) {
         final theme = Theme.of(context);
         return ListTile(
+          minTileHeight: 50,
           leading: Icon(
             Icons.timer_outlined,
             color: isSelected ? theme.colorScheme.primary : null,

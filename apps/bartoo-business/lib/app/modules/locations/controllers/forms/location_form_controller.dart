@@ -52,6 +52,7 @@ class LocationFormController extends GetxController
   final FocusNode address2Focus = FocusNode();
   final FocusNode cityFocus = FocusNode();
   final FocusNode stateFocus = FocusNode();
+  final bool showNameStep;
   final FocusNode countryFocus = FocusNode();
 
   LocationFormController({
@@ -59,9 +60,12 @@ class LocationFormController extends GetxController
     this.isCreation = true,
     this.onSavedCallback,
     this.scrollController,
+    this.showNameStep = true,
   }) {
     _initializeControllers();
-    setCurrentState(LocationFormStep.name);
+    setCurrentState(
+      showNameStep ? LocationFormStep.name : LocationFormStep.address,
+    );
   }
 
   void setLocation(LatLng latLng) {
@@ -80,6 +84,12 @@ class LocationFormController extends GetxController
       cityController.text = currentLocation!.city;
       stateController.text = currentLocation!.state;
       countryController.text = currentLocation!.country;
+
+      if (currentLocation!.location != null) {
+        location.value = currentLocation!.location;
+      }
+
+      Log('Current Location Data: ${currentLocation!.toJson()}');
     } else if (isCreation) {
       // Creating new location - get current location and populate fields
       await _initializeFromCurrentLocation();

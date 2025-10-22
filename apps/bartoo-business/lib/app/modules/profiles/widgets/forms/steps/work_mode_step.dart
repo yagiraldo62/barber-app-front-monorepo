@@ -1,6 +1,7 @@
 import 'package:bartoo/app/modules/profiles/controllers/forms/profile_form_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ui/widgets/form/animated_form_step.dart';
 
 class WorkModeStep extends StatelessWidget {
   final ProfileFormController controller;
@@ -9,45 +10,35 @@ class WorkModeStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '¿Cómo prefieres trabajar?',
-          style: Theme.of(context).textTheme.titleLarge,
+    return AnimatedFormStep(
+      title: '¿Cómo prefieres trabajar?',
+      descriptionText: 'Selecciona tu modalidad de trabajo preferida',
+      scrollToBottom: controller.scrollToBottom,
+      noAnimation: !controller.isCreation,
+      onAnimationsComplete: controller.onAnimationsComplete,
+      content: Obx(
+        () => Column(
+          children: [
+            _WorkModeCard(
+              title: 'Artista Independiente',
+              description:
+                  'Trabajo de forma independiente, gestiono mi propio negocio y agenda',
+              icon: Icons.person,
+              isSelected: controller.isIndependentArtist.value == true,
+              onTap: () => controller.setWorkMode(true),
+            ),
+            const SizedBox(height: 16),
+            _WorkModeCard(
+              title: 'Asociado a Organización',
+              description:
+                  'Trabajo asociado a una o más organizaciones que gestionan la agenda',
+              icon: Icons.business,
+              isSelected: controller.isIndependentArtist.value == false,
+              onTap: () => controller.setWorkMode(false),
+            ),
+          ],
         ),
-        const SizedBox(height: 8),
-        Text(
-          'Selecciona tu modalidad de trabajo preferida',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-          ),
-        ),
-        const SizedBox(height: 24),
-        Obx(
-          () => Column(
-            children: [
-              _WorkModeCard(
-                title: 'Artista Independiente',
-                description:
-                    'Trabajo de forma independiente, gestiono mi propio negocio y agenda',
-                icon: Icons.person,
-                isSelected: controller.isIndependentArtist.value == true,
-                onTap: () => controller.setWorkMode(true),
-              ),
-              const SizedBox(height: 16),
-              _WorkModeCard(
-                title: 'Asociado a Organización',
-                description:
-                    'Trabajo asociado a una o más organizaciones que gestionan la agenda',
-                icon: Icons.business,
-                isSelected: controller.isIndependentArtist.value == false,
-                onTap: () => controller.setWorkMode(false),
-              ),
-            ],
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

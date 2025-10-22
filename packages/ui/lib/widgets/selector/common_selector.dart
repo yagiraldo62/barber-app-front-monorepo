@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Typography;
+import 'package:ui/widgets/typography/typography.dart';
 
 /// A reusable modal bottom sheet selector widget
 ///
@@ -13,7 +14,7 @@ class CommonSelector<T> extends StatelessWidget {
     required this.selectedItem,
     required this.itemBuilder,
     required this.onItemSelected,
-    this.itemHeight = 56.0,
+    this.itemHeight = 50,
     this.isItemDisabled,
   });
 
@@ -52,7 +53,7 @@ class CommonSelector<T> extends StatelessWidget {
     required T selectedItem,
     required Widget Function(BuildContext, T, bool) itemBuilder,
     required void Function(T) onItemSelected,
-    double itemHeight = 52.5,
+    double itemHeight = 50,
     bool Function(T item)? isItemDisabled,
   }) {
     return showModalBottomSheet(
@@ -84,7 +85,7 @@ class CommonSelector<T> extends StatelessWidget {
     final selectedIndex = items.indexWhere((item) => item == selectedItem);
     final scrollController = ScrollController(
       initialScrollOffset:
-          selectedIndex > 0 ? (selectedIndex * itemHeight) : 0.0,
+          selectedIndex > 0 ? (selectedIndex * (itemHeight - 2)) : 0.0,
     );
 
     return Container(
@@ -99,14 +100,7 @@ class CommonSelector<T> extends StatelessWidget {
               children: [
                 Icon(icon, color: theme.colorScheme.primary),
                 const SizedBox(width: 12),
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.onSurface,
-                  ),
-                ),
+                Typography(title, variation: TypographyVariation.bodyMedium),
               ],
             ),
           ),

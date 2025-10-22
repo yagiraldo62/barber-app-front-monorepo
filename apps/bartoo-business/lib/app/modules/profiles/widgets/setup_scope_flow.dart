@@ -4,9 +4,10 @@ import 'package:bartoo/app/modules/profiles/widgets/forms/profile_form.dart';
 import 'package:bartoo/app/modules/services/widgets/location_services_form/location_services_form.dart';
 import 'package:bartoo/app/modules/availability/widgets/availability_form/availability_form.dart';
 import 'package:core/data/models/profile_model.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Typography;
 import 'package:get/get.dart';
 import 'package:ui/widgets/stepper/app_stepper.dart';
+import 'package:ui/widgets/typography/typography.dart';
 
 class FlowStepConfig {
   final CreateProfileStep step;
@@ -62,6 +63,7 @@ class SetupScopeFlow extends StatelessWidget {
                     isCreation: controller.currentProfile.value?.id == null,
                     scrollController: scrollController,
                     onSaved: (profile) => controller.onProfileSaved(profile),
+                    onIndependentArtistToggled: ctrl.toggleIsIndependentArtist,
                   ),
             ),
         CreateProfileStep.location:
@@ -80,6 +82,9 @@ class SetupScopeFlow extends StatelessWidget {
                     isCreation: controller.currentLocation.value?.id == null,
                     scrollController: scrollController,
                     onSaved: (location) => controller.onLocationSaved(location),
+                    showNameStep:
+                        controller.currentProfile.value?.firstLocationSetup ==
+                        true,
                   ),
             ),
         CreateProfileStep.services:
@@ -138,18 +143,6 @@ class SetupScopeFlow extends StatelessWidget {
             ),
       };
 
-      // Artist: show profile form only (current flow)
-      if (ctrl.profileType.value == ProfileType.artist &&
-          ctrl.isIndependentArtist.value == false) {
-        return ProfileForm(
-          currentProfile: ctrl.currentProfile.value,
-          isCreation: ctrl.currentProfile.value == null,
-          scrollController: scrollController,
-          onSaved: (profile) => ctrl.onProfileSaved(profile),
-          onIndependentArtistToggled: ctrl.toggleIsIndependentArtist,
-        );
-      }
-
       // Organization: build config list then render stepper + body
       final currentIdx = ctrl.currentIndex;
       final lastIdx = ctrl.lastAvailableIndex;
@@ -165,23 +158,25 @@ class SetupScopeFlow extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AppStepper(
-            steps: configs
-                .map(
-                  (c) => AppStepperStep(title: c.title, svgAsset: c.svgAsset),
-                )
-                .toList(growable: false),
-            currentStep: currentIdx,
-            lastStepAvailable: lastIdx,
-            onStepTapped: (i) {
-              // Allow back navigation by tapping previous steps
-              if (i <= lastIdx) ctrl.goTo(i);
-            },
-          ),
-          const SizedBox(height: 16),
-          Text(
+          if (configs.length > 1) ...[
+            AppStepper(
+              steps: configs
+                  .map(
+                    (c) => AppStepperStep(title: c.title, svgAsset: c.svgAsset),
+                  )
+                  .toList(growable: false),
+              currentStep: currentIdx,
+              lastStepAvailable: lastIdx,
+              onStepTapped: (i) {
+                // Allow back navigation by tapping previous steps
+                if (i <= lastIdx) ctrl.goTo(i);
+              },
+            ),
+            const SizedBox(height: 16),
+          ],
+          Typography(
             configs[currentIdx].stepTitle,
-            style: Theme.of(context).textTheme.displayLarge,
+            variation: TypographyVariation.displayLarge,
           ),
           // Center(
           //   child: Text(

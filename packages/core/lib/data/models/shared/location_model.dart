@@ -1,3 +1,6 @@
+import 'package:latlong2/latlong.dart';
+import 'package:utils/log.dart';
+
 /// Represents physical locations where profiles provide services.
 /// Maps to the `locations` table in the database.
 class LocationModel {
@@ -22,7 +25,7 @@ class LocationModel {
   String country; // Default 'Colombia'
   String state; // Default 'Antioquia'
   String city; // Default 'Medellin'
-  Map<String, dynamic>? location; // Geographic point
+  LatLng? location; // Geographic point
   bool isPublished; // Default false
   bool servicesUp; // Services configuration status (also in settings)
   bool availabilityUp; // Availability configuration status (also in settings)
@@ -47,7 +50,6 @@ class LocationModel {
   factory LocationModel.fromJson(Map<String, dynamic> jsonData) {
     final locationSettings =
         jsonData['location_settings'] as Map<String, dynamic>? ?? {};
-
     return LocationModel(
         id: jsonData['id'] as String? ?? '',
         name: jsonData['name'] as String? ?? '',
@@ -57,7 +59,18 @@ class LocationModel {
       ..country = jsonData['country'] as String? ?? 'Colombia'
       ..state = jsonData['state'] as String? ?? 'Antioquia'
       ..city = jsonData['city'] as String? ?? 'Medellin'
-      ..location = jsonData['location'] as Map<String, dynamic>?
+      ..location =
+          jsonData['location'] != null
+              ? jsonData['location']['coordinates'] != null
+                  ? LatLng(
+                    (jsonData['location']['coordinates'][0] as num).toDouble(),
+                    (jsonData['location']['coordinates'][1] as num).toDouble(),
+                  )
+                  : LatLng(
+                    (jsonData['location']['latitude'] as num).toDouble(),
+                    (jsonData['location']['longitude'] as num).toDouble(),
+                  )
+              : null
       ..isPublished = jsonData['is_published'] as bool? ?? false
       ..servicesUp = jsonData['services_up'] as bool? ?? false
       ..availabilityUp = jsonData['availability_up'] as bool? ?? false
@@ -91,7 +104,13 @@ class LocationModel {
       'country': country,
       'state': state,
       'city': city,
-      'location': location,
+      'location':
+          location != null
+              ? {
+                'longitude': location!.longitude,
+                'latitude': location!.latitude,
+              }
+              : null,
       'is_published': isPublished,
       'services_up': servicesUp,
       'availability_up': availabilityUp,

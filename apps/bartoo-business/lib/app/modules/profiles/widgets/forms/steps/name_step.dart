@@ -9,9 +9,9 @@ class NameStep extends StatelessWidget {
 
   const NameStep({super.key, required this.controller});
 
-  String get _introText =>
+  String? get _introText =>
       controller.profileType.value == ProfileType.artist
-          ? 'Como Artista puedes trabajar de forma independiente, o asociado a una organización.'
+          ? null
           : 'Como Organización puedes administrar varias sedes, cada una con su equipo, horario y servicios.';
 
   String get _titleText =>

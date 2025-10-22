@@ -291,68 +291,71 @@ class _AnimatedFormStepState extends State<AnimatedFormStep> {
     }
 
     // Progressive animation mode
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Intro text (optional) - only show when intro should be visible
-        if (widget.introText != null && _showIntro) ...[
-          AnimatedOpacity(
-            opacity: _introOpacityVisible ? 1.0 : 0.0,
-            duration: widget.fadeDuration,
-            child: TypingText(
-              key: widget.typingKey,
-              text: widget.introText!,
-              variation: widget.introVariation,
-              duration: widget.introDuration,
-              onTypingComplete: _onIntroComplete,
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Intro text (optional) - only show when intro should be visible
+          if (widget.introText != null && _showIntro) ...[
+            AnimatedOpacity(
+              opacity: _introOpacityVisible ? 1.0 : 0.0,
+              duration: widget.fadeDuration,
+              child: TypingText(
+                key: widget.typingKey,
+                text: widget.introText!,
+                variation: widget.introVariation,
+                duration: widget.introDuration,
+                onTypingComplete: _onIntroComplete,
+              ),
             ),
-          ),
-          const SizedBox(height: 24),
-        ],
+            const SizedBox(height: 24),
+          ],
 
-        // Title text - only show when title should be visible
-        if (_showTitle) ...[
-          AnimatedOpacity(
-            opacity: _titleOpacityVisible ? 1.0 : 0.0,
-            duration: widget.fadeDuration,
-            child: TypingText(
-              text: widget.title,
-              variation: widget.titleVariation,
-              duration: widget.titleDuration,
-              onTypingComplete: _onTitleComplete,
+          // Title text - only show when title should be visible
+          if (_showTitle) ...[
+            AnimatedOpacity(
+              opacity: _titleOpacityVisible ? 1.0 : 0.0,
+              duration: widget.fadeDuration,
+              child: TypingText(
+                text: widget.title,
+                variation: widget.titleVariation,
+                duration: widget.titleDuration,
+                onTypingComplete: _onTitleComplete,
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-        ],
+            const SizedBox(height: 16),
+          ],
 
-        // Description text (optional) - only show when description should be visible
-        if (widget.descriptionText != null && _showDescription) ...[
-          AnimatedOpacity(
-            opacity: _descriptionOpacityVisible ? 1.0 : 0.0,
-            duration: widget.fadeDuration,
-            child: TypingText(
-              text: widget.descriptionText!,
-              variation: widget.descriptionVariation,
-              duration: widget.descriptionDuration,
-              onTypingComplete: _onDescriptionComplete,
+          // Description text (optional) - only show when description should be visible
+          if (widget.descriptionText != null && _showDescription) ...[
+            AnimatedOpacity(
+              opacity: _descriptionOpacityVisible ? 1.0 : 0.0,
+              duration: widget.fadeDuration,
+              child: TypingText(
+                text: widget.descriptionText!,
+                variation: widget.descriptionVariation,
+                duration: widget.descriptionDuration,
+                onTypingComplete: _onDescriptionComplete,
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-        ],
+            const SizedBox(height: 16),
+          ],
 
-        // Content with animation - only show when content should be visible
-        if (_showContent)
-          AnimatedOpacity(
-            opacity: _contentOpacityVisible ? 1.0 : 0.0,
-            duration: widget.fadeDuration,
-            curve: Curves.easeInOut,
-            child: Padding(
-              padding: widget.contentPadding,
-              child: widget.content,
+          // Content with animation - only show when content should be visible
+          if (_showContent)
+            AnimatedOpacity(
+              opacity: _contentOpacityVisible ? 1.0 : 0.0,
+              duration: widget.fadeDuration,
+              curve: Curves.easeInOut,
+              child: Padding(
+                padding: widget.contentPadding,
+                child: widget.content,
+              ),
             ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 }

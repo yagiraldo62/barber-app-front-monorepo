@@ -11,6 +11,7 @@ import 'package:ui/widgets/form/stepper_form_fields.dart';
 class LocationForm extends StatelessWidget {
   final LocationModel? currentLocation;
   final bool isCreation;
+  final bool showNameStep;
   final ScrollController? scrollController;
   final void Function(LocationModel)?
   onSaved; // Optional override when creation completes
@@ -21,6 +22,7 @@ class LocationForm extends StatelessWidget {
     this.isCreation = true,
     this.scrollController,
     this.onSaved,
+    this.showNameStep = true,
   });
 
   @override
@@ -33,6 +35,7 @@ class LocationForm extends StatelessWidget {
           isCreation: isCreation,
           onSavedCallback: onSaved,
           scrollController: scrollController,
+          showNameStep: showNameStep,
         ),
       );
     }
@@ -41,13 +44,14 @@ class LocationForm extends StatelessWidget {
 
     // Define steps for the form
     final steps = [
-      StepInfo(
-        stepWidget: LocationNameStep(controller: controller),
-        condition:
-            () =>
-                controller.currentStep.value.index >=
-                LocationFormStep.name.index,
-      ),
+      if (showNameStep)
+        StepInfo(
+          stepWidget: LocationNameStep(controller: controller),
+          condition:
+              () =>
+                  controller.currentStep.value.index >=
+                  LocationFormStep.name.index,
+        ),
       StepInfo(
         stepWidget: LocationAddressStep(controller: controller),
         condition:

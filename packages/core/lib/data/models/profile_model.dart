@@ -32,6 +32,7 @@ class ProfileModel {
   bool? independentArtist; // Artist only: operates independently
   bool? servicesUp; // Organization only: services configuration status
   bool? availabilityUp; // Organization only: availability configuration status
+  bool? firstLocationSetup; // Organization only: first location setup status
 
   // Timestamps
   DateTime? createdAt;
@@ -71,6 +72,7 @@ class ProfileModel {
       ..independentArtist = profileSettings['independent_artist'] as bool?
       ..servicesUp = profileSettings['services_up'] as bool?
       ..availabilityUp = profileSettings['availability_up'] as bool?
+      ..firstLocationSetup = profileSettings['first_location_setup'] as bool?
       // Timestamps
       ..createdAt =
           jsonData['created_at'] != null
@@ -119,6 +121,9 @@ class ProfileModel {
       if (availabilityUp != null) {
         profileSettings['availability_up'] = availabilityUp;
       }
+      if (firstLocationSetup != null) {
+        profileSettings['first_location_setup'] = firstLocationSetup;
+      }
     }
 
     return {
@@ -159,6 +164,8 @@ class ProfileModel {
           'services_up': servicesUp,
         if (type == ProfileType.organization && availabilityUp != null)
           'availability_up': availabilityUp,
+        if (type == ProfileType.organization && firstLocationSetup != null)
+          'first_location_setup': firstLocationSetup,
       },
       'owner_id': ownerId,
       'created_at': createdAt?.toIso8601String(),
