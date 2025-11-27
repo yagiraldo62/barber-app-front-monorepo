@@ -2,11 +2,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// A mixin that provides methods to store, retrieve and remove values from storage.
 mixin StorageManager {
-  String AUTH_LOADING = "AUTH_LOADING";
   String AUTH_USER = "AUTH_USER";
   String AUTH_TOKEN = "AUTH_TOKEN";
   String SELECTED_SCOPE = "SELECTED_SCOPE";
   String USER_COORDS = "USER_COORDS";
+  String APP_THEME = "APP_THEME";
+  String PENDING_INVITATION = "PENDING_INVITATION";
 
   /// Stores value in storage
   Future<void> storeValue(String key, String? value) async {

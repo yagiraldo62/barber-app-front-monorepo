@@ -9,6 +9,7 @@ class ProfileProvider extends BaseProvider {
 
   Future<ProfileModel?> createProfile({
     String? name,
+    String? slug,
     String? title,
     String? description,
     ProfileType type = ProfileType.artist,
@@ -17,6 +18,7 @@ class ProfileProvider extends BaseProvider {
   }) async {
     final Map<String, dynamic> body = {
       'name': name,
+      'slug': slug,
       'categories_id': categoriesId,
       'title': title,
       'type': type.toJson(),
@@ -27,7 +29,9 @@ class ProfileProvider extends BaseProvider {
       body['profile_settings'] = {'independent_artist': independentArtist};
     }
 
-    final response = await post('$_baseUrl', body);
+    Log('ProfileProvider: createProfile - Request body: $body');
+
+    final response = await post(_baseUrl, body);
 
     if ((response.body?["ok"] ?? false) != true) {
       return null;

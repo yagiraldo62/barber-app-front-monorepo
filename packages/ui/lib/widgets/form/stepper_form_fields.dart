@@ -164,8 +164,9 @@ class StepperFormFields<T> extends StatelessWidget {
           final controller = scrollController;
           if (controller == null ||
               !(controller.hasClients) ||
-              !enableAutoScroll)
+              !enableAutoScroll) {
             return;
+          }
           final position = controller.position;
           controller.animateTo(
             position.maxScrollExtent,

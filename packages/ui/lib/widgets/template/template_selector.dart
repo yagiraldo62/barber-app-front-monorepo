@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart' hide Typography;
 import 'package:ui/widgets/button/selectable_button.dart';
-import 'package:ui/widgets/typography/typography.dart';
-import 'package:utils/log.dart';
 
 /// A generic reusable widget for selecting templates
 ///

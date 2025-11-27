@@ -73,6 +73,7 @@ class MembersProvider extends BaseProvider {
     }
 
     final List<dynamic> dataList = response.body?["data"] ?? [];
+    Log('Members list: $dataList');
     return dataList.map((item) => LocationMemberModel.fromJson(item)).toList();
   }
 

@@ -11,13 +11,13 @@
 #### 2. **BaseGuardController** (`packages/core/lib/modules/auth/controllers/base_guard_controller.dart`)
 - ✅ Updated `validate` method to use `data.selectedScope` instead of `data.selectedScope`
 
-#### 3. **BaseAuthController** (`packages/core/lib/modules/auth/controllers/auth_controller.dart`)
+#### 3. **BaseAuthController** (`packages/core/lib/modules/auth/controllers/base_auth_controller.dart`)
 - ✅ Updated UserModel import path from flat to `/user/user_model.dart`
 - ✅ Removed unused `ArtistModel` import
 
 ### Business App Controllers
 
-#### 4. **BusinessAuthController** (`apps/bartoo-business/lib/app/modules/auth/controllers/business_auth_controller.dart`)
+#### 4. **BusinessAuthController** (`apps/bartoo-business/lib/app/auth/controllers/business_auth_controller.dart`)
 - ✅ Replaced `Rx<ArtistModel?>` with `Rx<BussinessScope?>`
 - ✅ Renamed `setSelectedArtistFromUser` → `setSelectedScopeFromUser`
 - ✅ Renamed `setSelectedArtist` → `setSelectedScope`
@@ -26,10 +26,10 @@
 - ✅ Updated logic to handle both `ProfileScope` and `LocationMemberScope`
 - ✅ Uses pattern matching with `switch` expressions
 
-#### 5. **BusinessGuestGuardController** (`apps/bartoo-business/lib/app/modules/auth/controllers/business_guest_guard_controller.dart`)
+#### 5. **BusinessGuestGuardController** (`apps/bartoo-business/lib/app/auth/controllers/business_guest_guard_controller.dart`)
 - ✅ Updated to use `authState.selectedScope` instead of `authState.selectedScope`
 
-#### 6. **BusinessAuthCallbacks** (`apps/bartoo-business/lib/app/modules/auth/controllers/business_auth_callbacks.dart`)
+#### 6. **BusinessAuthCallbacks** (`apps/bartoo-business/lib/app/auth/controllers/business_auth_callbacks.dart`)
 - ✅ Updated `onLogin` to create appropriate scope based on user data
 - ✅ Updated `onAuthValidation` signature to use `BussinessScope?`
 - ✅ Updated to call `setSelectedScope` instead of `setSelectedProfile`

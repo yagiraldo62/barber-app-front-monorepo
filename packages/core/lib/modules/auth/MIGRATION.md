@@ -132,7 +132,7 @@ class YourAppAuthBinding extends Bindings {
 
 ### 1. Create Auth Callbacks
 
-Create `lib/app/modules/auth/controllers/your_app_auth_callbacks.dart`:
+Create `lib/app/auth/controllers/your_app_auth_callbacks.dart`:
 
 ```dart
 import 'package:core/modules/auth/interfaces/auth_callbacks.dart';
@@ -185,10 +185,10 @@ Update your route bindings to use the new controllers.
 
 The business app implementation serves as a complete example of the new pattern. See:
 
-- `apps/bartoo-business/lib/app/modules/auth/controllers/business_auth_callbacks.dart`
-- `apps/bartoo-business/lib/app/modules/auth/controllers/business_auth_actions_controller.dart`
-- `apps/bartoo-business/lib/app/modules/auth/controllers/business_auth_guard_controller.dart`
-- `apps/bartoo-business/lib/app/modules/auth/bindings/business_auth_binding.dart`
+- `apps/bartoo-business/lib/app/auth/controllers/business_auth_callbacks.dart`
+- `apps/bartoo-business/lib/app/auth/controllers/business_auth_actions_controller.dart`
+- `apps/bartoo-business/lib/app/auth/controllers/business_auth_guard_controller.dart`
+- `apps/bartoo-business/lib/app/auth/bindings/business_auth_binding.dart`
 
 ## Benefits of Migration
 

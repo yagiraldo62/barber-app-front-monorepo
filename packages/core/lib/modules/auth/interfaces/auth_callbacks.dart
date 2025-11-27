@@ -24,4 +24,8 @@ abstract class AuthCallbacks {
   /// [user] - The current user (can be null)
   /// [selectedScope] - The current selected scope (can be null)
   Future<void> onAuthValidation(UserModel? user, BussinessScope? selectedScope);
+
+  /// Helper methods for redirection logic
+  void guestRouteValidation(UserModel? user);
+  void authRoutesValidation(UserModel? user);
 }

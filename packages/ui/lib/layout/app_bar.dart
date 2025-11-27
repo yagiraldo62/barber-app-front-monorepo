@@ -3,9 +3,10 @@ import 'package:get/get.dart';
 import 'package:ui/widgets/avatar/auth_user_avatar.dart';
 import 'package:ui/widgets/brand/bartoo_app_name.dart';
 
-import 'package:core/modules/auth/controllers/auth_controller.dart';
+import 'package:core/modules/auth/controllers/base_auth_controller.dart';
 import 'package:core/modules/auth/widgets/facebook_login_button.dart';
 import 'package:ui/widgets/button/toggle_theme.dart';
+import 'package:ui/widgets/app_bar/scope_selector.dart';
 import 'package:utils/log.dart';
 
 class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -41,9 +42,15 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: const BartooAppName(size: 24),
       backgroundColor:
           back
-              ? Theme.of(context).scaffoldBackgroundColor.withOpacity(0.5)
+              ? Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.5)
               : Theme.of(context).scaffoldBackgroundColor,
       actions: [
+        Obx(
+          () =>
+              authController.user.value != null
+                  ? const ScopeSelector()
+                  : const SizedBox.shrink(),
+        ),
         ToggleThemeButton(),
         const SizedBox(width: 10),
         Padding(

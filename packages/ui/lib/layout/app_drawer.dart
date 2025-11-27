@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ui/widgets/brand/app_logo.dart';
 import 'package:ui/widgets/button/toggle_theme.dart';
 
-import 'package:core/modules/auth/controllers/auth_controller.dart';
+import 'package:core/modules/auth/controllers/base_auth_controller.dart';
 import 'package:get/get.dart';
 
 class BaseAppDrawer extends StatelessWidget {

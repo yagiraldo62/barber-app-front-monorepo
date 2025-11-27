@@ -1,5 +1,35 @@
 import 'package:latlong2/latlong.dart';
-import 'package:utils/log.dart';
+
+/// Enum for location setup steps
+enum LocationSetupStep {
+  servicesUp,
+  availabilityUp,
+  membersUp;
+
+  String toJson() {
+    switch (this) {
+      case LocationSetupStep.servicesUp:
+        return 'services_up';
+      case LocationSetupStep.availabilityUp:
+        return 'availability_up';
+      case LocationSetupStep.membersUp:
+        return 'members_up';
+    }
+  }
+
+  static LocationSetupStep fromJson(String value) {
+    switch (value.toLowerCase()) {
+      case 'services_up':
+        return LocationSetupStep.servicesUp;
+      case 'availability_up':
+        return LocationSetupStep.availabilityUp;
+      case 'members_up':
+        return LocationSetupStep.membersUp;
+      default:
+        throw ArgumentError('Unknown LocationSetupStep: $value');
+    }
+  }
+}
 
 /// Represents physical locations where profiles provide services.
 /// Maps to the `locations` table in the database.
@@ -14,7 +44,9 @@ class LocationModel {
     this.rate = 5.0,
     this.locationUp = false,
     this.servicesUp = false,
+    this.membersUp = false,
     this.availabilityUp = false,
+    this.artistsAvailables = false,
   });
 
   // Primary fields
@@ -29,6 +61,9 @@ class LocationModel {
   bool isPublished; // Default false
   bool servicesUp; // Services configuration status (also in settings)
   bool availabilityUp; // Availability configuration status (also in settings)
+  bool membersUp; // Members configuration status (also in settings)
+  bool
+  artistsAvailables; // Whether there is any artist are available at this location
 
   // Location settings (JSONB field)
   double rate; // Location rating (default: 5)
@@ -79,6 +114,9 @@ class LocationModel {
       ..locationUp = locationSettings['location_up'] as bool? ?? false
       ..servicesUp = locationSettings['services_up'] as bool? ?? false
       ..availabilityUp = locationSettings['availability_up'] as bool? ?? false
+      ..membersUp = locationSettings['members_up'] as bool? ?? false
+      ..artistsAvailables =
+          locationSettings['artists_availables'] as bool? ?? false
       // Timestamps
       ..createdAt =
           jsonData['created_at'] != null
@@ -114,11 +152,14 @@ class LocationModel {
       'is_published': isPublished,
       'services_up': servicesUp,
       'availability_up': availabilityUp,
+      'artists_availables': artistsAvailables,
       'location_settings': {
         'rate': rate,
         'location_up': locationUp,
         'services_up': servicesUp,
         'availability_up': availabilityUp,
+        'members_up': membersUp,
+        'artists_availables': artistsAvailables,
       },
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),

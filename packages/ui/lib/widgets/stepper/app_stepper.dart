@@ -9,8 +9,8 @@ class AppStepperStep {
   const AppStepperStep({required this.title, this.icon, this.svgAsset});
 }
 
-const double _defaultIconSize = 18.0;
-const double _defaultIconContainerSize = 36.0;
+const double _defaultIconSize = 25.0;
+const double _defaultIconContainerSize = 45.0;
 
 /// Simple horizontal stepper with connectors and labels.
 class AppStepper extends StatelessWidget {
@@ -65,7 +65,7 @@ class AppStepper extends StatelessWidget {
               height: _defaultIconContainerSize,
               decoration: BoxDecoration(
                 color: isCompleted && !isActive ? Colors.transparent : dotColor,
-                border: Border.all(color: dotColor, width: isActive ? 3 : 2),
+                border: Border.all(color: dotColor, width: 1),
                 shape: BoxShape.circle,
               ),
               child: Center(

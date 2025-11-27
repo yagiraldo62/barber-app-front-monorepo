@@ -6,7 +6,7 @@ Added a new step to the ProfileForm to allow artists to select whether they want
 ## Changes Made
 
 ### 1. New Step Widget
-**File**: `apps/bartoo-business/lib/app/modules/profiles/widgets/forms/steps/work_mode_step.dart`
+**File**: `apps/bartoo-business/lib/app/profiles/widgets/forms/steps/work_mode_step.dart`
 
 Created a new step widget with:
 - Two selectable cards: "Artista Independiente" and "Asociado a Organización"
@@ -15,7 +15,7 @@ Created a new step widget with:
 - Responsive design following Material Design principles
 
 ### 2. Updated ProfileFormStep Enum
-**File**: `apps/bartoo-business/lib/app/modules/profiles/controllers/forms/profile_form_controller.dart`
+**File**: `apps/bartoo-business/lib/app/profiles/controllers/forms/profile_form_controller.dart`
 
 ```dart
 enum ProfileFormStep { workMode, name, title, description, categories, photo }
@@ -24,7 +24,7 @@ enum ProfileFormStep { workMode, name, title, description, categories, photo }
 Added `workMode` as the first step in the profile creation flow.
 
 ### 3. Controller Updates
-**File**: `apps/bartoo-business/lib/app/modules/profiles/controllers/forms/profile_form_controller.dart`
+**File**: `apps/bartoo-business/lib/app/profiles/controllers/forms/profile_form_controller.dart`
 
 #### New Properties:
 ```dart
@@ -45,7 +45,7 @@ Added case for `ProfileFormStep.workMode` with validation to ensure a work mode 
 Now passes `independentArtist` value when creating or updating profiles.
 
 ### 4. Form Widget Updates
-**File**: `apps/bartoo-business/lib/app/modules/profiles/widgets/forms/profile_form.dart`
+**File**: `apps/bartoo-business/lib/app/profiles/widgets/forms/profile_form.dart`
 
 - Imported the new `WorkModeStep` widget
 - Added the work mode step as the first step in the steps array

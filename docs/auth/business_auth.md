@@ -10,7 +10,7 @@ The Business app extends the core authentication module to include artist-specif
 
 ### Auth Callbacks
 
-**File:** `apps/bartoo-business/lib/app/modules/auth/controllers/business_auth_callbacks.dart`
+**File:** `apps/bartoo-business/lib/app/auth/controllers/business_auth_callbacks.dart`
 
 The `BusinessAuthCallbacks` class implements the `AuthCallbacks` interface and provides the following methods:
 
@@ -30,7 +30,7 @@ The `BusinessAuthCallbacks` class implements the `AuthCallbacks` interface and p
 
 ### Auth Binding
 
-**File:** `apps/bartoo-business/lib/app/modules/auth/bindings/business_auth_binding.dart`
+**File:** `apps/bartoo-business/lib/app/auth/bindings/business_auth_binding.dart`
 
 The `BusinessAuthBinding` class registers all dependencies, including:
 - Core dependencies (e.g., `AuthProvider`, `UserRepository`, `AuthRepository`)
@@ -48,9 +48,64 @@ The `BusinessAuthBinding` class registers all dependencies, including:
 1. The user initiates logout.
 2. The `onLogout` callback clears artist-specific data and handles cleanup.
 
-### Validation
-1. Guards validate the authentication state on app start or route changes.
-2. The `onAuthValidation` callback validates the authentication state for artists.
+### Auth Validation & Redirections
+
+The authentication validation system ensures users are properly authenticated and verified before accessing protected routes. The redirection flow follows this priority order:
+
+#### 1. Guest Route Validation (`guestRouteValidation`)
+- If user is null and not on home route → redirect to home (`/`)
+- This ensures unauthenticated users are sent to the home page
+
+#### 2. Auth Routes Validation (`authRoutesValidation`)
+The validation runs on protected routes and follows this order:
+
+**Step 1: Null User Check**
+- If user is null and not on home route → redirect to home (`/`)
+
+**Step 2: Phone Verification (Prerequisite)**
+- Early exit if already on `/verify-phone` route (prevents infinite loops)
+- If user is not phone verified AND not on verify-phone route → redirect to `/verify-phone`
+- If user IS phone verified AND on verify-phone route → redirect to `/` (home)
+- Phone verification is a prerequisite before any other setup
+
+**Step 3: Setup Route Check**
+- If already on a setup route (intro, profile setup, location setup, etc.) → skip further validation
+- Setup routes are excluded from mandatory flow redirection
+
+**Step 4: User State Validation** (only if NOT in setup route)
+- **First Login**: If `user.isFirstLogin == true` → redirect to intro (`/intro`)
+- **Pending Invitation**: If user has a pending invitation → redirect to invitation view
+- **No Selected Scope**: If no selected scope exists → redirect to profile creation
+
+**Step 5: Scope-Based Redirection**
+- **ProfileScope** (owns profile):
+  - If organization with no locations → redirect to location setup
+  - If organization with incomplete services/availability → redirect to location setup
+  - If independent artist with incomplete setup → redirect to profile setup
+- **LocationMemberScope** (employee/member):
+  - If organization not set → redirect to organization setup
+  - If location with incomplete setup → redirect to location setup
+
+### Setup Routes (Skip Redirection Logic)
+The following routes skip the mandatory flow redirection:
+- `/intro` - First login introduction
+- `/profiles/:profile_id/setup` - Profile setup
+- `/profiles/:profile_id/:location_id/setup` - Location setup
+- `/profiles/:profile_id/locations/new` - Create location
+- `/members` - Manage members/invitations
+
+### Middleware Integration
+Routes with `AuthGuardMiddleware` automatically run auth validation on entry:
+- Home (`/`)
+- Profile (`/profile`)
+- Artist Home (`/artist-home`)
+- Setup routes
+- Services update
+- And other protected routes
+
+This ensures authentication state is validated every time these protected routes are accessed.
+
+## Validation
 
 ## Example
 

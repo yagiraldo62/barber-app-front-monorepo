@@ -14,6 +14,7 @@ class ProfileModel {
   ProfileModel({
     this.id = '',
     this.name = '',
+    this.slug,
     this.type = ProfileType.artist,
     this.rate = 5.0,
   });
@@ -21,6 +22,7 @@ class ProfileModel {
   // Primary fields
   String? id;
   String name; // Unique profile name
+  String? slug; // Profile slug (URL-friendly identifier)
   String? title; // Profile's professional title
   String? description; // Profile description
   String? photoUrl; // Profile photo URL
@@ -61,6 +63,7 @@ class ProfileModel {
     return ProfileModel(
         id: jsonData['id'] as String?,
         name: jsonData['name'] as String? ?? '',
+        slug: jsonData['slug'] as String?,
         type: profileType,
       )
       ..title = jsonData['title'] as String?
@@ -129,6 +132,7 @@ class ProfileModel {
     return {
       'id': id,
       'name': name,
+      'slug': slug,
       'title': title,
       'description': description,
       'photo_url': photoUrl,
@@ -150,6 +154,7 @@ class ProfileModel {
     return {
       'id': id,
       'name': name,
+      'slug': slug,
       'title': title,
       'description': description,
       'photo_url': photoUrl,

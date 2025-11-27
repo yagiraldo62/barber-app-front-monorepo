@@ -1,13 +1,17 @@
+import 'package:core/modules/auth/controllers/base_auth_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:ui/widgets/avatar/user_avatar.dart';
+import 'package:utils/log.dart';
 
 class AuthUserAvatar extends StatelessWidget {
-  final bool isArtist;
   final Widget alternativeWidget;
   final int size;
 
-  const AuthUserAvatar({
+  final authController = Get.find<BaseAuthController>();
+
+  AuthUserAvatar({
     super.key,
-    this.isArtist = false,
     this.alternativeWidget = const CircularProgressIndicator(),
     this.size = 60,
   });
@@ -18,23 +22,8 @@ class AuthUserAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Temporarily commented out until proper dependency injection is set up
-    // String? src = authController.user.value?.photoURL;
-
-    // if (isArtist) {
-    //   if (authController.selectedScope.value != null) {
-    //     src = authController.selectedScope.value?.photoUrl;
-    //   }
-    // }
-
-    // return (src != "")
-    //     ? UserAvatar(
-    //         src: src,
-    //         size: size,
-    //       )
-    //     : alternativeWidget;
-
-    // Placeholder implementation until controllers are properly injected
-    return alternativeWidget;
+    String? src = authController.user.value?.photoURL;
+    Log('image src for AuthUserAvatar: $src');
+    return (src != "") ? UserAvatar(src: src, size: size) : alternativeWidget;
   }
 }

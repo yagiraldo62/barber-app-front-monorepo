@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:core/data/models/profile_model.dart';
 import 'package:core/data/models/shared/location_model.dart';
+import 'package:core/data/models/user_model.dart';
 // Avoid circular dependency by not importing UserModel here
 
 /// Manages membership relationships between users and locations.
@@ -17,6 +20,8 @@ class LocationMemberModel {
   String id;
   LocationMemberRole role; // 'member', 'manager', 'super-admin'
   bool isActive; // Default true
+  String? invitationPhoneNumber; // Contact phone number
+  String? invitationReceptorName; // Name of invitation recipient
 
   // Location member settings (JSONB field)
   bool servicesUp; // Member services configuration status
@@ -35,9 +40,11 @@ class LocationMemberModel {
 
   // Relations
   ProfileModel? organization; // Parent organization
-  LocationModel? location; // Work location (Note: this is typically found in organization.locations)
+  LocationModel?
+  location; // Work location (Note: this is typically found in organization.locations)
   ProfileModel? artist; // Artist profile (if member is an artist)
   // UserModel? member; // The member user (avoiding circular dependency)
+  UserModel? member; // Avoid circular dependency
   String? memberId; // Store member ID instead
 
   /// Factory constructor from JSON
@@ -46,24 +53,13 @@ class LocationMemberModel {
         jsonData['location_member_settings'] as Map<String, dynamic>? ?? {};
     final role = _parseRole(jsonData['role'] as String?);
 
-    // Extract location from organization.locations if not directly provided
-    LocationModel? location;
-    if (jsonData['location'] != null) {
-      location = LocationModel.fromJson(jsonData['location']);
-    } else if (jsonData['organization'] != null && 
-               jsonData['organization']['locations'] != null &&
-               (jsonData['organization']['locations'] as List).isNotEmpty) {
-      // Get the first location from the organization
-      location = LocationModel.fromJson(
-        (jsonData['organization']['locations'] as List).first
-      );
-    }
-
     return LocationMemberModel(
         id: jsonData['id'] as String? ?? '',
         role: role,
         isActive: jsonData['is_active'] as bool? ?? true,
       )
+      ..invitationPhoneNumber = jsonData['invitation_phone_number'] as String?
+      ..invitationReceptorName = jsonData['invitation_receptor_name'] as String?
       // Location member settings (from JSONB field)
       ..servicesUp = memberSettings['services_up'] as bool? ?? false
       ..availabilityUp = memberSettings['availability_up'] as bool? ?? false
@@ -99,7 +95,14 @@ class LocationMemberModel {
           jsonData['organization'] != null
               ? ProfileModel.fromJson(jsonData['organization'])
               : null
-      ..location = location
+      ..location =
+          jsonData['location'] != null
+              ? LocationModel.fromJson(jsonData['location'])
+              : null
+      ..member =
+          jsonData['member'] != null
+              ? UserModel.fromJson(jsonData['member'])
+              : null
       ..artist =
           jsonData['artist'] != null
               ? ProfileModel.fromJson(jsonData['artist'])
@@ -119,6 +122,8 @@ class LocationMemberModel {
       },
       'accepted_at': acceptedAt?.toIso8601String(),
       'declined_at': declinedAt?.toIso8601String(),
+      'invitation_phone_number': invitationPhoneNumber,
+      'invitation_receptor_name': invitationReceptorName,
       'invitation_token': invitationToken,
       'token_expiration_date': tokenExpirationDate?.toIso8601String(),
       'created_at': createdAt?.toIso8601String(),
@@ -127,7 +132,7 @@ class LocationMemberModel {
       'organization': organization?.toJson(),
       'location': location?.toJson(),
       'artist': artist?.toJson(),
-      if (memberId != null) 'member': {'id': memberId},
+      'member': member?.toJson(),
     };
   }
 

@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import 'package:core/data/models/user_model.dart';
-import 'package:core/modules/auth/controllers/auth_controller.dart';
+import 'package:core/modules/auth/controllers/base_auth_controller.dart';
 import 'package:core/modules/auth/repository/auth_repository.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 
 enum UserType { artist, organization, member, client }
@@ -14,43 +13,13 @@ class BaseAuthIntroController extends GetxController {
 
   final AuthRepository authRepository = Get.find<AuthRepository>();
 
-  // User type selection
-  final Rx<UserType?> selectedUserType = Rx<UserType?>(null);
-
   // Animation control
   final RxBool showContent = false.obs;
 
-  void selectUserType(UserType type) {
-    selectedUserType.value = type;
-  }
-
-  bool get canContinue => selectedUserType.value != null;
+  bool get canContinue => true;
 
   void onAnimationsComplete() {
     showContent.value = true;
-  }
-
-  Future<void> onSelectUserType() async {
-    user.value?.isFirstLogin = false;
-
-    await authRepository.setAuthUser(user.value);
-
-    if (selectedUserType.value == UserType.client) {
-      // Direct to home for clients
-      // Update first login status
-      await updateFirstLogin();
-      Get.offAllNamed(dotenv.env['HOME_ROUTE'] ?? '/home');
-    } else if (selectedUserType.value == UserType.artist) {
-      Get.offAllNamed(
-        dotenv.env['CREATE_PROFILE_ROUTE'] ?? '/home',
-        arguments: {'userType': 'artist'},
-      );
-    } else if (selectedUserType.value == UserType.organization) {
-      Get.offAllNamed(
-        dotenv.env['CREATE_PROFILE_ROUTE'] ?? '/home',
-        arguments: {'userType': 'organization'},
-      );
-    }
   }
 
   Future<void> updateFirstLogin([bool isOrganizationMember = false]) async {

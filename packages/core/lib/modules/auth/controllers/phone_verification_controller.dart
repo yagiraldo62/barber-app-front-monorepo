@@ -1,5 +1,5 @@
 import 'package:core/data/models/user_model.dart';
-import 'package:core/modules/auth/controllers/auth_controller.dart';
+import 'package:core/modules/auth/controllers/base_auth_controller.dart';
 import 'package:core/modules/auth/repository/phone_verification_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';

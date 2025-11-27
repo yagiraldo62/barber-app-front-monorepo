@@ -44,6 +44,7 @@ class ProfileRepository {
 
   Future<ProfileModel> create({
     String? name,
+    String? slug,
     List<String>? categoriesId,
     ProfileType type = ProfileType.artist,
     String? title,
@@ -54,6 +55,7 @@ class ProfileRepository {
     try {
       ProfileModel? createdProfile = await profileProvider.createProfile(
         name: name,
+        slug: slug,
         categoriesId: categoriesId ?? [],
         type: type,
         title: title,

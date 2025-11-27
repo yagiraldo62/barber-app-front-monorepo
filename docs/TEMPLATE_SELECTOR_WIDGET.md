@@ -90,7 +90,7 @@ TemplateSelector<ServicesTemplateModel>(
 ## Current Implementations
 
 ### 1. Availability Templates
-**File**: `apps/bartoo-business/lib/app/modules/availability/widgets/availability_form/steps/template_selection_step.dart`
+**File**: `apps/bartoo-business/lib/app/availability/widgets/availability_form/steps/template_selection_step.dart`
 
 ```dart
 TemplateSelector<AvailabilityTemplateModel>(
@@ -108,7 +108,7 @@ TemplateSelector<AvailabilityTemplateModel>(
 **Use Case**: Selecting availability schedule template
 
 ### 2. Services Templates
-**File**: `apps/bartoo-business/lib/app/modules/services/widgets/location_services_form/template_selection_buttons.dart`
+**File**: `apps/bartoo-business/lib/app/services/widgets/location_services_form/template_selection_buttons.dart`
 
 ```dart
 TemplateSelector<ServicesTemplateModel>(

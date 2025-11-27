@@ -1,4 +1,5 @@
 import 'package:base/providers/base_provider.dart';
+import 'package:core/data/models/location_member_model.dart';
 import 'package:utils/log.dart';
 
 class MemberInvitationsProvider extends BaseProvider {
@@ -37,7 +38,7 @@ class MemberInvitationsProvider extends BaseProvider {
   }
 
   /// Get invitation details by token (public endpoint, no auth required)
-  Future<Map<String, dynamic>?> getInvitationByToken(String token) async {
+  Future<LocationMemberModel?> getInvitationByToken(String token) async {
     final response = await get('$_baseUrl/$token');
 
     if ((response.body?["ok"] ?? false) != true) {
@@ -46,7 +47,7 @@ class MemberInvitationsProvider extends BaseProvider {
 
     Log(response.body?["data"]);
 
-    return response.body?["data"];
+    return LocationMemberModel.fromJson(response.body?["data"]);
   }
 
   /// Accept or decline an invitation
@@ -74,4 +75,32 @@ class MemberInvitationsProvider extends BaseProvider {
   /// Decline an invitation (convenience method)
   Future<Map<String, dynamic>?> declineInvitation(String token) =>
       respondToInvitation(token: token, action: 'decline');
+
+  /// Resend an invitation to an existing pending invitation
+  Future<Map<String, dynamic>?> resendInvitation({
+    required String phoneNumber,
+    required String organizationId,
+    String? locationId,
+    String sendBy = 'sms',
+  }) async {
+    final Map<String, dynamic> body = {
+      'phone_number': phoneNumber,
+      'organization_id': organizationId,
+      'send_by': sendBy,
+    };
+
+    if (locationId != null && locationId.isNotEmpty) {
+      body['location_id'] = locationId;
+    }
+
+    final response = await post('$_baseUrl/resend', body);
+
+    if ((response.body?["ok"] ?? false) != true) {
+      return null;
+    }
+
+    Log(response.body?["data"]);
+
+    return response.body?["data"];
+  }
 }

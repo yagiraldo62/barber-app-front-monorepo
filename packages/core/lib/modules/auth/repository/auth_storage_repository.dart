@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:core/data/models/location_member_model.dart';
 import 'package:core/modules/auth/classes/auth_state.dart';
 import 'package:core/modules/auth/classes/selected_scope.dart';
 import 'package:utils/storage_manager.dart';
@@ -42,6 +43,21 @@ class AuthStorageRepository with StorageManager {
 
     final jsonData = json.decode(storedScope);
     return BussinessScope.fromJson(jsonData);
+  }
+
+  // Pending invitation
+  setPendingInvitation(LocationMemberModel? invitationToken) {
+    setValue(
+      PENDING_INVITATION,
+      invitationToken != null ? json.encode(invitationToken.toJson()) : null,
+    );
+  }
+
+  Future<LocationMemberModel?> getPendingInvitation() async {
+    String? storedInvitation = await getValue(PENDING_INVITATION);
+    return storedInvitation != null
+        ? LocationMemberModel.fromJson(json.decode(storedInvitation))
+        : null;
   }
 
   /// Retrieves the authentication state.

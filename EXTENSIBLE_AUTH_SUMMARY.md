@@ -24,28 +24,28 @@ The auth module has been successfully refactored to support extensible implement
 
 ### 2. Business App Implementation
 
-**BusinessAuthCallbacks** (`apps/bartoo-business/lib/app/modules/auth/controllers/business_auth_callbacks.dart`)
+**BusinessAuthCallbacks** (`apps/bartoo-business/lib/app/auth/controllers/business_auth_callbacks.dart`)
 - Business-specific auth behavior
 - Handles artist selection, business-specific redirections
 - Implements all required callback methods
 
-**BusinessAuthActionsController** (`apps/bartoo-business/lib/app/modules/auth/controllers/business_auth_actions_controller.dart`)
+**BusinessAuthActionsController** (`apps/bartoo-business/lib/app/auth/controllers/business_auth_actions_controller.dart`)
 - Extends BaseAuthActionsController
 - Uses BusinessAuthCallbacks for business logic
 
-**BusinessAuthGuardController** (`apps/bartoo-business/lib/app/modules/auth/controllers/business_auth_guard_controller.dart`)
+**BusinessAuthGuardController** (`apps/bartoo-business/lib/app/auth/controllers/business_auth_guard_controller.dart`)
 - Extends BaseGuardController
 - Business-specific auth validation
 
-**BusinessGuestGuardController** (`apps/bartoo-business/lib/app/modules/auth/controllers/business_guest_guard_controller.dart`)
+**BusinessGuestGuardController** (`apps/bartoo-business/lib/app/auth/controllers/business_guest_guard_controller.dart`)
 - Extends BaseGuardController
 - Guest-specific validation (redirects authenticated users)
 
-**BusinessAuthIntroController** (`apps/bartoo-business/lib/app/modules/auth/controllers/business_auth_intro_controller.dart`)
+**BusinessAuthIntroController** (`apps/bartoo-business/lib/app/auth/controllers/business_auth_intro_controller.dart`)
 - Extends core AuthIntroController
 - Uses business callbacks for first login completion
 
-**BusinessAuthBinding** (`apps/bartoo-business/lib/app/modules/auth/bindings/business_auth_binding.dart`)
+**BusinessAuthBinding** (`apps/bartoo-business/lib/app/auth/bindings/business_auth_binding.dart`)
 - Binds all business-specific auth controllers
 - Maintains core auth dependencies
 

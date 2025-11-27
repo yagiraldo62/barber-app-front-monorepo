@@ -1,13 +1,26 @@
-import 'package:core/modules/auth/controllers/auth_controller.dart';
+import 'package:core/modules/auth/controllers/base_auth_controller.dart';
 import 'package:core/modules/auth/controllers/base_auth_actions_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class FacebookLoginButton extends StatelessWidget {
-  FacebookLoginButton({super.key});
+  final Function? beforeLogin;
+
+  FacebookLoginButton({super.key, this.beforeLogin});
 
   final authActionsController = Get.find<BaseAuthActionsController>();
   final authController = Get.find<BaseAuthController>();
+
+  onLogin() {
+    if (authController.user.value != null) {
+      return;
+    }
+    if (beforeLogin != null) {
+      beforeLogin!();
+    }
+    authActionsController.signInWithFacebook();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
@@ -16,11 +29,7 @@ class FacebookLoginButton extends StatelessWidget {
           const Color(0xFF1877F2),
         ), // Facebook blue color
       ),
-      onPressed:
-          () =>
-              !authController.validating.value
-                  ? authActionsController.signInWithFacebook()
-                  : null,
+      onPressed: () => onLogin(),
       child: Obx(
         () =>
             authController.validating.value

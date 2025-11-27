@@ -1,4 +1,4 @@
-import 'package:bartoo/app/modules/auth/bindings/business_auth_binding.dart';
+import 'package:bartoo/app/auth/bindings/business_auth_binding.dart';
 import 'package:utils/initialize_services.dart';
 import 'package:flutter/material.dart';
 import 'package:ui/theme/theme.dart';
@@ -19,7 +19,7 @@ void main() async {
       darkTheme: darkTheme,
       title: "Application",
       themeMode: Get.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      initialRoute: AppPages.INITIAL,
+      initialRoute: AppPages.initialRoute,
       getPages: AppPages.routes,
       initialBinding: BusinessAuthBinding(),
     ),

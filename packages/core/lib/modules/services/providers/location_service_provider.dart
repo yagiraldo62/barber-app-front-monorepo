@@ -1,7 +1,6 @@
 import 'package:base/providers/base_provider.dart';
 import 'package:core/data/models/location_service_model.dart';
 import 'package:utils/log.dart';
-import 'package:get/get.dart';
 
 class LocationServiceProvider extends BaseProvider {
   /// Get location services for a specific profile and location
