@@ -1,5 +1,5 @@
 import 'package:bartoo/app/auth/controllers/business_auth_controller.dart';
-import 'package:core/data/models/location_member_model.dart';
+import 'package:core/data/models/member_model.dart';
 import 'package:get/get.dart';
 import 'package:core/modules/profile/providers/member_invitations_provider.dart';
 
@@ -17,7 +17,7 @@ class InvitationDetailsController extends GetxController {
   final isLoading = true.obs;
   final isResponding = false.obs;
   final error = RxnString();
-  final invitation = Rxn<LocationMemberModel>();
+  final invitation = Rxn<MemberModel>();
 
   bool get isAuthenticated => _authController.user.value != null;
 

@@ -70,6 +70,7 @@ class SetupScopeController extends GetxController {
 
   void toggleIsIndependentArtist(bool value) {
     isIndependentArtist.value = value;
+    profileType.value = ProfileType.artist;
 
     _buildSteps();
   }
@@ -318,7 +319,10 @@ class SetupScopeController extends GetxController {
       steps.add(CreateProfileStep.location);
       steps.add(CreateProfileStep.services);
       steps.add(CreateProfileStep.availability);
-      steps.add(CreateProfileStep.members);
+
+      if (profileType.value == ProfileType.organization) {
+        steps.add(CreateProfileStep.members);
+      }
 
       if (currentProfile.value != null) {
         if (currentLocation.value?.id == null) {

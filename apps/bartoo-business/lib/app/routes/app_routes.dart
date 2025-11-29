@@ -31,4 +31,5 @@ abstract class Routes {
       '/profiles/:profile_id/locations/:location_id/availability/edit';
   static const updateMembers =
       '/profiles/:profile_id/locations/:location_id/members/edit';
+  static const updateProfileMembers = '/profiles/:profile_id/members/edit';
 }

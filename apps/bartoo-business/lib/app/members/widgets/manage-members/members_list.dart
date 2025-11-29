@@ -6,19 +6,22 @@ import 'member_row.dart';
 class MembersList extends StatelessWidget {
   final bool shrinkWrap;
   final MembersInviteController controller;
+  final List<dynamic>? members;
   const MembersList({
     super.key,
     this.shrinkWrap = false,
     required this.controller,
+    this.members,
   });
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      if (controller.isLoading.value && controller.members.isEmpty) {
+      final membersList = members ?? controller.members;
+      if (controller.isLoading.value && membersList.isEmpty) {
         return const Center(child: CircularProgressIndicator());
       }
-      if (controller.members.isEmpty) {
-        return const Text('No members yet');
+      if (membersList.isEmpty) {
+        return const Text('No hay miembros');
       }
       String idOf(dynamic m) {
         try {
@@ -32,10 +35,10 @@ class MembersList extends StatelessWidget {
         physics: shrinkWrap ? const NeverScrollableScrollPhysics() : null,
         shrinkWrap: shrinkWrap,
         padding: const EdgeInsets.symmetric(vertical: 8),
-        itemCount: controller.members.length,
+        itemCount: membersList.length,
         separatorBuilder: (_, __) => const Divider(height: 1),
         itemBuilder: (context, index) {
-          final m = controller.members[index];
+          final m = membersList[index];
           return MemberRow(
             member: m,
             onRevoke: () => controller.revokeMember(idOf(m)),

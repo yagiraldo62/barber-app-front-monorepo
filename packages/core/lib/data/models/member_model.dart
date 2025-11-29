@@ -7,11 +7,12 @@ import 'package:core/data/models/user_model.dart';
 
 /// Manages membership relationships between users and locations.
 /// Maps to the `location_members` table in the database.
-class LocationMemberModel {
-  LocationMemberModel({
+class MemberModel {
+  MemberModel({
     this.id = '',
     this.role = LocationMemberRole.member,
     this.isActive = true,
+    this.isArtist = false,
     this.servicesUp = false,
     this.availabilityUp = false,
   });
@@ -20,6 +21,7 @@ class LocationMemberModel {
   String id;
   LocationMemberRole role; // 'member', 'manager', 'super-admin'
   bool isActive; // Default true
+  bool isArtist; // Whether member is an artist
   String? invitationPhoneNumber; // Contact phone number
   String? invitationReceptorName; // Name of invitation recipient
 
@@ -48,15 +50,16 @@ class LocationMemberModel {
   String? memberId; // Store member ID instead
 
   /// Factory constructor from JSON
-  factory LocationMemberModel.fromJson(Map<String, dynamic> jsonData) {
+  factory MemberModel.fromJson(Map<String, dynamic> jsonData) {
     final memberSettings =
         jsonData['location_member_settings'] as Map<String, dynamic>? ?? {};
     final role = _parseRole(jsonData['role'] as String?);
 
-    return LocationMemberModel(
+    return MemberModel(
         id: jsonData['id'] as String? ?? '',
         role: role,
         isActive: jsonData['is_active'] as bool? ?? true,
+        isArtist: jsonData['is_artist'] as bool? ?? false,
       )
       ..invitationPhoneNumber = jsonData['invitation_phone_number'] as String?
       ..invitationReceptorName = jsonData['invitation_receptor_name'] as String?
@@ -116,6 +119,7 @@ class LocationMemberModel {
       'id': id,
       'role': role.toJson(),
       'is_active': isActive,
+      'is_artist': isArtist,
       'location_member_settings': {
         'services_up': servicesUp,
         'availability_up': availabilityUp,
@@ -168,11 +172,9 @@ class LocationMemberModel {
   }
 
   /// Convert list from JSON
-  static List<LocationMemberModel> listFromJson(List<dynamic>? jsonData) =>
+  static List<MemberModel> listFromJson(List<dynamic>? jsonData) =>
       jsonData != null
-          ? jsonData
-              .map((member) => LocationMemberModel.fromJson(member))
-              .toList()
+          ? jsonData.map((member) => MemberModel.fromJson(member)).toList()
           : [];
 }
 

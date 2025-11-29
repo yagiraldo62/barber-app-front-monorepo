@@ -76,7 +76,7 @@ class LocationModel {
 
   // Relations
   // ProfileModel? profile; // Many-to-one with Profile
-  // List<LocationMemberModel>? members;
+  // List<MemberModel>? members;
   // List<LocationAvailabilityModel>? availability;
   // List<AppointmentModel>? appointments;
   // List<LocationServiceModel>? services;

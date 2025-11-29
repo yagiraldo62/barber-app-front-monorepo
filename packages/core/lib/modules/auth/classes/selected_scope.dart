@@ -1,8 +1,8 @@
 import 'package:core/data/models/profile_model.dart';
-import 'package:core/data/models/location_member_model.dart';
+import 'package:core/data/models/member_model.dart';
 
 /// Represents the selected scope for a user session.
-/// Can be either a ProfileModel or a LocationMemberModel.
+/// Can be either a ProfileModel or a MemberModel.
 sealed class BussinessScope {
   const BussinessScope();
 
@@ -13,7 +13,7 @@ sealed class BussinessScope {
     final data = json['data'] as Map<String, dynamic>;
 
     if (type == 'location_member') {
-      return LocationMemberScope(LocationMemberModel.fromJson(data));
+      return LocationMemberScope(MemberModel.fromJson(data));
     } else if (type == 'profile') {
       return ProfileScope(ProfileModel.fromJson(data));
     } else {
@@ -21,7 +21,7 @@ sealed class BussinessScope {
       if (data.containsKey('organization') ||
           data.containsKey('artist') ||
           data.containsKey('role')) {
-        return LocationMemberScope(LocationMemberModel.fromJson(data));
+        return LocationMemberScope(MemberModel.fromJson(data));
       } else {
         return ProfileScope(ProfileModel.fromJson(data));
       }
@@ -42,9 +42,9 @@ class ProfileScope extends BussinessScope {
   };
 }
 
-/// Scope representing a LocationMemberModel (member of an organization location)
+/// Scope representing a MemberModel (member of an organization location)
 class LocationMemberScope extends BussinessScope {
-  final LocationMemberModel locationMember;
+  final MemberModel locationMember;
 
   const LocationMemberScope(this.locationMember);
 

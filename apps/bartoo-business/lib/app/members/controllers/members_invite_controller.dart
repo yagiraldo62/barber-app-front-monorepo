@@ -1,7 +1,7 @@
 import 'package:core/data/models/shared/location_model.dart';
 import 'package:get/get.dart';
 import 'package:bartoo/app/auth/controllers/business_auth_controller.dart';
-import 'package:core/data/models/location_member_model.dart';
+import 'package:core/data/models/member_model.dart';
 import 'package:core/modules/profile/providers/members_provider.dart';
 import 'package:core/modules/profile/providers/member_invitations_provider.dart';
 import 'package:utils/log.dart';
@@ -24,10 +24,16 @@ class MembersInviteController extends GetxController {
   final error = RxString('');
 
   // Data
-  final members = <LocationMemberModel>[].obs; // accepted members
-  final invitations = <LocationMemberModel>[].obs; // pending invitations
+  final members = <MemberModel>[].obs; // accepted members
+  final invitations = <MemberModel>[].obs; // pending invitations
   final availableLocationMembers =
       <LocationModel>[].obs; // locations from user (full member objects)
+
+  // Computed lists for separating super admins from regular members
+  List<MemberModel> get superAdmins =>
+      members.where((m) => m.role == LocationMemberRole.superAdmin).toList();
+  List<MemberModel> get regularMembers =>
+      members.where((m) => m.role != LocationMemberRole.superAdmin).toList();
 
   // Form state
   final selectedLocationId = RxString(
@@ -216,7 +222,7 @@ class MembersInviteController extends GetxController {
     }
   }
 
-  Future<void> resendInvitation(LocationMemberModel invitation) async {
+  Future<void> resendInvitation(MemberModel invitation) async {
     isLoading.value = true;
     error.value = '';
     try {

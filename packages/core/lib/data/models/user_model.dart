@@ -1,7 +1,7 @@
 import 'package:core/data/models/appointment_model.dart';
 import 'package:core/data/models/category_model.dart';
 import 'package:core/data/models/profile_model.dart';
-import 'package:core/data/models/location_member_model.dart';
+import 'package:core/data/models/member_model.dart';
 
 class UserModel {
   UserModel();
@@ -30,7 +30,7 @@ class UserModel {
   late List<CategoryModel>? categories; // User interests (many-to-many)
   late List<AppointmentModel>? appointments; // Appointments as client
   late List<ProfileModel>? profiles; // Owned profiles
-  late List<LocationMemberModel>? locationsWorked; // Locations where user works
+  late List<MemberModel>? locationsWorked; // Locations where user works
   // TODO: Add profiles_interactions when UserProfileInteractionModel is created
   // late List<UserProfileInteractionModel>? profilesInteractions;
 
@@ -86,7 +86,7 @@ class UserModel {
       ..locationsWorked =
           jsonData['locations_worked'] != null &&
                   jsonData['locations_worked'] is List
-              ? LocationMemberModel.listFromJson(jsonData['locations_worked'])
+              ? MemberModel.listFromJson(jsonData['locations_worked'])
               : null;
   }
 

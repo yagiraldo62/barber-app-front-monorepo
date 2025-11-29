@@ -98,8 +98,24 @@ class ManageMembers extends StatelessWidget {
           ],
 
           const SizedBox(height: 12),
-          Text('Members', style: Theme.of(context).textTheme.titleMedium),
-          MembersList(shrinkWrap: true, controller: controller),
+          if (controller.superAdmins.isNotEmpty) ...[
+            Text(
+              'Super Administradores',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            MembersList(
+              shrinkWrap: true,
+              controller: controller,
+              members: controller.superAdmins,
+            ),
+            const SizedBox(height: 16),
+          ],
+          Text('Miembros', style: Theme.of(context).textTheme.titleMedium),
+          MembersList(
+            shrinkWrap: true,
+            controller: controller,
+            members: controller.regularMembers,
+          ),
           if (onContinue != null) ...[
             const SizedBox(height: 24),
             Align(

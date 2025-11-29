@@ -199,12 +199,6 @@ class SetupScopeFlow extends StatelessWidget {
             configs[currentIdx].stepTitle,
             variation: TypographyVariation.displayLarge,
           ),
-          // Center(
-          //   child: Text(
-          //     configs[currentIdx].stepTitle,
-          //     style: Theme.of(context).textTheme.displayMedium,
-          //   ),
-          // ),
           const SizedBox(height: 16),
           configs[currentIdx].build(),
         ],

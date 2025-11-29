@@ -5,7 +5,7 @@ import 'package:core/data/models/shared/location_model.dart';
 // TODO: Create ProfileMediaModel for media relation
 // TODO: Create ProfilePostModel for posts relation
 // TODO: Create ArtistServiceModel for services relation
-// TODO: Create LocationMemberModel for members and locations_worked relations
+// TODO: Create MemberModel for members and locations_worked relations
 // TODO: Create UserProfileInteractionModel for user_interactions relation
 
 /// Represents artist/organization profiles that provide services.
@@ -51,8 +51,8 @@ class ProfileModel {
   // List<ProfilePostModel>? posts; // Social posts
   // List<ArtistServiceModel>? services; // Artist services
   // List<UserProfileInteractionModel>? userInteractions; // User interactions
-  // List<LocationMemberModel>? members; // Organization members
-  // List<LocationMemberModel>? locationsWorked; // Locations where profile works
+  // List<MemberModel>? members; // Organization members
+  // List<MemberModel>? locationsWorked; // Locations where profile works
 
   /// Factory constructor from JSON
   factory ProfileModel.fromJson(Map<String, dynamic> jsonData) {

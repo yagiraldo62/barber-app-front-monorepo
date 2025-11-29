@@ -20,13 +20,9 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
   final authController = Get.find<BaseAuthController>();
 
   @override
-  Size get preferredSize =>
-      back
-          ? const Size.fromHeight(kToolbarHeight / 1.3)
-          : const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
   @override
   Widget build(BuildContext context) {
-    Log('BaseAppBar: back: $back, title: $title');
     return AppBar(
       leading:
           back
@@ -40,10 +36,7 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: false,
       titleSpacing: 0,
       title: const BartooAppName(size: 24),
-      backgroundColor:
-          back
-              ? Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.5)
-              : Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       actions: [
         Obx(
           () =>
@@ -51,8 +44,7 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ? const ScopeSelector()
                   : const SizedBox.shrink(),
         ),
-        ToggleThemeButton(),
-        const SizedBox(width: 10),
+        // ToggleThemeButton(),
         Padding(
           padding: const EdgeInsets.all(10),
           child: Obx(

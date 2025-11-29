@@ -1,6 +1,6 @@
 import 'package:bartoo/app/auth/controllers/business_auth_controller.dart';
 import 'package:bartoo/app/routes/app_pages.dart';
-import 'package:core/data/models/location_member_model.dart';
+import 'package:core/data/models/member_model.dart';
 import 'package:core/data/models/profile_model.dart';
 import 'package:core/data/models/user_model.dart';
 import 'package:core/modules/auth/classes/selected_scope.dart';
@@ -47,7 +47,7 @@ class BusinessAuthCallbacks implements AuthCallbacks {
 
     await authController.setAuthDefaultScope(user: user);
 
-    LocationMemberModel? pendingInvitation =
+    MemberModel? pendingInvitation =
         await authRepository.getPendingInvitation();
 
     Log(

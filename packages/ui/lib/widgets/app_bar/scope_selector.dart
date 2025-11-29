@@ -59,7 +59,7 @@ class ScopeSelector extends StatelessWidget {
               scopes,
             ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          padding: const EdgeInsets.all(8),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -183,17 +183,27 @@ class ScopeSelector extends StatelessWidget {
 
   /// Returns a user-friendly display text for a scope.
   String _getScopeDisplayText(BussinessScope? scope) {
+    String displayText;
     if (scope is ProfileScope) {
-      return scope.profile.name;
+      displayText = scope.profile.name;
     } else if (scope is LocationMemberScope) {
       final org = scope.locationMember.organization?.name ?? '';
-      final location = scope.locationMember.location?.name.replaceAll(org, '');
-      if (location != null && org != null) {
-        return '$org ${location != '' ? '- $location' : ''}';
+      final location =
+          scope.locationMember.location?.name.replaceAll(org, '') ?? '';
+      if (org.isNotEmpty) {
+        displayText = '$org ${location.isNotEmpty ? '- $location' : ''}'.trim();
+      } else {
+        displayText = location.isNotEmpty ? location : 'Location';
       }
-      return location ?? org ?? 'Location';
+    } else {
+      displayText = 'Select Scope';
     }
-    return 'Select Scope';
+
+    // Truncate to max 25 characters
+    if (displayText.length > 25) {
+      return '${displayText.substring(0, 22)}...';
+    }
+    return displayText;
   }
 
   /// Changes the selected scope in the auth controller.

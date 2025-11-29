@@ -1,5 +1,5 @@
 import 'package:bartoo/app/routes/app_pages.dart';
-import 'package:core/data/models/location_member_model.dart';
+import 'package:core/data/models/member_model.dart';
 import 'package:core/modules/auth/controllers/base_auth_controller.dart';
 import 'package:core/data/models/user_model.dart';
 import 'package:core/modules/auth/classes/selected_scope.dart';
@@ -10,7 +10,7 @@ import 'package:utils/log.dart';
 class BusinessAuthController extends BaseAuthController {
   // Business-specific properties
   Rx<BussinessScope?> selectedScope = Rx<BussinessScope?>(null);
-  Rx<LocationMemberModel?> pendingInvitation = Rx<LocationMemberModel?>(null);
+  Rx<MemberModel?> pendingInvitation = Rx<MemberModel?>(null);
 
   /// Sets the default business scope for the authenticated user.
   ///
@@ -182,7 +182,7 @@ class BusinessAuthController extends BaseAuthController {
     authRepository.setSelectedScope(scope);
   }
 
-  void setPendingInvitation(LocationMemberModel? invitation) {
+  void setPendingInvitation(MemberModel? invitation) {
     pendingInvitation.value = invitation;
     authRepository.setPendingInvitation(invitation);
   }

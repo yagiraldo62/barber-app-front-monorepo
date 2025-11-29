@@ -27,7 +27,6 @@ class AppLayout extends StatelessWidget {
         color: Theme.of(context).scaffoldBackgroundColor,
         child: Scaffold(
           drawer: back ? null : BaseAppDrawer(),
-          extendBodyBehindAppBar: back,
           appBar: BaseAppBar(back: back, title: title),
           body: Align(
             alignment: Alignment.topCenter,

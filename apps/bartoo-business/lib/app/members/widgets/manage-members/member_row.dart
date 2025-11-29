@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart' hide Typography;
-import 'package:core/data/models/location_member_model.dart';
+import 'package:core/data/models/member_model.dart';
 import 'package:ui/widgets/typography/typography.dart';
 
 class MemberRow extends StatelessWidget {
-  final LocationMemberModel member;
+  final MemberModel member;
   final bool isInvitation;
   final VoidCallback? onRevoke;
   final VoidCallback? onCancelInvitation;
@@ -105,7 +105,7 @@ class MemberRow extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Typography(
-          role.replaceAll('_', ' '),
+          role.replaceAll('-', ' '),
           variation: TypographyVariation.bodySmall,
         ),
         // if (member.member?.phoneNumber != null)

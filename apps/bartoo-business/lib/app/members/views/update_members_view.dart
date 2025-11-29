@@ -11,14 +11,13 @@ class UpdateMembersView extends GetView<UpdateMembersController> {
   Widget build(BuildContext context) {
     return AppLayout(
       back: true,
-      title: 'Editar Miembros',
+      title: 'Gestionar Miembros',
       body: Obx(() {
         if (!controller.isInitialized.value) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        if (controller.currentProfile.value == null ||
-            controller.currentLocation.value == null) {
+        if (controller.currentProfile.value == null) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -26,7 +25,7 @@ class UpdateMembersView extends GetView<UpdateMembersController> {
                 const Icon(Icons.error_outline, size: 64, color: Colors.grey),
                 const SizedBox(height: 16),
                 const Text(
-                  'Ubicación no encontrada',
+                  'Perfil no encontrado',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
@@ -50,7 +49,7 @@ class UpdateMembersView extends GetView<UpdateMembersController> {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
             child: ManageMembers(
               organizationId: controller.currentProfile.value!.id!,
-              locationId: controller.currentLocation.value!.id,
+              locationId: controller.currentLocation.value?.id,
               onContinue: () => controller.onMembersUpdated(),
             ),
           ),

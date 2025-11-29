@@ -149,6 +149,7 @@ class InvitationDetails extends StatelessWidget {
 
       final org = invitation.organization;
       final loc = invitation.location;
+
       final role = invitation.role;
       final phone = invitation.invitationPhoneNumber;
       final expiresAt = invitation.tokenExpirationDate;

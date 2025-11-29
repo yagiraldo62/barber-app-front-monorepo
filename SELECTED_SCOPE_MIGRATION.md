@@ -7,10 +7,10 @@
 
 This sealed class allows a single scope that can be either:
 - `ProfileScope` - Contains a `ProfileModel` (artist or organization profile)
-- `LocationMemberScope` - Contains a `LocationMemberModel` (member of an organization location)
+- `LocationMemberScope` - Contains a `MemberModel` (member of an organization location)
 
 **Benefits**:
-- ✅ Type-safe union type (similar to TypeScript's `ProfileModel | LocationMemberModel`)
+- ✅ Type-safe union type (similar to TypeScript's `ProfileModel | MemberModel`)
 - ✅ Compile-time exhaustiveness checking with pattern matching
 - ✅ Clean API with clear intent
 - ✅ JSON serialization/deserialization support
@@ -50,7 +50,7 @@ final profile = ProfileModel(id: '123', name: 'My Studio');
 final scope = ProfileScope(profile);
 
 // For a location member
-final member = LocationMemberModel(id: '456', role: LocationMemberRole.manager);
+final member = MemberModel(id: '456', role: LocationMemberRole.manager);
 final scope = LocationMemberScope(member);
 ```
 

@@ -1,5 +1,5 @@
 import 'package:base/providers/base_provider.dart';
-import 'package:core/data/models/location_member_model.dart';
+import 'package:core/data/models/member_model.dart';
 import 'package:utils/log.dart';
 
 class MemberInvitationsProvider extends BaseProvider {
@@ -38,7 +38,7 @@ class MemberInvitationsProvider extends BaseProvider {
   }
 
   /// Get invitation details by token (public endpoint, no auth required)
-  Future<LocationMemberModel?> getInvitationByToken(String token) async {
+  Future<MemberModel?> getInvitationByToken(String token) async {
     final response = await get('$_baseUrl/$token');
 
     if ((response.body?["ok"] ?? false) != true) {
@@ -47,7 +47,7 @@ class MemberInvitationsProvider extends BaseProvider {
 
     Log(response.body?["data"]);
 
-    return LocationMemberModel.fromJson(response.body?["data"]);
+    return MemberModel.fromJson(response.body?["data"]);
   }
 
   /// Accept or decline an invitation

@@ -1,12 +1,12 @@
 import 'package:base/providers/base_provider.dart';
-import 'package:core/data/models/location_member_model.dart';
+import 'package:core/data/models/member_model.dart';
 import 'package:utils/log.dart';
 
 class MembersProvider extends BaseProvider {
   final String _baseUrl = '/members';
 
   /// Create a location member directly (administrative)
-  Future<LocationMemberModel?> createMember({
+  Future<MemberModel?> createMember({
     required String organizationId,
     required String locationId,
     required String memberId,
@@ -30,15 +30,15 @@ class MembersProvider extends BaseProvider {
       return null;
     }
 
-    Log(LocationMemberModel.fromJson(response.body?["data"]).toJson());
+    Log(MemberModel.fromJson(response.body?["data"]).toJson());
 
     return response.body?["data"] != null
-        ? LocationMemberModel.fromJson(response.body?["data"])
+        ? MemberModel.fromJson(response.body?["data"])
         : null;
   }
 
   /// Get all location members with optional filtering
-  Future<List<LocationMemberModel>?> getMembers({
+  Future<List<MemberModel>?> getMembers({
     String? organizationId,
     String? locationId,
     String? memberId,
@@ -74,11 +74,11 @@ class MembersProvider extends BaseProvider {
 
     final List<dynamic> dataList = response.body?["data"] ?? [];
     Log('Members list: $dataList');
-    return dataList.map((item) => LocationMemberModel.fromJson(item)).toList();
+    return dataList.map((item) => MemberModel.fromJson(item)).toList();
   }
 
   /// Get a specific location member by ID
-  Future<LocationMemberModel?> getMemberById(String id) async {
+  Future<MemberModel?> getMemberById(String id) async {
     final response = await get('$_baseUrl/$id');
 
     if ((response.body?["ok"] ?? false) != true) {
@@ -86,12 +86,12 @@ class MembersProvider extends BaseProvider {
     }
 
     return response.body?["data"] != null
-        ? LocationMemberModel.fromJson(response.body?["data"])
+        ? MemberModel.fromJson(response.body?["data"])
         : null;
   }
 
   /// Update a location member
-  Future<LocationMemberModel?> updateMember(
+  Future<MemberModel?> updateMember(
     String id, {
     String? role,
     Map<String, dynamic>? locationMemberSettings,
@@ -111,10 +111,10 @@ class MembersProvider extends BaseProvider {
       return null;
     }
 
-    Log(LocationMemberModel.fromJson(response.body?["data"]).toJson());
+    Log(MemberModel.fromJson(response.body?["data"]).toJson());
 
     return response.body?["data"] != null
-        ? LocationMemberModel.fromJson(response.body?["data"])
+        ? MemberModel.fromJson(response.body?["data"])
         : null;
   }
 
@@ -130,7 +130,7 @@ class MembersProvider extends BaseProvider {
   }
 
   /// Revoke member access (soft delete)
-  Future<LocationMemberModel?> revokeMember(
+  Future<MemberModel?> revokeMember(
     String id, {
     required String organizationId,
     required String locationId,
@@ -146,10 +146,10 @@ class MembersProvider extends BaseProvider {
       return null;
     }
 
-    Log(LocationMemberModel.fromJson(response.body?["data"]).toJson());
+    Log(MemberModel.fromJson(response.body?["data"]).toJson());
 
     return response.body?["data"] != null
-        ? LocationMemberModel.fromJson(response.body?["data"])
+        ? MemberModel.fromJson(response.body?["data"])
         : null;
   }
 }

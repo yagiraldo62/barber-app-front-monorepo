@@ -1,8 +1,10 @@
 import 'package:bartoo/app/auth/controllers/business_auth_controller.dart';
+import 'package:core/data/models/profile_model.dart';
 import 'package:core/modules/auth/classes/selected_scope.dart';
 import 'package:flutter/material.dart' hide Typography;
 import 'package:get/get.dart';
 import 'package:ui/widgets/typography/typography.dart';
+import 'package:ui/widgets/button/app_text_button.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -38,10 +40,10 @@ class SettingsScreen extends StatelessWidget {
             // Organization Card
             if (scope is LocationMemberScope &&
                 scope.locationMember.organization != null) ...[
-              _OrganizationCard(scope: scope as LocationMemberScope),
+              _OrganizationCard(profile: scope.locationMember.organization!),
               const SizedBox(height: 16),
             ] else if (scope is ProfileScope) ...[
-              _ProfileCard(scope: scope),
+              _OrganizationCard(profile: scope.profile),
               const SizedBox(height: 16),
             ],
 
@@ -57,14 +59,12 @@ class SettingsScreen extends StatelessWidget {
 }
 
 class _OrganizationCard extends StatelessWidget {
-  final LocationMemberScope scope;
+  final ProfileModel profile;
 
-  const _OrganizationCard({required this.scope});
+  const _OrganizationCard({required this.profile});
 
   @override
   Widget build(BuildContext context) {
-    final organization = scope.locationMember.organization!;
-
     return Card(
       elevation: 2,
       child: Padding(
@@ -74,69 +74,33 @@ class _OrganizationCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(Icons.business, size: 32),
-                const SizedBox(width: 12),
                 Expanded(
-                  child: Typography(
-                    'Organización',
-                    variation: TypographyVariation.titleLarge,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: () {
-                    Get.toNamed('/profiles/${organization.id}/edit');
-                  },
-                ),
-              ],
-            ),
-            const Divider(height: 24),
-            _InfoRow(label: 'Nombre', value: organization.name),
-            const SizedBox(height: 12),
-            if (organization.title != null && organization.title!.isNotEmpty)
-              _InfoRow(label: 'Título', value: organization.title!),
-            const SizedBox(height: 12),
-            if (organization.description != null &&
-                organization.description!.isNotEmpty)
-              _InfoRow(label: 'Descripción', value: organization.description!),
-            const SizedBox(height: 12),
-            _InfoRow(
-              label: 'Tipo',
-              value: organization.type.name.toUpperCase(),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ProfileCard extends StatelessWidget {
-  final ProfileScope scope;
-
-  const _ProfileCard({required this.scope});
-
-  @override
-  Widget build(BuildContext context) {
-    final profile = scope.profile;
-
-    return Card(
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Icon(Icons.person, size: 32),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Typography(
-                    'Perfil',
-                    variation: TypographyVariation.titleLarge,
-                    fontWeight: FontWeight.bold,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (profile.title != null && profile.title!.isNotEmpty)
+                        Row(
+                          children: [
+                            const SizedBox(width: 44),
+                            Typography(
+                              profile.title!,
+                              variation: TypographyVariation.bodyMedium,
+                              color: Colors.grey[600],
+                            ),
+                          ],
+                        ),
+                      Row(
+                        children: [
+                          const Icon(Icons.business, size: 32),
+                          const SizedBox(width: 12),
+                          Typography(
+                            profile.name,
+                            variation: TypographyVariation.titleLarge,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
                 IconButton(
@@ -147,16 +111,19 @@ class _ProfileCard extends StatelessWidget {
                 ),
               ],
             ),
-            const Divider(height: 24),
-            _InfoRow(label: 'Nombre', value: profile.name),
             const SizedBox(height: 12),
-            if (profile.title != null && profile.title!.isNotEmpty)
-              _InfoRow(label: 'Título', value: profile.title!),
-            const SizedBox(height: 12),
-            if (profile.description != null && profile.description!.isNotEmpty)
-              _InfoRow(label: 'Descripción', value: profile.description!),
-            const SizedBox(height: 12),
-            _InfoRow(label: 'Tipo', value: profile.type.name.toUpperCase()),
+            if (profile.type == ProfileType.organization) ...[
+              const Divider(),
+
+              const SizedBox(height: 12),
+              _ManagementButton(
+                icon: Icons.group,
+                label: 'Gestionar Miembros',
+                onPressed: () {
+                  Get.toNamed('/profiles/${profile.id}/members/edit');
+                },
+              ),
+            ],
           ],
         ),
       ),
@@ -172,7 +139,11 @@ class _LocationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final location = scope.locationMember.location!;
-    final organizationId = scope.locationMember.organization?.id;
+    final organization = scope.locationMember.organization;
+    final organizationId = organization?.id;
+    final showManageMembersOption =
+        scope.locationMember.organization?.type == ProfileType.organization;
+    final showLocationName = location.name != organization?.name;
 
     return Card(
       elevation: 2,
@@ -186,10 +157,23 @@ class _LocationCard extends StatelessWidget {
                 const Icon(Icons.location_on, size: 32),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: Typography(
-                    'Ubicación',
-                    variation: TypographyVariation.titleLarge,
-                    fontWeight: FontWeight.bold,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Typography(
+                        location.address != null && location.address!.isNotEmpty
+                            ? location.address!
+                            : 'Ubicación',
+                        variation: TypographyVariation.titleLarge,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      if (showLocationName)
+                        Typography(
+                          location.name,
+                          variation: TypographyVariation.bodyMedium,
+                          color: Colors.grey[600],
+                        ),
+                    ],
                   ),
                 ),
                 if (organizationId != null)
@@ -203,50 +187,40 @@ class _LocationCard extends StatelessWidget {
                   ),
               ],
             ),
-            const Divider(height: 24),
-            _InfoRow(label: 'Nombre', value: location.name),
+
             const SizedBox(height: 12),
-            if (location.address != null && location.address!.isNotEmpty)
-              _InfoRow(label: 'Dirección', value: location.address!),
-            const SizedBox(height: 12),
-            _InfoRow(label: 'Ciudad', value: location.city),
-            const SizedBox(height: 12),
-            _InfoRow(label: 'Estado', value: location.state),
-            const SizedBox(height: 12),
-            _InfoRow(label: 'País', value: location.country),
-            const SizedBox(height: 24),
             const Divider(),
             const SizedBox(height: 16),
-            Typography(
-              'Gestión',
-              variation: TypographyVariation.titleMedium,
-              fontWeight: FontWeight.bold,
-            ),
-            const SizedBox(height: 12),
+
             if (organizationId != null) ...[
               _ManagementButton(
                 icon: Icons.design_services,
                 label: 'Servicios',
-                onPressed: () => Get.toNamed(
-                  '/profiles/$organizationId/locations/${location.id}/services/edit',
-                ),
+                onPressed:
+                    () => Get.toNamed(
+                      '/profiles/$organizationId/locations/${location.id}/services/edit',
+                    ),
               ),
               const SizedBox(height: 8),
               _ManagementButton(
                 icon: Icons.schedule,
                 label: 'Disponibilidad',
-                onPressed: () => Get.toNamed(
-                  '/profiles/$organizationId/locations/${location.id}/availability/edit',
-                ),
+                onPressed:
+                    () => Get.toNamed(
+                      '/profiles/$organizationId/locations/${location.id}/availability/edit',
+                    ),
               ),
-              const SizedBox(height: 8),
-              _ManagementButton(
-                icon: Icons.group,
-                label: 'Miembros',
-                onPressed: () => Get.toNamed(
-                  '/profiles/$organizationId/locations/${location.id}/members/edit',
+              if (showManageMembersOption) ...[
+                const SizedBox(height: 8),
+                _ManagementButton(
+                  icon: Icons.group,
+                  label: 'Miembros',
+                  onPressed:
+                      () => Get.toNamed(
+                        '/profiles/$organizationId/locations/${location.id}/members/edit',
+                      ),
                 ),
-              ),
+              ],
             ],
           ],
         ),
@@ -268,14 +242,11 @@ class _ManagementButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton.icon(
+    return AppTextButton(
+      label: label,
       onPressed: onPressed,
       icon: Icon(icon),
-      label: Text(label),
-      style: OutlinedButton.styleFrom(
-        alignment: Alignment.centerLeft,
-        minimumSize: const Size(double.infinity, 48),
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
     );
   }
 }

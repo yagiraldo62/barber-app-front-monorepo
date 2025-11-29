@@ -3,7 +3,7 @@
 
 import 'package:core/modules/auth/classes/selected_scope.dart';
 import 'package:core/data/models/profile_model.dart';
-import 'package:core/data/models/location_member_model.dart';
+import 'package:core/data/models/member_model.dart';
 
 /// Example: How to create a SelectedScope
 
@@ -17,7 +17,7 @@ void exampleCreateScope() {
   final profileScope = ProfileScope(profile);
 
   // Create a LocationMemberScope
-  final locationMember = LocationMemberModel(
+  final locationMember = MemberModel(
     id: '456',
     role: LocationMemberRole.superAdmin,
   );

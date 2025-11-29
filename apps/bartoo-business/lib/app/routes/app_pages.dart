@@ -174,6 +174,12 @@ class AppPages {
       binding: UpdateMembersBinding(),
       middlewares: [AuthGuardMiddleware()],
     ),
+    GetPage(
+      name: Routes.updateProfileMembers,
+      page: () => const UpdateMembersView(),
+      binding: UpdateMembersBinding(),
+      middlewares: [AuthGuardMiddleware()],
+    ),
     getHomePage(Routes.homeNavigation),
   ];
 }

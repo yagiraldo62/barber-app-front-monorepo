@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:core/data/models/location_member_model.dart';
+import 'package:core/data/models/member_model.dart';
 import 'package:core/modules/auth/classes/auth_state.dart';
 import 'package:core/modules/auth/classes/selected_scope.dart';
 import 'package:utils/storage_manager.dart';
@@ -46,17 +46,17 @@ class AuthStorageRepository with StorageManager {
   }
 
   // Pending invitation
-  setPendingInvitation(LocationMemberModel? invitationToken) {
+  setPendingInvitation(MemberModel? invitationToken) {
     setValue(
       PENDING_INVITATION,
       invitationToken != null ? json.encode(invitationToken.toJson()) : null,
     );
   }
 
-  Future<LocationMemberModel?> getPendingInvitation() async {
+  Future<MemberModel?> getPendingInvitation() async {
     String? storedInvitation = await getValue(PENDING_INVITATION);
     return storedInvitation != null
-        ? LocationMemberModel.fromJson(json.decode(storedInvitation))
+        ? MemberModel.fromJson(json.decode(storedInvitation))
         : null;
   }
 
